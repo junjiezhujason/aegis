@@ -1,0 +1,284 @@
+<div class="go_panel main-viz">
+  <!-- ontology options line -->
+  <div  class="info-line" id="general_options">
+    <div class="options-block">
+      <div class="label-block">
+        <label> General Options </label>
+        <a data-toggle="tooltip"
+           data-placement="right"
+           title="">
+          <span class="glyphicon glyphicon-question-sign"></span>
+        </a>
+      </div>
+      <span>&#124;</span>
+      &nbsp;
+      <div class="general-options">
+        ontology &nbsp;
+        <div class="select-control">
+          <select class="form-control main-ontology-control" id="ontology_selection">
+            <option value="cellular_component">cellular component</option>
+            <option value="biological_process">biologcial process</option>
+            <option value="molecular_function">molecular function</option>
+          </select>
+        </div>
+      </div>
+      &nbsp;
+      <span>&#124;</span>
+      &nbsp;
+      <div class="general-options">
+        species &nbsp;
+        <div class="select-control">
+          <select class="form-control main-ontology-control" id="species_selection">
+            <option value="human">human</option>
+            <option value="mouse">mouse</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button type="button"
+            class="btn btn-primary btn-sm icon-btn-right main-ontology-control"
+            id="request_ontology_button">
+        <span class="glyphicon glyphicon-refresh"> </span>
+    </button>
+  </div>
+  <!-- context anchor search line -->
+  <div class="info-line context-block" id="context_anchors">
+    <div class="autocomplete-search-block">
+      <div class="label-block">
+        <label> Context Anchors </label>
+        <a data-toggle="tooltip"
+           data-placement="right"
+           title="Select GO term anchors by the auto-complete search">
+          <span class="glyphicon glyphicon-question-sign"></span>
+        </a>
+      </div>
+      <div class="tagit-block">
+        <input name="tags"
+               class="main-context-control"
+               id="go_context_tag_it"
+               value="">
+      </div>
+    </div>
+    <button type="button"
+            class="btn btn-sm btn-primary icon-btn-right main-context-control"
+            id="go_context_reset_button">
+     <span class="glyphicon glyphicon-remove"></span>
+    </button>
+  </div>
+
+  <!-- context options line -->
+  <div  class="info-line context-block" id="context_options">
+    <div class="options-block">
+      <div class="label-block">
+        <label>Context Options</label>
+        <a data-toggle="tooltip"
+           data-placement="right"
+           title="The context options determines the GO terms to be included. The context is contrained by the anchor nodes, and the node size (the genes annotated with a node).">
+          <span class="glyphicon glyphicon-question-sign"></span>
+        </a>
+      </div>
+      <span>&#124;</span>
+      &nbsp;
+      <div class="general-options">
+        anchor type &nbsp;
+        <div class="select-control">
+          <select class="form-control main-context-control"
+                  id="context_anchor_type" >
+            <option value="waypoint">waypoint</option>
+            <option value="root">root</option>
+          </select>
+        </div>
+      </div>
+      &nbsp;
+      <span>&#124;</span>
+      &nbsp;
+      <div class="general-options">
+        node size
+        &nbsp;
+        <input id="spinner_min_node_size"
+               name="value"
+               class="jquery_ui_spinner medium_inline main-context-control">
+        &mdash;
+        <input id="spinner_max_node_size"
+               name="value"
+               class="jquery_ui_spinner medium_inline main-context-control">
+      </div>
+      &nbsp;
+      <span>&#124;</span>
+      &nbsp;
+      <div class="material-switch general-options">
+        refine
+        &nbsp;
+        <input class="main-context-control"
+               id="check_refine_context"
+               name="check_refine_context"
+               type="checkbox"/>
+        <label for="check_refine_context" class="label-primary"></label>
+      </div>
+    </div>
+    <button type="button"
+            class="btn btn-primary btn-sm icon-btn-right main-context-control"
+            id="go_context_update_button">
+        <span class="glyphicon glyphicon-refresh"> </span>
+    </button>
+  </div>
+  <!-- other options line -->
+  <div class="info-line context-block" id="display_options">
+    <div class="options-block">
+      <div class="label-block">
+        <label>Display Options</label>
+        <a data-toggle="tooltip"
+           data-placement="right"
+           title="Select GO term anchor for the anchors from the search bar">
+          <span class="glyphicon glyphicon-question-sign"></span>
+        </a>
+      </div>
+      <span>&#124;</span>
+      &nbsp;
+      <div class="general-options">
+        highlight &nbsp;
+        <div class="select-control">
+          <select class="form-control" id="highlight_node_select">
+            <option value="none">none</option>
+            <option value="fcus_ancs">focus anchors</option>
+            <!--
+            <option value="fcus_grph">Focus Graph</option>
+            <option value="cntx_ancs">Context Anchors</option>
+            -->
+            <option value="prolif_set">prolific set</option>
+            <option value="fcus_outer">outer focus anchors</option>
+          </select>
+        </div>
+      </div>
+      &nbsp;
+      <span>&#124;</span>
+      &nbsp;
+      <div class="general-options">
+        layout &nbsp;
+        <div class="select-control">
+          <select class="form-control" id="view_select">
+            <option value="flex">buoyant</option>
+            <option value="depth">root-bound</option>
+            <option value="height">leaf-bound</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="output_div" class="output-div view-block">
+    <span id="go_output">
+      [Move mouse over a focus graph node to see GO information]
+    </span>
+    <span id="gene_output">
+    </span>
+  </div>
+  <div id ="new_full_canvas" class="full-canvas view-block">
+    <div id ="mirror_canvas"></div>
+  </div>
+
+  <!-- focus anchor search line -->
+  <div class="info-line focus-block" id="focus_anchors">
+    <div class="autocomplete-search-block">
+      <div class="label-block">
+        <label> Focus Anchors </label>
+        <a data-toggle="tooltip"
+           data-placement="right"
+           title="Select GO term anchors by double-clicking on nodes in the focus graph or by the auto-search bar">
+          <span class="glyphicon glyphicon-question-sign"></span>
+        </a>
+      </div>
+      <div class="tagit-block">
+        <input name="tags"
+               id="go_focus_tag_it"
+               value="">
+      </div>
+    </div>
+    <button type="button"
+            class="btn btn-sm btn-primary icon-btn-right"
+            id="go_focus_reset_button">
+     <span class="glyphicon glyphicon-remove"></span>
+    </button>
+  </div>
+  <!-- focus options line -->
+  <div  class="info-line focus-block" id="focus_options">
+    <div class="options-block">
+      <div class="label-block">
+        <label>Focus Options</label>
+        <a data-toggle="tooltip"
+           data-placement="right"
+           title="">
+          <span class="glyphicon glyphicon-question-sign"></span>
+        </a>
+      </div>
+      <span>&#124;</span>
+      &nbsp;
+      <div class="general-options">
+        anchor type &nbsp;
+        <div class="select-control">
+          <select class="form-control" id="focus_anchor_type" >
+            <option value="waypoint">waypoint</option>
+            <option value="leaf">leaf</option>
+          </select>
+        </div>
+      </div>
+      &nbsp;
+      <span>&#124;</span>
+      &nbsp;
+      <div class="general-options">
+        maximum anchors &nbsp;
+        <input id="spinner_max_num_foc_anchors"
+               name="value"
+               class="jquery_ui_spinner medium_inline">
+      </div>
+      &nbsp;
+      <span>&#124;</span>
+      &nbsp;
+      <div class="material-switch general-options">
+        cluster anchors
+        &nbsp;
+        <input id="check_group_focus"
+               name="check_group_focus"
+               type="checkbox"/>
+        <label for="check_group_focus" class="label-primary"></label>
+      </div>
+    </div>
+    <button type="button"
+            class="btn btn-sm btn-primary icon-btn-right"
+            id="focus_option_update">
+     <span class="glyphicon glyphicon-refresh"></span>
+    </button>
+  </div>
+  <!-- advanced options line -->
+  <div  class="info-line focus-block" id="other_options">
+    <div class="options-block">
+      <div class="label-block">
+      </div>
+      <span>&#124;</span>
+      &nbsp;
+      <div class="material-switch general-options">
+        gap break (buoyant)
+        &nbsp;
+        <input id="spinner_foc_gap_break"
+               name="value"
+               class="jquery_ui_spinner medium_inline">
+      </div>
+      &nbsp;
+      <span>&#124;</span>
+      &nbsp;
+      <div class="material-switch general-options">
+        focus descendant threshold (way-point)
+        &nbsp;
+        <input id="spinner_desc_size"
+               name="value"
+               class="jquery_ui_spinner medium_inline">
+      </div>
+    </div>
+    <button type="button"
+            class="btn btn-sm btn-primary icon-btn-right"
+            id="focus_option_2_update">
+     <span class="glyphicon glyphicon-refresh"></span>
+    </button>
+  </div>
+</div>
+<div class="modal" id="go_ajax_modal"></div>

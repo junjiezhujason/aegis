@@ -1,0 +1,593 @@
+body{
+   min-width:800px;        /* Suppose you want minimum width of 1000px */
+   width: auto !important;  /* Firefox will set width as auto */
+   width:800px;            /* As IE6 ignores !important it will set width as 1000px; */
+}
+
+.about-page p{
+  text-align: justify;
+}
+.summary_lite {
+  width: 100%;
+  height:30px;
+  color: #000080;
+  background-color: #F5F5F5;
+}
+.text_long {
+  height:100px;
+}
+#aegis_logo {
+  background-position : center 0px;
+  background-size : 900px auto;
+  background-repeat: no-repeat;
+  /*margin-bottom : 5px;*/
+  /*background-image : url({{ url_for('static', filename='img/headerbackground.jpg')}});*/
+}
+
+#story_painting {
+  display: block;
+  width: 100%;
+}
+
+.story_figure {
+  /*display: block;*/
+  width: 65%;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.go_figure {
+  width: 55%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.cf_figure {
+  width: 80%;
+}
+.story_figure p {
+  text-align:center;
+}
+
+
+/* https://stackoverflow.com/questions/1964839/how-can-i-create-a-please-wait-loading-animation-using-jquery */
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 )
+                url('http://i.stack.imgur.com/FhHRx.gif')
+                50% 50%
+                no-repeat;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading .modal {
+    overflow: hidden;
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #D6E3F0;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+/*skyline-subway manhattan*/
+
+.full-canvas {
+  text-align: center;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /*height: 460px;*/
+  width: 100%;
+}
+
+
+/*Rest*/
+.sim-result-plot-blocks {
+  height: 300px;
+}
+
+.legend-box .legend-text {
+  alignment-baseline: central;
+}
+.ann-text {
+  font-size: 9pt;
+}
+.group-text .ann-text {
+  alignment-baseline: central;
+}
+.group-triang-text .ann-text {
+  alignment-baseline: central;
+}
+
+.main_container {
+  max-width: 900px;
+  margin: auto;
+}
+
+#aegis_logo > p {
+  font-size: 12pt;
+}
+
+
+.tab_title {
+  font-size: 11pt;
+}
+
+.panel-heading .colpsible-panel:after {
+  font-family: 'Glyphicons Halflings';
+  content: "\e114";
+  float: right;
+  color: #408080;
+}
+.panel-heading .colpsible-panel.collapsed:after {
+  content: "\e080";
+}
+.sim_spinner {
+  width : 30px;
+  height: 20px;
+}
+
+#control_div {
+  overflow-x: hidden;
+  white-space: nowrap;
+  height: 50px;
+  padding-top: 10px;
+}
+#query_div {
+  overflow-x: hidden;
+  white-space: nowrap;
+  height: 50px;
+  margin-top: 10px;
+  padding-top: 10px;
+  /*padding-left: 10px;*/
+  background: #cce5ff;
+}
+
+#query_div #prompt_text {
+  padding-top: 5px;
+  /*position: relative;*/
+  display: inline-block;
+  /*vertical-align: middle;*/
+}
+#query_div #input_box {
+  height: auto;
+  /*width: 50%;*/
+  /*resize: horizontal;*/
+  /*position: relative;*/
+  display: inline-block;
+  /*vertical-align: middle;*/
+  margin-left: 10px;
+  margin-right: 10px;
+}
+#query_div #input_box input {
+  height: auto;
+  /*width: 300px;*/
+  /*resize: horizontal;*/
+}
+#query_div #submit_box {
+  display: inline-block;
+  /*float: left;*/
+  /*background: white;*/
+  /*vertical-align: top;*/
+  /*position: relative;*/
+  /*width: 10px;*/
+}
+
+/*.display_div {
+  overflow-x: auto;
+  overflow-y: hidden;
+  float: left;
+  border: 2px solid lightgrey;
+  width: 100%;
+  height: auto;
+}*/
+
+/* go_interaction.css*/
+.output-div {
+  white-space: nowrap;
+  overflow-x: hidden;
+  height: 30px;
+  width: 100%;
+  line-height: 30px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  background: #154360;
+  /*border: 2px solid lightgrey;*/
+  vertical-align: middle;
+  display: inline-block;
+  /*line-height: 35px;*/
+  color: #CCCCCC;
+  padding-left: 10px;
+}
+
+.output-div .span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+  margin-right: 0px;
+}
+
+.graph-bar-pair {
+  position: absolute;
+  height: inherit;
+}
+.grid-background {
+  position: absolute;
+  height: inherit;
+}
+.node-tip-layer {
+  position: absolute;
+}
+.graph-bar-pair .graph-canvas {
+  display: inline-block;
+  height: 100%;
+}
+.graph-bar-pair .bar-canvas {
+  display: inline-block;
+  height: 100%;
+}
+
+
+.node-tip {
+  position: absolute;
+  background: white;
+  box-shadow: 0 0 10px #999999;
+  padding-left: 4px;
+  padding-right: 4px;
+  text-align: center;
+  color: black;
+  font-size: 11px;
+  display: none;
+  /*max-width: 100px;*/
+  width: auto;
+  height: auto;
+}
+
+
+
+
+/*  #go_gene_search_div {
+    margin-top: 50px;
+
+}*/
+/*http://www.techirsh.com/2015/05/creating-attractive-rounded-button-with.html*/
+/*-------------------------
+Inline help tip
+--------------------------*/
+.view-btn {
+  display: inline-block;
+  width: 80px;
+  height: 28px;
+  padding: 1px 15px 1px 2px;
+  border-radius:50px;
+  align-items: center;  /* Makes everything centered*/
+  background: #A9A9A9;
+  border-color: #A9A9A9;
+}
+.view-text {
+  margin-right: 10px;
+}
+.view-right {
+  margin-left: auto;
+  justify-content: space-between;
+  order: 2;
+  /*width: 150px;*/
+  align-items: center;  /* Makes everything centered*/
+  display: flex;
+}
+.btn-glyphicon {
+  padding:4px;
+  background:#ffffff;
+  margin-right:7px;
+  float: left;
+  margin-bottom:3px;
+  color:#0D3071;
+}
+.icon-btn {
+  width: 80px;
+  height: 28px;
+  padding: 1px 15px 1px 2px;
+  border-radius:50px;
+  display: flex;
+  align-items: center;  /* Makes everything centered*/
+}
+/* https://bootsnipp.com/snippets/ZlQ32 */
+.material-switch > input[type="checkbox"] {
+    display: none;
+}
+
+.material-switch > label {
+    cursor: pointer;
+    height: 0px;
+    position: relative;
+    width: 40px;
+}
+
+.material-switch > label::before {
+    background: rgb(0, 0, 0);
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    content: '';
+    height: 16px;
+    margin-top: -8px;
+    position:absolute;
+    opacity: 0.3;
+    transition: all 0.4s ease-in-out;
+    width: 40px;
+}
+.material-switch > label::after {
+    background: rgb(255, 255, 255);
+    border-radius: 16px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    content: '';
+    height: 24px;
+    left: -4px;
+    margin-top: -8px;
+    position: absolute;
+    top: -4px;
+    transition: all 0.3s ease-in-out;
+    width: 24px;
+}
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+}
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: inherit;
+    left: 20px;
+}
+/* ---------------*/
+
+.vl {
+  display: inline-block;
+  height: 100%;
+}
+.link-line {
+  flex-grow: 1;
+  margin-right: 20px;
+}
+.link-line hr {
+  width: 100%;
+  border-top: 1px dashed #CDCDCD;
+}
+.small_inline{
+  width: 25px;
+  margin-bottom: 5px;
+}
+.medium_inline{
+  width: 50px;
+  margin-bottom: 5px;
+}
+
+
+.go_panel {
+  width: 100%;
+  border: 2px solid lightgrey;
+}
+.go_panel .inline-btn {
+  // margin-left: auto;
+  margin-left: 15px;
+  margin-right: 10px;
+}
+
+.go_panel .icon-btn-right {
+  /*margin-left: auto;*/
+  margin-left: 5px;
+  /*justify-content: space-between;*/
+  /*order: 2;*/
+  /*float: right;*/
+  /*align: right;*/
+
+}
+
+.go_panel .search-label {
+  flex-shrink: 0;
+  width: 120px;
+}
+.go_panel .select-control {
+  display: inline-block;
+}
+.go_panel .random-draw-line {
+  /*display: inline-block;*/
+  /*margin: 0 1rem;*/
+  min-width: 28rem;
+  /*overflow-x: hidden;*/
+  /*white-space: nowrap;*/
+}
+.go_panel .options-block {
+  min-width: 10rem;
+  flex-grow: 1; /* <-- THE SECRET SAUCE! */
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+}
+.go_panel .options-block .general-options {
+  display: inline-block;
+  white-space: nowrap;
+  align-items: center;  /* Makes everything centered*/
+}
+.go_panel .options-block .general-options .file-upload_select{
+  display: inline-block;
+}
+.go_panel .autocomplete-search-block {
+  /*min-width: 10rem;*/
+  flex-grow: 1; /* <-- THE SECRET SAUCE! */
+  white-space: nowrap;
+  display: inline-block;
+  /*vertical-align: middle;*/
+  align-items: center;  /* Makes everything centered*/
+  width: 90%;
+  height: 47px;
+  margin-right: 20px;
+}
+.go_panel .label-block{
+  display: inline-block;
+  width: 140px;
+  vertical-align: middle;
+}
+.go_panel .tagit-block {
+  // flex-grow: 1; /* <-- THE SECRET SAUCE! */
+  min-width: 10rem;
+  display: inline-block;
+  white-space: nowrap;
+  height: 100%;
+  width: 80%;
+  vertical-align: middle;
+}
+.go_panel .tagit-block ul {
+  display: inline-block;
+  overflow-y: scroll;
+  padding: 5px;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+#random-draw-focus {
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+.go_panel .search-form {
+  /*margin: 0 1rem;*/
+  flex-grow: 1; /* <-- THE SECRET SAUCE! */
+  min-width: 10rem;
+}
+.go_panel .btn_size {
+  width: 50px;
+  height: 30px;
+}
+.go_panel .info-line {
+  display: flex;
+  align-items: center;  /* Makes everything centered*/
+  margin: 0.1rem;
+  padding: 0.8rem;
+  overflow: hidden;
+  background-color: #F0F0F0;
+}
+// TODO: remove
+.search-line {
+  display: flex;
+  align-items: center;  /* Makes everything centered*/
+  margin: 0.8rem;
+  overflow: hidden;
+}
+
+.select-line {
+  display: flex;
+  align-items: center;  /* Makes everything centered*/
+  margin: 0.8rem;
+}
+.search-form {
+  // margin: 0 1rem;
+  flex-grow: 1; /* <-- THE SECRET SAUCE! */
+  min-width: 10rem;
+}
+
+.search-form input {
+  width: 100%;
+  /*padding: .4rem;*/
+  /*background-color: #ffb;*/
+}
+.search-line .awesomplete {
+  width: 100%;
+  /*padding: .4rem;*/
+}
+.search-form .bootstrap-tagsinput {
+ height: 44px;
+ // width: 100%;
+ width: 300px;
+ margin-top:8px;
+ overflow-x: scroll;
+ white-space: nowrap;
+}
+.select-line .bootstrap-tagsinput input {
+  display: none; /* disables text input*/
+}
+
+.search-container {
+  float: left;
+}
+
+.search-container input[type=text] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+  float: left;
+  display: inline;
+}
+
+.search-container button {
+  float: right;
+  padding: 6px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.go-term-lookup-sec {
+  display: flex;
+  align-items: center;  /* Makes everything centered*/
+}
+
+.go-term-lookup-sec button {
+    margin-left: 5px;
+    // padding-left: 6px;
+    // width: 78px;
+}
+.go-term-lookup-sec .search-form {
+  width: 200px;
+  margin: 0px;
+  /*padding: .4rem;*/
+  /*background-color: #ffb;*/
+}
+
+.go-term-lookup-sec .awesomplete {
+  width: 50px;
+}
+
+
+.context-anchor-sec {
+  display: flex;
+  align-items: center;  /* Makes everything centered*/
+  margin-left: 10px;
+}
+
+#input_file_upload {
+  margin: auto;
+}

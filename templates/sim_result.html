@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+<div id="result_select_panel">
+    Load Result
+    <button type="button"
+            class="btn btn-primary btn-sm icon-btn-right"
+            id="load_simulation_button">
+        <span class="glyphicon glyphicon-refresh"> </span>
+    </button>
+</div>
+<div id="go_panel">
+  {% include "go_interaction.html" %}
+  </div>
+</div>
+<div>
+  <div>
+  {% include "ss_manhattan.html" %}
+  </div>
+  <div >
+    <button id='export_as_png'>Export Figure as PNG</button>
+    <button id='export_as_svg'>Export Figure as SVG</button>
+  </div>
+</div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/sim_result.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/d3-save-svg.min.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/FileSaver.min.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/canvas-toBlob.js') }}" ></script>
+<script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
+<script src="https://cdn.rawgit.com/eligrey/canvas-toBlob.js/f1a01896135ab378aa5c0118eadd81da55e698d8/canvas-toBlob.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/d3_save_utils.js') }}"></script>
+{% endblock %}
+

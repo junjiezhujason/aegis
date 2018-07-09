@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GO Visualization</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='lib/bootstrap-3.3.7/css/bootstrap.min.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main_style.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/ssm.css') }}" />
+
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='lib/awesomplete-gh-pages/awesomplete.css') }}" /> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='lib/bootstrap-tagsinput/bootstrap-tagsinput.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='lib/awesome-boostrap-checkbox/build.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='lib/awesome-boostrap-checkbox/build.css') }}" />
+  <!-- required for go_visualization.js -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='lib/tag-it-2.0/jquery.tagit.css') }}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/bootstrap-3.3.7/js/bootstrap.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-4.11.0/d3.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/bootstrap-tagsinput/bootstrap-tagsinput.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/plotly/plotly-latest.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/awesomplete-gh-pages/awesomplete.js') }}" ></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/d3-save-svg.min.js') }}" ></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/seedrandom/seedrandom.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/plotly/plotly-latest.min.js') }}"></script>
+  <!-- required for go_visualization.js -->
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/tag-it-2.0/tag-it.min.js') }}"></script>
+
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script> -->
+
+  <!-- Bootstrap CSS -->
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='lib/jquery-ui-1.12.1/jquery-ui.css') }}" /> -->
+  <!--
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='lib/tag-it-2.0/tagit.ui-zendesk.css') }}" />
+  -->
+  <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='lib/jquery-ui-bootstrap-jquery-ui-bootstrap-71f2e47/css/custom-theme/jquery-ui-1.9.2.custom.css') }}" />
+
+  <script type="text/javascript" src="{{ url_for('static', filename='js/all_configs.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/common_utils.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/graph_utils.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/bar_utils.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/go_interaction.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/control_utils.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/search_utils.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/statistics_utils.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/data_utils.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/ss_manhattan.js') }}"></script>
+</head>
+<body>
+  <div class="container main_container" id="header_container">
+    <div class="jumbotron" id="aegis_logo">
+      <h1>AEGIS</h1>
+      <p>
+        <u>A</u>ugmented
+        <u>E</u>xploration of the
+        <u>G</u>O with
+        <u>I</u>nteractive
+        <u>S</u>imulations
+      </p>
+    </div>
+    <ul class="nav nav-tabs">
+      <li id="about_tab" class="{{ 'active' if task == 'about' else '' }}">
+        <a class="tab_title" href="{{ url_for('about') }}">About</a>
+      </li>
+      {% if mode == 'lite_mode' %}
+        <li id="lite_tab" class="{{ 'active' if task == 'lite' else '' }}">
+          <a class="dropdown-toggle tab_title" data-toggle="dropdown" href="#">
+            Explore <span class="caret"></span>
+            <ul class="dropdown-menu">
+            {% for item in sublist %}
+              <li>
+                <a href="{{ url_for('lite', page=item.id) }}">
+                  {{ item.caption }}
+                </a>
+              </li>
+            {% endfor %}
+            </ul>
+          </a>
+        </li>
+      {% else %}
+        {% for item in sublist %}
+          <li id="view_tab" class="{{ 'active' if task == item.id else '' }}">
+            <a class="tab_title" href="{{ url_for('core', page=item.id) }}">
+              {{ item.caption }}
+            </a>
+          </li>
+        {% endfor %}
+      {% endif %}
+    </ul>
+  </div>
+  <div class="container main_container" id="content_container">
+    {% block content %}
+    {% endblock %}
+  </div>
+  <script type="text/javascript">
+    $("#aegis_logo").css("background-image",
+      "url({{ url_for('static', filename='img/headerbackground.jpg')}})");
+   // overall scroll panel setup
+   // source: https://stackoverflow.com/questions/35992900
+    $('.panel-collapse').on('shown.bs.collapse', function (e) {
+      var $panel = $(this).closest('.panel');
+      $('html,body').animate({
+          scrollTop: $panel.offset().top
+      }, 500);
+    });
+  </script>
+</body>
+</html>

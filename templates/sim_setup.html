@@ -1,0 +1,336 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="panel-group" id="accordion">
+  <!-- Introduction Panel -->
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          Instructions
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+      <div class="panel-body">
+        <p>
+            Setup your simulation here with graph interaction and parameter selection. Once you finalize your simulation setup, you can launch the simulation or download the core parameters. The complexity of your simulation determines how long the computation would take. The results can optionally be rendered under the "Simulation Result" tab.
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- Gene Ontology Setup Panel -->
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel"
+           data-toggle="collapse"
+           data-parent="#accordion"
+           href="#collapseThree">
+          Gene Ontology Navigation
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse">
+      <div class="panel-body">
+        {% include "go_interaction.html" %}
+        <hr>
+        <div class="go_panel">
+          <!--go term seleciton line -->
+          <div class="info-line go-sel-for-gene-block">
+            <div class="autocomplete-search-block">
+              <div class="label-block">
+                <label> GO Selection </label>
+                <a data-toggle="tooltip"
+                   data-placement="right"
+                   title="Select individual genes anchors by auto search or generate random genes">
+                  <span class="glyphicon glyphicon-question-sign"></span>
+                </a>
+              </div>
+              <div class="tagit-block">
+                <input name="tags"
+                       id="go_select_tag_it"
+                       value="">
+              </div>
+            </div>
+            <button type="button"
+                    class="btn btn-sm btn-success icon-btn-right"
+                    id="go_selection_reset_button">
+             <span class="glyphicon glyphicon-remove"></span>
+            </button>
+            <button type="button"
+                    class="btn btn-sm btn-success icon-btn-right"
+                    id="go_copy">
+             <span class="glyphicon glyphicon-duplicate"></span>
+            </button>
+          </div>
+          <!--gene sampling line-->
+          <div class="info-line gene-sel-block">
+            <div class="options-block">
+              <div class="label-block">
+                <label> Sampling </label>
+                <a data-toggle="tooltip"
+                   data-placement="right"
+                   title="Select individual genes anchors by auto search or generate random genes">
+                  <span class="glyphicon glyphicon-question-sign"></span>
+                </a>
+              </div>
+              <span>&#124;</span>
+              &nbsp;
+
+              <div class="general-options">
+                Draw number of genes &nbsp;
+                <input id="spinner_num_genes"
+                       name="value"
+                       class="jquery_ui_spinner small_inline"
+                       value="1">
+                <button type="button"
+                        class="btn btn-sm btn-success inline-btn"
+                        id="add_random_num_genes">
+                 <span class="glyphicon glyphicon-plus"></span>
+              </div>
+              &nbsp;
+              <span>&#124;</span>
+              &nbsp;
+              <div class="general-options">
+                Draw proportion of genes &nbsp;
+                <input id="spinner_prop_genes"
+                       name="value"
+                       class="jquery_ui_spinner small_inline"
+                       value="100">
+                <button type="button"
+                        class="btn btn-sm btn-success inline-btn"
+                        id="add_random_prop_genes">
+                 <span class="glyphicon glyphicon-plus"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!--gene seleciton line -->
+          <div class="info-line gene-sel-block">
+            <div class="autocomplete-search-block">
+              <div class="label-block">
+                <label> Gene Selection </label>
+                <a data-toggle="tooltip"
+                   data-placement="right"
+                   title="Select individual genes anchors by auto search or generate random genes">
+                  <span class="glyphicon glyphicon-question-sign"></span>
+                </a>
+              </div>
+              <div class="tagit-block">
+                <input name="tags"
+                       id="go_gene_tag_it"
+                       value="">
+              </div>
+            </div>
+            <button type="button"
+                    class="btn btn-sm btn-success icon-btn-right"
+                    id="gene_reset_button">
+             <span class="glyphicon glyphicon-remove"></span>
+            </button>
+            <button type="button"
+                    class="btn btn-sm btn-success icon-btn-right"
+                    id="gene_copy">
+             <span class="glyphicon glyphicon-duplicate"></span>
+            </button>
+          </div>
+          <!-- function from samples
+            <a class="btn icon-btn icon-btn-right btn-primary"  onclick="add_random_genes()">
+              <span class="glyphicon btn-glyphicon glyphicon-plus img-circle text-success"></span>
+              Add
+            </a>
+            <a class="btn icon-btn icon-btn-right btn-primary"  onclick="add_random_anchor_genes()">
+              <span class="glyphicon btn-glyphicon glyphicon-plus img-circle text-success"></span>
+              Add
+            </a>
+          -->
+        </div>
+       <!--  <hr>
+        <div class="go_panel">
+          <div class="info-line">
+            <div class="options-block">
+              <div class="label-block">
+                <label> Context for Testing </label>
+              </div>
+              <span>&#124;</span>
+              &nbsp;
+              <div class="general-options">
+                Use refinement
+                &nbsp;
+                <input id="stat_check_refine_context"
+                       name="stat_check_refine_context"
+                       type="checkbox"
+                       checked/>
+                <label for="stat_check_refine_context" class="label-primary"></label>
+              </div>
+              &nbsp;
+              <span>&#124;</span>
+              &nbsp;
+              <div class="general-options">
+                Use node size from above
+                &nbsp;
+                <input id="stat_limit_node_size"
+                       name="stat_limit_node_size"
+                       type="checkbox"
+                       checked/>
+                <label for="stat_limit_node_size" class="label-primary"></label>
+              </div>
+              &nbsp;
+              <span>&#124;</span>
+              &nbsp;
+              <div class="general-options">
+                Use full ontology
+                &nbsp;
+                <input id="stat_use_full_ontology"
+                       name="stat_use_full_ontology"
+                       type="checkbox"
+                       checked/>
+                <label for="stat_use_full_ontology" class="label-primary"></label>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Additional Parameter Setup Panel -->
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+          Other Parameters
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse">
+      <div class="panel-body">
+        <form>
+          <div class="form-group row">
+            <label for="spinner_min_nsamples" class="col-sm-5 col-form-label">
+              Minimum of samples per case / control
+            </label>
+            <div class="col-sm-3">
+              <input id="spinner_nsamples" name="value" class="jquery_ui_spinner" value="10">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="spinner_max_nsamples" class="col-sm-5 col-form-label">
+              Maximum of samples per case / control
+            </label>
+            <div class="col-sm-3">
+              <input id="spinner_nsamples" name="value" class="jquery_ui_spinner" value="100">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="spinner_ncases" class="col-sm-5 col-form-label">
+              Number of linearly-spaced sample size regimes
+            </label>
+            <div class="col-sm-3">
+              <input id="spinner_ncases" name="value" class="jquery_ui_spinner" value="5">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="spinner_ntrials" class="col-sm-5 col-form-label">
+              Number of repetitions per regime
+            </label>
+            <div class="col-sm-3">
+              <input id="spinner_ntrials" name="value" class="jquery_ui_spinner"  value="10">
+            </div>
+          </div>
+           <div class="form-group row">
+            <label for="spinner_maxsize" class="col-sm-5 col-form-label">
+              Gene effect size / signal strength
+            </label>
+            <div class="col-sm-3">
+              <input id="spinner_maxsize" name="value" class="jquery_ui_spinner" value="0.50">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-5">
+              Competitive test for each GO term
+            </label>
+            <div class="col-sm-5">
+              <select class="form-control" id="co_test">
+                <option>Hypergeometric</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-5">
+              Self-contained test for each GO term
+            </label>
+            <div class="col-sm-5">
+              <select class="form-control" id="sc_test">
+                <option>Simes' (Composite)</option>
+                <option>Bonferroni (Composite)</option>
+                <option>Fisher's Combination (Composite)</option>
+                <option>Mann-Whitney (ANOVA)</option>
+                <option>Kruskal-Wallis (ANOVA)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-5">
+              Multiple-testing adjustment procedures
+            </label>
+            <div class="col-sm-5">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="testBonf" checked disabled>
+                <label class="form-check-label" for="testBonf">
+                  Bonferroni
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="testBonf" checked disabled>
+                <label class="form-check-label" for="testH">
+                  Benjamini Hochberg
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  <!-- Final Review and Launch Panel -->
+  <div class="panel panel">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+        Review and Launch
+      </a>
+    </h4>
+  </div>
+  <div id="collapseFour" class="panel-collapse collapse">
+    <div class="panel-body">
+      <div>
+      </div>
+      <div>
+        <button onclick="submitSim()" class="btn btn-primary">
+          Launch Simulation
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- Progress Dialog -->
+<div id="progress_dialog" title="Simulation Progress" style="display: none">
+  <div class="progress" style="width: 90%; margin: 20px;">
+    <div class="progress-bar progress-bar-striped active"
+         role="progressbar"
+         aria-valuenow="0"
+         aria-valuemin="0"
+         aria-valuemax="100"
+         style="width: 0%">
+      <span class="progress-bar-label">0%</span>
+    </div>
+  </div>
+  <div class=widget style="text-align: center;">
+    <button onclick="cancelSimFunc()">Cancel</button>
+  </div>
+</div>
+
+<div class="hidden-textbox" style="display: show">
+  <textarea id="hidden_copy_text"></textarea>
+</div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/sim_setup.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="panel-group about-page" id="accordion">
+  <!-- About AEGIS -->
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          About AEGIS
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+      <div class="panel-body">
+        <p class="about-text">
+          AEGIS is an open-source software with an interactive information-retrieval framework that enables an investigator to navigate through the entire Gene Ontology (GO) graph (with tens of thousands of nodes) and focus on fine-grained details without losing the context. It features interpretable visualization of GO terms reported from studies, flexible exploratory analysis of the GO DAG, as well as principled power analysis that is biologically relevant.
+        </p>
+        <p>
+          AEGIS is developed and maintained by
+          <a href="http://jasonjunjiezhu.com/">Junjie (Jason) Zhu</a> in the
+          <a href="http://statweb.stanford.edu/~sabatti/">Sabatti Lab</a> at
+          <a href="https://www.stanford.edu/">Stanford University</a>.
+          <a href="https://stanfordwho.stanford.edu/SWApp/detailAction.do?key=DR337X062%20%20%20%20%20%20%20&search=Zhao&soundex=&stanfordonly=&affilfilter=everyone&filters=">Qian Zhao</a> and
+          <a href="http://web.stanford.edu/~ekatsevi/">Eugene Katsevich</a> have also contributed to the development. Our full manuscript is under preparation.
+        </p>
+        <div class="story_figure">
+          <img src="{{ url_for('static', filename='img/aegis_painting.jpg')}}"
+               id="story_painting">
+          <p></p>
+          <p>
+          <b>Minerve remettant à Persée son bouclier avec lequel il doit combattre La Méduse </b>
+          <br />
+          by Houasse René Antoine
+          </p>
+          <p>
+          <i> The modern concept of doing something "under someone's aegis"
+              means doing something under the protection of a powerful,
+              knowledgeable, or benevolent source.
+          </i>
+          </p>
+          <p>
+          (
+          <a href="https://en.wikipedia.org/wiki/Aegis">Wikipedia</a>,
+          <a href="http://greekmythology.wikia.com/wiki/Aegis">Greek Mythology</a>,
+           <a href="https://en.muzeo.com/art-print/minerve-remettant-a-persee-son-bouclier-avec-lequel-il-doit-combattre-la-meduse/houasse">Image Source</a>
+          )
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Gene Ontology Background -->
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+          Gene Ontology Background
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse">
+      <div class="panel-body">
+        <p>
+          The Gene Ontology (GO) is one of the most popular biological databases. It consists of two continuously evolving elements: (1) a collection of controlled biological terms with semantic hierarchical relationships and (2) annotations that link genes and gene products to specific terms.
+        </p>
+        <div class="story_figure go_figure">
+          <img src="{{ url_for('static', filename='img/go_overview.png')}}"
+               id="story_painting">
+        </div>
+        <p>
+           The GO can be represented as a graph where each node represents a GO term, and each directed link pointing from a parent to a child represents the semantic relationship with two terms. The child term can be related to the parent term via an “is a”, “part of” or “regulates” relation. There are three root nodes: “biological process”, “molecular function” and “cellular component”, and each of their descendants are connected with directed edges in an acyclic fashion. Genes can be simultaneously annotated to different terms, and their annotations propagate upwards in the hierarchy, resulting in the gene sets in the nodes.
+        </p>
+
+        <p>
+          For more detailed information about the GO, please visit:
+          <a href="http://geneontology.org/page/introduction-go-resource">
+            the GO Consortium
+          </a>
+          and
+          <a href="http://gohandbook.org/doku.php">the GO Handbook</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- Visualization Framework -->
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+          Visualization Framework
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse">
+      <div class="panel-body">
+        <h5>Focus and Context Graphs and their Representations</h5>
+        <p>
+          We introduce the concept of a context graph and a focus graph. The context graph (highlighted with red nodes below) is sub-DAG of the full DAG, based on context anchors (with pink borders). The focus graph (highlighted with blue nodes below) is a sub-DAG of the context graph. It is similarly selected based on focus anchors (with aqua borders). The context and focus anchors can be of types: waypoint, root or leaf.
+        </p>
+        <p>
+          For our visualization, the context graph is represented via a silhouette view, only indicating the number of nodes in each level. The focus graph is represented as a bone fide graph with detailed links and nodes. One example of how to change the focus graph is to draw undisplayed nodes from the context (with the “add” symbols marked in purple) as new focus anchors to create a new induced focus graph. Additional interactions to update the focus graph are detailed in the visualization interface and in our video demos
+          <a>here</a>.
+        </p>
+        <div class="story_figure cf_figure">
+          <img src="{{ url_for('static', filename='img/suppfig_allfocuscontext.png')}}"
+               id="story_painting">
+        </div>
+
+        <h5>Buoyant Layout vs. Root-bound Layout for the Focus Graph</h5>
+        <p>The root-bound layout places each node at levels based on their longest distance to the root, preserving a topological constraint where each parent node is higher than its children. The buoyant layout preserves not only the topological constraint, but also factors in the gene annotations, such that a node with fewer annotated genes is placed no higher than that with more genes. The buoyant layout is powered by our bubble-float algorithm.
+        <div class="story_figure go_figure">
+          <img src="{{ url_for('static', filename='img/rootbound_vs_buoyant.png')}}"
+               id="story_painting">
+        </div>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+          Video Tutorials
+        </a>
+      </h4>
+    </div>
+    <div id="collapseFour" class="panel-collapse collapse">
+      <div class="panel-body">
+          <!-- <h4>Introduction to Focus and Context Graphs</h4> -->
+          <div class="youtube">
+            <iframe width="700" height="502" src="https://www.youtube.com/embed/OPfclFhAB_M" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+          <hr/>
+          <!-- <h4>Overview of the Graph Layout</h4> -->
+          <div class="youtube">
+            <iframe width="700" height="502" src="https://www.youtube.com/embed/1HhtM1UtRoY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+          <hr/>
+          <!-- <h4>Interactions to Explore the GO</h4> -->
+          <div class="youtube">
+            <iframe width="700" height="502" src="https://www.youtube.com/embed/_PUrXKUQzHs"frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+      </div>
+    </div>
+  </div>
+  <!-- Installation and Usage -->
+  <!--
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseFive">
+          Installation and Usage
+        </a>
+      </h4>
+    </div>
+    <div id="collapseFive" class="panel-collapse collapse">
+      <div class="panel-body">
+      </div>
+    </div>
+  </div>
+  -->
+</div>
+<script type="text/javascript">
+  // d3.select("#about_tab")
+  //   .attr("class", "active")
+  //   ;
+</script>
+{% endblock %}

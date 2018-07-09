@@ -1,0 +1,198 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="panel-group" id="accordion">
+  <!-- Introduction Panel -->
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          Data Summary
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+      <div class="panel-body">
+        <p>
+        </p>
+        <form>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">
+              Data Name:
+            </label>
+            <div class="col-sm-9">
+              <textarea class="summary_lite" id="dat_name" type="text" value="" readonly></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">
+              Ontology:
+            </label>
+            <div class="col-sm-9">
+              <textarea class="summary_lite" id="ont_name" type="text" value="" readonly></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">
+              Species:
+            </label>
+            <div class="col-sm-9">
+              <textarea class="summary_lite" id="spe_name" type="text" value="" readonly></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">
+              Context Anchor Type:
+            </label>
+            <div class="col-sm-9">
+              <textarea class="summary_lite" id="anc_type" type="text" value="" readonly></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label id="anc_list_lab" class="col-sm-3 col-form-label">
+              Context Anchors:
+            </label>
+            <div class="col-sm-9">
+              <textarea class="summary_lite text_long" id="anc_list" type="text" value="" readonly></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Gene Ontology Setup Panel -->
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel"
+           data-toggle="collapse"
+           data-parent="#accordion"
+           href="#collapseThree">
+          Gene Ontology Navigation
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse">
+      <div class="panel-body">
+        {% include "go_interaction.html" %}
+        <hr>
+        <div class="go_panel">
+          <!--go term seleciton line -->
+          <div class="info-line go-sel-for-gene-block">
+            <div class="autocomplete-search-block">
+              <div class="label-block">
+                <label> GO Selection </label>
+                <a data-toggle="tooltip"
+                   data-placement="right"
+                   title="Select individual genes anchors by auto search or generate random genes">
+                  <span class="glyphicon glyphicon-question-sign"></span>
+                </a>
+              </div>
+              <div class="tagit-block">
+                <input name="tags"
+                       id="go_select_tag_it"
+                       value="">
+              </div>
+            </div>
+            <button type="button"
+                    class="btn btn-sm btn-success icon-btn-right"
+                    id="go_selection_reset_button">
+             <span class="glyphicon glyphicon-remove"></span>
+            </button>
+            <button type="button"
+                    class="btn btn-sm btn-success icon-btn-right"
+                    id="go_copy">
+             <span class="glyphicon glyphicon-duplicate"></span>
+            </button>
+          </div>
+          <!--gene sampling line-->
+          <div class="info-line gene-sel-block">
+            <div class="options-block">
+              <div class="label-block">
+                <label> Sampling </label>
+                <a data-toggle="tooltip"
+                   data-placement="right"
+                   title="Select individual genes anchors by auto search or generate random genes">
+                  <span class="glyphicon glyphicon-question-sign"></span>
+                </a>
+              </div>
+              <span>&#124;</span>
+              &nbsp;
+
+              <div class="general-options">
+                Draw number of genes &nbsp;
+                <input id="spinner_num_genes"
+                       name="value"
+                       class="jquery_ui_spinner small_inline"
+                       value="1">
+                <button type="button"
+                        class="btn btn-sm btn-success inline-btn"
+                        id="add_random_num_genes">
+                 <span class="glyphicon glyphicon-plus"></span>
+              </div>
+              &nbsp;
+              <span>&#124;</span>
+              &nbsp;
+              <div class="general-options">
+                Draw proportion of genes &nbsp;
+                <input id="spinner_prop_genes"
+                       name="value"
+                       class="jquery_ui_spinner small_inline"
+                       value="100">
+                <button type="button"
+                        class="btn btn-sm btn-success inline-btn"
+                        id="add_random_prop_genes">
+                 <span class="glyphicon glyphicon-plus"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!--gene seleciton line -->
+          <div class="info-line gene-sel-block">
+            <div class="autocomplete-search-block">
+              <div class="label-block">
+                <label> Gene Selection </label>
+                <a data-toggle="tooltip"
+                   data-placement="right"
+                   title="Select individual genes anchors by auto search or generate random genes">
+                  <span class="glyphicon glyphicon-question-sign"></span>
+                </a>
+              </div>
+              <div class="tagit-block">
+                <input name="tags"
+                       id="go_gene_tag_it"
+                       value="">
+              </div>
+            </div>
+            <button type="button"
+                    class="btn btn-sm btn-success icon-btn-right"
+                    id="gene_reset_button">
+             <span class="glyphicon glyphicon-remove"></span>
+            </button>
+            <button type="button"
+                    class="btn btn-sm btn-success icon-btn-right"
+                    id="gene_copy">
+             <span class="glyphicon glyphicon-duplicate"></span>
+            </button>
+          </div>
+          <!-- function from samples
+            <a class="btn icon-btn icon-btn-right btn-primary"  onclick="add_random_genes()">
+              <span class="glyphicon btn-glyphicon glyphicon-plus img-circle text-success"></span>
+              Add
+            </a>
+            <a class="btn icon-btn icon-btn-right btn-primary"  onclick="add_random_anchor_genes()">
+              <span class="glyphicon btn-glyphicon glyphicon-plus img-circle text-success"></span>
+              Add
+            </a>
+          -->
+        </div>
+      </div>
+    </div>
+  </div>
+ </div>
+
+<div class="hidden-textbox" style="display: show">
+  <textarea id="hidden_copy_text"></textarea>
+</div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/lite.js') }}"></script>
+{% endblock %}

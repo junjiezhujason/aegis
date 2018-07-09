@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="panel-group" id="accordion">
+  <!-- Gene Ontology Setup Panel -->
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel"
+           data-toggle="collapse"
+           data-parent="#accordion"
+           href="#vizOptions">
+           Instrucitons
+        </a>
+      </h4>
+    </div>
+    <div id="vizOptions" class="panel-collapse collapse">
+      <div class="panel-body">
+        <p>
+            Upload data or try examples here
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- Additional Parameter Setup Panel -->
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel"
+           data-toggle="collapse"
+           data-parent="#accordion"
+           href="#vizDynamic">
+           Gene Ontology Navigation
+        </a>
+      </h4>
+    </div>
+    <div id="vizDynamic" class="panel-collapse collapse">
+      <div class="panel-body">
+        <div class="go_panel">
+          <!-- data options line -->
+          <div  class="info-line data-driven-line">
+            <div class="options-block">
+              <div class="label-block">
+                <label> Optional Data </label>
+                <a data-toggle="tooltip"
+                   data-placement="right"
+                   title="">
+                  <span class="glyphicon glyphicon-question-sign"></span>
+                </a>
+              </div>
+
+              <div class="general-options">
+                <form id="upload-file"
+                      method="post"
+                      enctype="multipart/form-data">
+                  <fieldset>
+                      <input name="file"
+                             id="input_file_upload"
+                             type="file">
+                  </fieldset>
+                </form>
+              </div>
+
+              &nbsp;
+              <span>&#124;</span>
+              &nbsp;
+              <div class="general-options">
+                Query &nbsp;
+                <div class="select-control">
+                  <select class="form-control"
+                          id="query_data_type">
+                    <option value="none">None </option>
+                    <option value="upload">Upload </option>
+                    <option value="example1">Example 1</option>
+                    <option value="example2">Example 2</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <button type="button"
+                    class="btn btn-primary btn-sm icon-btn-right"
+                    id="go_use_data_query_button">
+                <span class="glyphicon glyphicon-refresh"> </span>
+            </button>
+          </div>
+        </div>
+        <hr>
+        {% include "go_interaction.html" %}
+      </div>
+    </div>
+  </div>
+  <!-- Final Review and Launch Panel -->
+  <div class="panel panel">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a class="colpsible-panel"
+         data-toggle="collapse"
+         data-parent="#accordion"
+         href="#vizDownload">
+         Data Download
+      </a>
+    </h4>
+  </div>
+  <div id="vizDownload" class="panel-collapse collapse">
+    <div class="panel-body">
+      <div>
+        {% include "ss_manhattan.html" %}
+      </div>
+      <div>
+        <button id='export_as_png'>Export Figure as PNG</button>
+        <button id='export_as_svg'>Export Figure as SVG</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal" id="ajax_modal"><!-- Place at bottom of page --></div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='lib/bootstrap-filestyle/bootstrap-filestyle.min.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/d3-save-svg.min.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/FileSaver.min.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/canvas-toBlob.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/d3_save_utils.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/view_go.js') }}"></script>
+
+{% endblock %}
