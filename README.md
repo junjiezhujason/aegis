@@ -3,12 +3,14 @@
 
 ## Installation
 
-Important Requirement: Python3 (e.g., see http://docs.python-guide.org/en/latest/) 
+*Important Requirement*: Python3 (and virtual environment recommended)
 
-Recommended for package management: virtualenv or virtualenvwrapper
+See the following links for more information:
 
+    http://docs.python-guide.org/en/latest/
+    https://virtualenv.pypa.io/en/stable/
 
-To install dependencies, use:
+To install dependencies, simply use:
 
     pip3 install -r requirements.txt
 
