@@ -107,6 +107,9 @@ def create_lite_dag_dict():
     DAG_DICT = {}
     cache_dir = os.path.join(MAIN_FOLDER, "local")
     upload_dir = os.path.join(MAIN_FOLDER, "tmp")
+    assert os.path.exists(cache_dir), "local path does not exist"
+    assert os.path.exists(upload_dir), "upload path does not exist"
+
     lite_list = get_lite_sublist()
     for item in lite_list:
         dag = GODAGraph(cache_dir,
@@ -213,7 +216,8 @@ def request_general_and_context_info():
 def dag_setup_ontology():
     assert MAIN_FOLDER, "a local cache folder needs to be specified"
     cache_dir = os.path.join(MAIN_FOLDER, "local")
-    assert os.path.exists(cache_dir), "{} does not exist".format(cache_dir)
+    if not os.path.exists(cache_dir):
+        os.makedirs(cache_dir)
 
     params = flask.request.get_json()["params"]
     print(params)
