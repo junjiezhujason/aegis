@@ -39,8 +39,10 @@ files of the following form
 
     ${LOCALPATH}/local/godag_*.pkl
 
-The current version only supports human and mouse annotations. 
-However, the source code can be easily be  modified to include other species.
+Because the current software includes these light-weight pickle objects
+that is automatically pre-loaded from the cache.  
+Once the cache is stored once, most features can be performed locally
+without internet connection for ontology or data download.
 
 ### Launching the local server
 
@@ -61,19 +63,15 @@ inside the local directory:
     ${LOCALPATH}/local/geneid2sym_human.json
     ${LOCALPATH}/local/geneid2sym_mouse.json
 
-This will also generate the cached files 
+and later, the program will also generate the cached files 
 
     ${LOCALPATH}/local/godag_*.pkl
 
-and by default will be read for this version unless other versions are requested.
-Because the current software includes these light-weight pickle objects
-that is automatically pre-loaded from the cache.  
-Once the cache is stored once, most features can be performed locally
-without internet connection for ontology or data download.
+By default, AEGIS  will continue this version if the same ${LOCALPATH} is 
+specified. To update the version, simply create a new local path to repeat
+the analysis above. 
 
 Finally, open your local browser with
 
     http://localhost:5000/
-
-
 
