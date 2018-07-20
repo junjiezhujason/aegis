@@ -267,6 +267,7 @@ def dag_setup_focus():
     query_list = flask.request.get_json()['req_go_names']
     params = flask.request.get_json()['params']
 
+    # whether to used pre-saved dag or the exisiting (modified) dag
     access = params['access_dag']
     if access:
         exp_dag = DAG_DICT[access]["dag"]

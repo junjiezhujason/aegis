@@ -878,37 +878,6 @@ class OrderedContext():
         logger.debug("Focus level min index: {}".format(start_indices))
         logger.debug("Level breaks: {}".format(level_breaks))
 
-        # If there are duplicate level breaks, then we should handle here
-        ## TODO: there is an issue with the binary search when duplicates exist
-        #  def find_uniq_in_sort(arr):
-        #      # assuming this list is sorted in descending order,
-        #      # we want to keep the last occurance of duplicates
-        #      unique_val = []
-        #      unique_idx = []
-        #      for idx in range(len(arr)):
-        #          val = arr[idx]
-        #          if idx < (len(arr) - 1):
-        #              next_val = arr[idx+1]
-        #              if val == next_val:
-        #                  continue
-        #          unique_val.append(val)
-        #          unique_idx.append(idx)
-        #      return unique_val, unique_idx
-
-        #  uniq_val, uniq_idx = find_uniq_in_sort(level_breaks)
-        #  # find the start indices in each layer
-        #  # start_indices = self.boundary_histogram_search(level_breaks)
-        #  uniq_start_indices = self.boundary_histogram_search(uniq_val)
-        #  for i, lev_idx in enumerate(uniq_idx):
-        #      start_indices[lev_idx] = uniq_start_indices[i]
-        #  logger.info("Context level min index: {}".format(start_indices))
-
-        # naive solution
-        # iterate through each node in order and determine the largest
-        # node index in each interval if there are ties, then we should
-        # use the focus node breaks to fix the problem
-
-        # assert 0, "STOP"
         # count the number of nodes in each layer
         level_summary = [0] * n_levels
         for i, end_lev_index in enumerate(start_indices):
@@ -918,11 +887,6 @@ class OrderedContext():
                 level_summary[i] = end_lev_index - start_indices[i - 1]
         assert sum(level_summary) == len(cntx), "level sum error"
         logger.debug("Context level counts: {}".format(level_summary))
-
-        # DONE: speed up! using option 3 now so no need for level nodes
-        # option 1 (time intensive): iteratve through each node in context
-        # option 2 (space intensive): directly use the hash-map of n_genes -> [n_terms_(in_context) with less than n_genes]
-        # option 3 (bug prone :( ) : use binary interval search for histogram binning
 
         return {"level_counts": level_summary,
                 "level_starts": start_indices,
@@ -1040,10 +1004,8 @@ class GOStat():
         self.go_gene_map = [sorted(list(go_gene_map[n.name])) for n in nodes]
         logger.info("Stat go->gene: {}".format(len(self.go_gene_map)))
         # ------------------------------
-        # TODO: remove these perhaps
-        # self.gene_go_map = gene_go_map # use all genes as measure
-
         self.gene_go_map = self.reverse_list_to_dict(self.go_gene_map)
+
         # TODO: make below more efficient if needed
         logger.info("Stat gene->go: {}".format(len(self.gene_go_map)))
         self.gene_id_sym_map = {g : conv_map[str(g)] for g in self.gene_go_map}
@@ -2025,36 +1987,6 @@ class GODAGraph(DAGraph):
                 "min_w" : 1,
                 "max_w" : len(self.gene_go_map)}
 
-
-    def output_context_summary(self, slow_reachability=False):
-        out_dict = {}
-        for cntx_n in self.context_map:
-            logger.info("Writing output context for {} ({} nodes) "
-                .format(cntx_n, len(self.context_map[cntx_n])))
-            out_dict[cntx_n] = {}
-            cntx_o = out_dict[cntx_n]
-            context = self.context_map[cntx_n]
-            node_ids = sorted(context.keys())
-            cntx_o["id"] = node_ids
-            for rel in ["parents", "children"]:
-                attr = "num_" + rel
-                cntx_o[attr] =[len(getattr(context[i], rel)) for i in node_ids]
-                if slow_reachability:
-                    if rel == "parents":
-                        attr = "num_ancestors"
-                    if rel == "children":
-                        attr = "num_descendents"
-                    num_nodes = []
-                    for node_i in node_ids:
-                        rn = self.relation_search([node_i], rel, restrict_set=context)
-                        num_nodes.append(len(rn) - 1)
-                        if len(num_nodes) % 5000 == 0:
-                            logger.info("Parsed {} nodes".format(len(num_nodes)))
-                    cntx_o[attr] = num_nodes
-            for view in ["depth", "height", "weight"]:
-                cntx_o[view] = [getattr(context[i], view) for i in node_ids]
-        return out_dict
-
     def output_non_null_go_terms(self, gene_symb_list):
         stat = self.main_statistician
         g_list = stat.convert_gene_from_to("sym", "id", gene_symb_list)
@@ -2498,8 +2430,8 @@ class GODAGraph(DAGraph):
         flex_out = ordered_context.bouyant_context_layout(fnode_set)
         for level_info in ["level_counts", "level_breaks", "level_starts"]:
             context_meta[level_info] = {}
-            context_meta[level_info] = {}
             context_meta[level_info]["flex"] = flex_out[level_info]
+
         # sort the index map based on the context ids
         # map from the node ids to the focus node ids
         # the context node ids are techinically supposed to sort how the
@@ -2508,6 +2440,36 @@ class GODAGraph(DAGraph):
         sorted_nodes = ordered_context.sorted_nodes
         cntx_ids = sorted([cntx_id_map[nid] for nid in fnode_set])
         idx_map = { sorted_nodes[cid].id : i for i, cid in enumerate(cntx_ids)}
+
+        # get all focus node relatives and count how many nodes there are
+        subg = set() # the set of *ids* that are relatives of the focus
+        for relation in ["children", "parents"]:
+            subg = subg | set(self.relation_search(context_query, relation,
+                                                   node_map=context_map))
+        # we want to make sure we are counting among the *cids*
+        lev_cnt_rel = {}
+        for view in ["depth", "height", "flex"]:
+            if view == "flex":
+                n_levs = len(context_meta["level_counts"]["flex"])
+            else:
+                n_levs = len(ordered_context.fixed_level_nodes[view])
+            lev_cnt_rel[view] = []
+            for i_lev in range(n_levs):
+                lev_cnt_rel[view].append([])
+        for nid in subg:
+            # get the depth, height and flex level index of this node
+            cid = cntx_id_map[nid]
+            node = sorted_nodes[cid]
+            for view in ["depth", "height"]:
+                lev = getattr(node, view)
+                lev_cnt_rel[view][lev].append(cid)
+            # handle the buoyant search here
+            for i, start in enumerate(context_meta["level_starts"]["flex"]):
+                lev = i
+                if cid <= start:
+                    break
+            lev_cnt_rel["flex"][lev].append(cid)
+        context_meta["level_counts_focus_relatives"] = lev_cnt_rel
 
         focus_graph = self.prepare_focus_graph_output(context_query,
                                                       fnode_set,

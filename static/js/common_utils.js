@@ -60,42 +60,46 @@ function get_candidate_nodes_per_level(graph_data, main_config) {
   // highlighted nodes can be considered as candiates
 
   if (htype in main_config.context_highlights) {
-    let node_data = graph_data.context_info.graph.node_data;
-    let highlight_list;
-    // 1. get the list of nodes ot be highlighed
-    if (htype in {"self_nonnull":null, "comp_nonnull":null}) {
-      highlight_list = full_data.ground_truth_info[htype];
-    }
-    if (htype =="query_data" ) {
-      nid_map = full_data.context_data.name_id_map;
-      highlight_list = [];
-      for (let name in full_data.general_data.query_data){
-        highlight_list.push(nid_map[name]);
+    if (htype == "focus_relatives") {
+      level_nodes = graph_data.context_info.meta.level_counts_focus_relatives[view];
+    } else {
+      let node_data = graph_data.context_info.graph.node_data;
+      let highlight_list;
+      // 1. get the list of nodes ot be highlighed
+      if (htype in {"self_nonnull":null, "comp_nonnull":null}) {
+        highlight_list = full_data.ground_truth_info[htype];
       }
-    }
-    // 2. if the view is depth of height, then push the nodes to list
-    if (view == "depth" || view == "height") {
-      highlight_list.forEach( (d) => {
-        let level = node_data[d][view];
-        level_nodes[level].push(d);
-      });
-    }
-    if (view == "flex") {
-      let lev_idx = graph_data.context_info.meta.level_starts.flex;
-      // TODO: one could speed up
-      for (let i = 0; i < lev_idx.length; i ++ ) {
-        let min_val, max_val;
-        if ( i == 0 ) {
-          min_val = 0;
-        } else {
-          min_val = lev_idx[i-1] + 1;
+      if (htype =="query_data" ) {
+        nid_map = full_data.context_data.name_id_map;
+        highlight_list = [];
+        for (let name in full_data.general_data.query_data){
+          highlight_list.push(nid_map[name]);
         }
-        max_val = lev_idx[i];
+      }
+      // 2. if the view is depth of height, then push the nodes to list
+      if (view == "depth" || view == "height") {
         highlight_list.forEach( (d) => {
-          if ( (d >= min_val) & (d <= max_val)) {
-            level_nodes[i].push(d);
-          }
+          let level = node_data[d][view];
+          level_nodes[level].push(d);
         });
+      }
+      if (view == "flex") {
+        let lev_idx = graph_data.context_info.meta.level_starts.flex;
+        // TODO: one could speed up
+        for (let i = 0; i < lev_idx.length; i ++ ) {
+          let min_val, max_val;
+          if ( i == 0 ) {
+            min_val = 0;
+          } else {
+            min_val = lev_idx[i-1] + 1;
+          }
+          max_val = lev_idx[i];
+          highlight_list.forEach( (d) => {
+            if ( (d >= min_val) & (d <= max_val)) {
+              level_nodes[i].push(d);
+            }
+          });
+        }
       }
     }
   }

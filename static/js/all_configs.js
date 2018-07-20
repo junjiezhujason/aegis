@@ -211,6 +211,7 @@ let general_config = {
     "self_nonnull": "",
     "comp_nonnull": "",
     "query_data": "",
+    "focus_relatives": "",
   },
   // "mode": {
   //   "initial": null,
