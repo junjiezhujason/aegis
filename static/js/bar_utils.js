@@ -177,30 +177,6 @@ function update_context_display(bar_data, main_config){
       .attr("visibility", "visble")
       ;
   }
-  // debugger;
-  // TODO remove below
-  // if (curr_highlight in main_config.bar.hide_triangle) {
-  //   // cases not to show the two tick marks
-  //   // console.log("Hidding extra info.")
-  //   [secondary_svg_g].forEach(function(svg_g){
-  //     d3.select(container)
-  //       .select(svg_g)
-  //       .attr("visibility", "hidden");
-  //   });
-  //   bar_width_prop = main_config.bar.width_wide_prop;
-
-  //   // hide the legend
-  //   // hide the triangles
-  //   // hide the triangle annotations
-
-  // } else {
-  //   // show everything
-  //   secondary_svg_g.forEach(function(svg_g){
-  //     d3.select(container)
-  //       .select(svg_g)
-  //       .attr("visibility", "visble");
-  //   });
-  // }
 
   // determine drawing of bars and their specifics
   d3.select(container)
@@ -344,23 +320,35 @@ function update_context_display(bar_data, main_config){
           ;
       }
       if (group == "rec_text") {
-        update_enter[mode]
+        let text_node = update_enter[mode]
           .attr("x", d => (main_config.bar.text_dist + x_scale(d.high_val)))
           .attr("y", d => y_scale(d.level))
-          // .attr("fill", d => main_config.colors[d.grp_name] )
           .style("display", function(d) { // only show the last bar
             return d.grp_id == (bar_names.length-1) ? "block" : "none";
           })
-          .text(function(d) {
+          ;
+        let tspan1, tspan2;
+        if (mode == "enter") {
+          tspan1 = text_node.append('tspan').attr("class", "btspan_primary");
+          tspan2 = text_node.append('tspan').attr("class", "btspan_secondary");
+        } else {
+          tspan1 = text_node.select(".btspan_primary");
+          tspan2 = text_node.select(".btspan_secondary");
+        }
+        tspan1.text(d => d.high_val)
+          ;
+        tspan2.style("fill", main_config.colors.highlights[curr_highlight])
+          .text(d => {
             let num_nodes = bar_data.curr_lev_nodes[d.level].length;
             if ((curr_highlight in main_config.context_highlights) &
                 (num_nodes > 0))
             {
-              return d.high_val + " (" + num_nodes + ")";
+              return " [" + num_nodes + "]";
             } else {
-              return d.high_val;
+              return "";
             }
           })
+
           ;
       }
       if (group == "tri_data") {
