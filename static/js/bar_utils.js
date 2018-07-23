@@ -41,6 +41,9 @@ function bar_mode_select(graph_data, main_config) {
     case "query_data":
       return(["nodes in query data (" + num_nodes + ")",
               "other nodes in the context (" + num_other_nodes + ")"]);
+    case "focus_relatives":
+      return(["directly related to query terms (" + num_nodes + ")",
+              "other terms (" + num_other_nodes + ")"]);
     case "self_nonnull":
       return(["self-contained non-null (" + num_nodes + ")",
               "self-contained null (" + num_other_nodes + ")"]);
@@ -243,6 +246,7 @@ function update_context_display(bar_data, main_config){
     .selectAll("path")
     .data(plot_data.data, d => d.id)
     ;
+  console.log(plot_data.data);
   let tri_text = d3.select(container)
     .select(".group-triang-text")
     .selectAll("text")
@@ -344,23 +348,35 @@ function update_context_display(bar_data, main_config){
           ;
       }
       if (group == "rec_text") {
-        update_enter[mode]
+        let text_node = update_enter[mode]
           .attr("x", d => (main_config.bar.text_dist + x_scale(d.high_val)))
           .attr("y", d => y_scale(d.level))
-          // .attr("fill", d => main_config.colors[d.grp_name] )
           .style("display", function(d) { // only show the last bar
             return d.grp_id == (bar_names.length-1) ? "block" : "none";
           })
-          .text(function(d) {
+          ;
+        let tspan1, tspan2;
+        if (mode == "enter") {
+          tspan1 = text_node.append('tspan').attr("class", "btspan_primary");
+          tspan2 = text_node.append('tspan').attr("class", "btspan_secondary");
+        } else {
+          tspan1 = text_node.select(".btspan_primary");
+          tspan2 = text_node.select(".btspan_secondary");
+        }
+        tspan1.text(d => d.high_val)
+          ;
+        tspan2.style("fill", main_config.colors.highlights[curr_highlight])
+          .text(d => {
             let num_nodes = bar_data.curr_lev_nodes[d.level].length;
             if ((curr_highlight in main_config.context_highlights) &
                 (num_nodes > 0))
             {
-              return d.high_val + " (" + num_nodes + ")";
+              return " [" + num_nodes + "]";
             } else {
-              return d.high_val;
+              return "";
             }
           })
+
           ;
       }
       if (group == "tri_data") {

@@ -50,6 +50,7 @@ let all_color_mapping = {
     "plain": "#515A5A",
     "none": "#626567",
     "hide": "#BDC3C7",
+    "focus_relatives": "#6d160e",
   }
 };
 
@@ -138,7 +139,7 @@ let mirror_bar_config = {
     "top": bar_graph_share.padding.top,
     "bottom": bar_graph_share.padding.bottom,
     "left": 0,
-    "right":70,
+    "right":80,
   },
   "left_tick_padding": 8,
   "legend": {

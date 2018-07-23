@@ -34,7 +34,7 @@ $(function() {
       // show all 9 anchors and use leaf anchors for focus
       $("#spinner_max_num_foc_anchors").val(9);
     } else {
-      $("#spinner_max_num_foc_anchors").val(29);
+      $("#spinner_max_num_foc_anchors").val(4);
     }
   } else {
     $("#highlight_node_select").val("fcus_ancs");

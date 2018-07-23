@@ -378,7 +378,12 @@ function request_context_data() {
       // limit the search to only nodes in the context
       // TODO: figure out what to do here
       context_data = reformat_context_data(context_data);
-      context_data.init_focus_anchor = context_request.anchors;
+      let init_anchor = context_request.anchors;
+      if ((config.main_mode == "visualizer") &
+          (config.curr_state.QueryAsContext == false)) {
+         init_anchor = Object.keys(full_data.general_data.query_data);
+      }
+      context_data.init_focus_anchor  = init_anchor;
       full_data.context_data = context_data;
       setup_focus_request()
     },

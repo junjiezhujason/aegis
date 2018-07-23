@@ -73,11 +73,13 @@ function update_node_features(graph_data, confg) {
       case "query_data":
         target_data = node_meta.queries;
         break;
+      case "focus_relatives":
+        target_data =  node_meta.anchors;
+        break;
       default:
         target_data = {};
         break;
     }
-
     if (highlight_mode in {"self_nonnull":null, "comp_nonnull":null}) {
       let ground_truth = full_data.ground_truth_info[highlight_mode];
       let ground_set = {};

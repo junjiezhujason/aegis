@@ -126,10 +126,10 @@ body.loading .modal {
   font-size: 9pt;
 }
 .group-text .ann-text {
-  alignment-baseline: central;
+  dominant-baseline: central;
 }
 .group-triang-text .ann-text {
-  alignment-baseline: central;
+  dominant-baseline: central;
 }
 
 .main_container {

@@ -85,6 +85,8 @@ $(function() {
       if (query_type == "example1") {
         // show all 9 anchors and use leaf anchors for focus
         $("#spinner_max_num_foc_anchors").val(9);
+      } else {
+        $("#spinner_max_num_foc_anchors").val(27);
       }
       console.log("Requesting example data " + query_type);
       $.ajax({
@@ -105,12 +107,17 @@ $(function() {
           $(".main-ontology-control").prop("disabled", true);
           // $("#highlight_node_select").val("query_data"); // default view
           $("#highlight_node_select").val("query_data");
+          $("#highlight_node_select").val("focus_relatives");
+
           $("#focus_anchor_type").val("leaf");
           $("#spinner_foc_gap_break").val(20000);
-          config.curr_state.Highlight = "query_data";
           full_data.general_data.query_data = query_dict;
           // $("#context_anchor_type").val("waypoint"); // handled later
-          config.curr_state.QueryAsContext = true;
+          config.curr_state.QueryAsContext = false;
+          $("#view_select").val("depth");
+          config.curr_state.View = $("#view_select").val();
+          config.curr_state.Highlight =$("#highlight_node_select").val();
+
           // set the query to also be the context anchors
           // use the way-point view instead of the root view
           setup_request_main_ontology();
