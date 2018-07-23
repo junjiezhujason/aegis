@@ -50,27 +50,28 @@ let all_color_mapping = {
     "plain": "#515A5A",
     "none": "#626567",
     "hide": "#BDC3C7",
-    "focus_relatives": "#6d160e",
+    "focus_relatives": "#752481",
+    "fcux_ancs_2": "#2753AD",
   }
 };
 
 let bar_graph_share = {
   "padding": {
     "top": 40,
-    "bottom": 20,
+    "bottom": 25,
   }
 };
 
 let mirror_config = {
   "svg": {
     "height": 600,
-    "width": 800,
+    "width": 1200,
   },
   "split": {
     "left_ann": 0.10,
     "graph": 0.40,
     "bar": 0.45,
-    "mid_ann": 0.05,
+    "mid_ann": 0.01,
     "right_ann": 0.00,
   },
   "legend" : {

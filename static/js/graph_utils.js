@@ -95,8 +95,14 @@ function update_node_features(graph_data, confg) {
       // use data targets
       if (d.name in target_data) {
         d.col = confg.colors.highlights[highlight_mode];
+        if (highlight_mode == "focus_relatives") {
+          d.col = confg.colors.highlights["fcux_ancs_2"];
+        }
       } else {
         d.col = confg.colors.highlights["none"];
+        if (highlight_mode == "focus_relatives") {
+          d.col = confg.colors.highlights[highlight_mode];
+        }
       }
     }
 

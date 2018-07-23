@@ -351,6 +351,8 @@ function update_context_display(bar_data, main_config){
         let text_node = update_enter[mode]
           .attr("x", d => (main_config.bar.text_dist + x_scale(d.high_val)))
           .attr("y", d => y_scale(d.level))
+          .attr("dy", "0.32em")
+          .attr("font-family", "sans-serif")
           .style("display", function(d) { // only show the last bar
             return d.grp_id == (bar_names.length-1) ? "block" : "none";
           })

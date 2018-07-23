@@ -176,6 +176,14 @@ function request_focus_data(request) {
                          null,
                          ss_manhattan_config,
                          "light");
+
+        // TODO: UDPATE BELOW?
+        // let fsize = "15px"
+        // d3.selectAll("svg")
+        //   .selectAll("text")
+        //   .style("font-size", fsize)
+        //   .style("font-family", "arial")
+        // ;
       }
       if (config.main_mode == "simulation_result") {
 

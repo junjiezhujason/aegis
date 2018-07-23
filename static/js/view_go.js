@@ -81,7 +81,44 @@ $(function() {
       }
     }
     // option 2: use the example data
+    // TODO: remove later
     if (["example1", "example2"].includes(query_type) ){
+
+      // <div >
+      //   <button id='export_as_png'>Export Figure as PNG</button>
+      //   <button id='export_as_svg'>Export Figure as SVG</button>
+      // </div>
+      let fname = "subfig_focus_context_gwas";
+      d3.select(".data-driven-line").append("button")
+        .attr("id", 'export_as_png')
+        .text("Export Figure as PNG")
+        .on('click', function(){
+          save_d3_svg("#full_mirror_display", "png", fname + ".png")
+        });
+
+      d3.select(".data-driven-line").append("button")
+        .attr("id", 'export_as_svg')
+        .text("Export Figure as SVG")
+        .on('click', function() {
+          save_d3_svg("#full_mirror_display", "svg", fname)
+        })
+        ;
+      d3.select("#export_as_png")
+      if (query_type == "example2") {
+        $(".main-viz").css("width", "1200px");
+        $(".new-node-buttons").css("display", "none");
+        // $(".group-text").css("display", "none");
+        $(".legend-box").css("display", "none");
+
+
+        // $(".yaxis").css("display", "none");
+        // $(".xaxis").css("display", "none");
+        // d3.select(".full-mirror-display")
+        //   .selectAll("text")
+        //   .attr("font-size", "15px")
+        //   ;
+        // $(".background-layer").css("display", "none");
+      }
       if (query_type == "example1") {
         // show all 9 anchors and use leaf anchors for focus
         $("#spinner_max_num_foc_anchors").val(9);
