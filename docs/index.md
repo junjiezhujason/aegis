@@ -78,7 +78,7 @@ Finally, open your local browser with
 
 ## Other Vignettes
 
-![Single Cell RNA-seq Application](aegis_single_cell_example.html)
-![Benchmark for DAG-based Testing: Part I](aegis_benchmark_part1.html)
-![Benchmark for DAG-based Testing: Part II](aegis_benchmark_part2.html)
+[Single Cell RNA-seq Application](aegis_single_cell_example.html)
+[Benchmark for DAG-based Testing: Part I](aegis_benchmark_part1.html)
+[Benchmark for DAG-based Testing: Part II](aegis_benchmark_part2.html)
 
