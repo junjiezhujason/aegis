@@ -1,4 +1,4 @@
-site_name: aegis documentation
+site_name: AEGIS Documentation 
 nav:
 - Home: 'index.md'
 - Notebooks:
