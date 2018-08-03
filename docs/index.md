@@ -76,6 +76,5 @@ Finally, open your local browser with
     http://localhost:5000/
 
 
-## Other Vignettes
 
 

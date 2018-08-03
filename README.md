@@ -1,77 +1,55 @@
 
 # Exploratory Gene Ontology Analysis with Interactive Visualization 
 
-## Installation
+## Program Documentation 
 
-*Important Requirement*: Python3 (and virtual environment recommended)
+See the project site: http://jasonjunjiezhu.com/aegis for instructions on
+installation, api, and notebook tutorials.
 
-See the following links for more information:
-
-    http://docs.python-guide.org/en/latest/
-    https://virtualenv.pypa.io/en/stable/
-
-To install dependencies, simply use:
-
-    pip3 install -r requirements.txt
-
-## Getting started with AEGIS 
-
-AEGIS requires specification of a folder: `${LOCALPATH}` to store the 
-cached files. This is mainly for performance and version control. For typical 
-analysis (excluding simulation outputs), the files typically will typically 
-include no more than 250M of disk space. 
-
-### (Optional) downloading cached files
-You can download the light cache files (<50M) of (version-controlled) 
-species/ontologies from [here] and unpack to the directory `${LOCALPATH}`, e.g.,
-
-    local_${VERSION}.tar.gz
-
-
-Here is an example of the workflow:
-    
-    cd ${LOCALPATH}
-    wget http://stanford.edu/~jjzhu/fileshare/aegis/local_20180710.tar.gz
-    tar -xvzf local_20180710.tar.gz
-
-Make sure to expand the file in the `${LOCALPATH}` so that the folder includes
-files of the following form
-
-    ${LOCALPATH}/local/godag_*.pkl
-
-Because the current software includes these light-weight pickle objects
-that is automatically pre-loaded from the cache.  
-Once the cache is stored once, most features can be performed locally
-without internet connection for ontology or data download.
+## Project Management 
 
 ### Launching the local server
 
-To launch the server, simply just run `app.py` with Python3:
+To launch full version of AEGIS locally, run:
 
-    python3 app.py --port 5000 --folder ${LOCALPATH}
+    python3 main.py --port 5000 --folder $maindir
 
-You can modify the port as well. 
-Note that both the port and the folder options are required.
+where the `$maindir` will be where the project is cached. 
+The port number 5000 can be changed.
 
-If this is your first time running AEGIS and you did not download our cached
-files, AEGIS will automatically download the latest gene and go annotations. 
-This may take a while, and the following files will be automatically generated
-inside the local directory:
+### Development
 
-    ${LOCALPATH}/local/gene2go
-    ${LOCALPATH}/local/go-basic.obo
-    ${LOCALPATH}/local/geneid2sym_human.json
-    ${LOCALPATH}/local/geneid2sym_mouse.json
+For development of versions either the full or lite version, run:
 
-and later, the program will also generate the cached files 
+   python3 main.py --debug $mode --port 5000 --folder $maindir
 
-    ${LOCALPATH}/local/godag_*.pkl
+where `$version` could be either `core` or `lite`. 
+Again, the port number can be changed.  
 
-By default, AEGIS  will continue this version if the same ${LOCALPATH} is 
-specified. To update the version, simply create a new local path to repeat
-the analysis above. 
+For convenience, there is an equivalent bash script wrapper that launches this
+python command:
 
-Finally, open your local browser with
+    bash run_app.sh $ipnport $version $runmode $maindir
 
-    http://localhost:5000/
+where `$version` could be either `core` or `lite`, 
+and `$runmode` could be either `debug` or `deploy`.
+
+All of these options launched the server locally. 
+
+### Deploying the Documentation
+
+To create the documenation at http://jasonjunjiezhu.com/aegis/ for AEGIS, run
+
+    mkdocs gh-deploy
+
+The configuration information can be found in in `mkdocs.yml`.
+
+###  Deploying the lite web server 
+
+To create the lite version of the web app at http://aegis-viz.appspot.com/, run
+
+    gcloud app deploy
+
+The configuration information can be found in in `app.yml`.
+
 
