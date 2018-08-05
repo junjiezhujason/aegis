@@ -21,16 +21,17 @@ cached files. This is mainly for performance and version control. For typical
 analysis (excluding simulation outputs), the files typically will typically 
 include no more than 250M of disk space. 
 
-### (Optional) Download Cached Files
+If this is the first time that you are running AEGIS locally, internet connection
+will be required to download data from the online databases. 
+
+### Download Cached Files (Optional) 
 
 You can pre-propagate some local files in `${LOCALPATH}` to reduce setup time. 
 Otherwise, the latest version of the GO and annotation files will be downloaded.
 
-You can download the light cache files of (version-controlled) 
+To speed up the setup, download the light cache files of (version-controlled) 
 species/ontologies [here](http://stanford.edu/~jjzhu/fileshare/aegis) 
-and unpack to the directory `${LOCALPATH}`, e.g.,
-
-    local_${VERSION}.tar.gz
+and unpack to the directory `${LOCALPATH}`, e.g., `local_${VERSION}.tar.gz`
 
 Or here is an example of the workflow:
     
