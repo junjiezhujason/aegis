@@ -55,6 +55,19 @@
 <body>
   <div class="container main_container" id="header_container">
     <div class="jumbotron" id="aegis_logo">
+      {% if mode == 'lite_mode' %}
+      <h1>AEGIS
+        <span style="font-weight: 100; font-family: Helvetica"><i>LITE</i></span>
+      </h1>
+      <p>
+        <u>A</u>ugmented
+        <u>E</u>xploration of the
+        <u>G</u>O with
+        <u>I</u>nteractive
+        <u>S</u>imulations
+        (<i>the Light-Weight Explorer</i>)
+      </p>
+      {% else %}
       <h1>AEGIS</h1>
       <p>
         <u>A</u>ugmented
@@ -63,6 +76,7 @@
         <u>I</u>nteractive
         <u>S</u>imulations
       </p>
+      {% endif %}
     </div>
     <ul class="nav nav-tabs">
       <li id="about_tab" class="{{ 'active' if task == 'about' else '' }}">

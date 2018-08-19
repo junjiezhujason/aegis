@@ -329,24 +329,7 @@ let config_caseslider = {
   },
 };
 
-
-
-
-function ssm_params(height=350, width=700, main_mode="simulation_result") {
-  if (main_mode == "visualizer") {
-    graph_only = true;
-    show_context = false;
-    main_plot_type = "vector";
-  } else {
-    graph_only = false;
-    show_context = false;
-    main_plot_type = "matrix";
-  }
-  let ss_manhattan_dim = {
-    "width": width,
-    "height": height,
-  };
-
+function get_subplot_breakdown(ss_manhattan_dim) {
   let ss_manhattan_share = {
     "total": ss_manhattan_dim,
     "padding": {
@@ -382,6 +365,25 @@ function ssm_params(height=350, width=700, main_mode="simulation_result") {
       }
     }
   }
+  return(ss_manhattan_share)
+}
+
+function ssm_params(height=350, width=700, main_mode="simulation_result") {
+  if (main_mode == "visualizer") {
+    graph_only = true;
+    show_context = false;
+    main_plot_type = "vector";
+  } else {
+    graph_only = false;
+    show_context = false;
+    main_plot_type = "matrix";
+  }
+  let ss_manhattan_dim = {
+    "width": width,
+    "height": height,
+  };
+
+  let ss_manhattan_share = get_subplot_breakdown(ss_manhattan_dim);
   let ss_manhattan_config = {
     "main_plot_type": main_plot_type,
     "show_context": show_context,

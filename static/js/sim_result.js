@@ -4,8 +4,7 @@ let config = general_config;
 config.main_mode = "simulation_result";
 setup_full_go_canvas(config);
 
-let ss_manhattan_config = ssm_params();
-
+let ss_manhattan_config = ssm_params(width=config.full_mirror.width);
 initialize_ssm_canvas(".plot-canvas", ss_manhattan_config)
 
 

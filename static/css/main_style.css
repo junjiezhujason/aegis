@@ -591,3 +591,7 @@ Inline help tip
 #input_file_upload {
   margin: auto;
 }
+
+.file-upload-input {
+  width: 450px;
+}

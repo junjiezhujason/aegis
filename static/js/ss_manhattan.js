@@ -923,16 +923,23 @@ function add_scale_attribute(in_data, conf, plot_id) {
   return out_data;
 }
 
-function update_full_plot(container,
-                          node_values,
-                          focus_nodes,
-                          f_group_ordering,
-                          c_group_ordering, // TODO: replace with index breaks
-                          conf,
-                          mode) {
+function update_binder_plot(container,
+                            node_values,
+                            focus_nodes,
+                            f_group_ordering,
+                            c_group_ordering, // TODO: replace with index breaks
+                            conf,
+                            mode) {
   // requirements:
   // 1. all children should have a larger index than its parent
   // 2. there is no edge crossing within each group
+
+  // the svg can be handled here
+  // console.log(node_values);
+  // console.log(focus_nodes);
+  // TODO: update the figure dimensions here!
+  // debugger;
+
 
   // let main_svg = d3.select(container).select(".ssm-svg");
   let f_data = prepare_group_info(f_group_ordering);

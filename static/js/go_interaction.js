@@ -169,7 +169,7 @@ function request_focus_data(request) {
           f_group_ordering[d.pos_info.flex.y].push(d.cid);
           d.full_name = full_data.general_data.search_dict[d.name];
         })
-        update_full_plot(".plot-canvas",
+        update_binder_plot(".plot-canvas",
                          node_values,
                          f_nodes,
                          f_group_ordering,
@@ -209,7 +209,7 @@ function request_focus_data(request) {
         }
 
         // let node_values = graph_data.results.fake_simulation_data;
-        update_full_plot(".plot-canvas",
+        update_binder_plot(".plot-canvas",
                          node_values,
                          f_nodes,
                          f_group_ordering,

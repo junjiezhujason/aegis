@@ -1,26 +1,73 @@
 {% extends "layout.html" %}
 {% block content %}
-<div id="result_select_panel">
-    Load Result
-    <button type="button"
-            class="btn btn-primary btn-sm icon-btn-right"
-            id="load_simulation_button">
-        <span class="glyphicon glyphicon-refresh"> </span>
-    </button>
-</div>
-<div id="go_panel">
-  {% include "go_interaction.html" %}
+<div class="panel-group" id="accordion">
+  <!-- Data Loading Panel -->
+  <div class="panel panel" id="loadResultPanel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel"
+           data-toggle="collapse"
+           data-parent="#accordion"
+           href="#loadResults">
+           Load Power Analysis
+        </a>
+      </h4>
+    </div>
+    <div id="loadResults" class="panel-collapse collapse">
+      <div class="panel-body">
+        <p>
+          Load result here:
+          <button type="button"
+                  class="btn btn-primary btn-sm icon-btn-right"
+                  id="load_simulation_button">
+              <span class="glyphicon glyphicon-refresh"> </span>
+          </button>
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- Exploration Panel -->
+  <div class="panel panel" id="goExplorePanel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel"
+           data-toggle="collapse"
+           data-parent="#accordion"
+           href="#goExplore">
+           Focus-and-Context Navigation
+        </a>
+      </h4>
+    </div>
+    <div id="goExplore" class="panel-collapse collapse">
+      <div class="panel-body">
+        {% include "go_interaction.html" %}
+      </div>
+    </div>
+  </div>
+  <!-- Output Panel -->
+  <div class="panel panel" id="simOutputPanel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel"
+           data-toggle="collapse"
+           data-parent="#accordion"
+           href="#simOutput">
+           Download Results
+        </a>
+      </h4>
+    </div>
+    <div id="simOutput" class="panel-collapse collapse">
+      <div class="panel-body">
+        {% include "ss_manhattan.html" %}
+        <div>
+          <button id='export_as_png'>Export Figure as PNG</button>
+          <button id='export_as_svg'>Export Figure as SVG</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<div>
-  <div>
-  {% include "ss_manhattan.html" %}
-  </div>
-  <div >
-    <button id='export_as_png'>Export Figure as PNG</button>
-    <button id='export_as_svg'>Export Figure as SVG</button>
-  </div>
-</div>
+
 <script type="text/javascript" src="{{ url_for('static', filename='js/sim_result.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/d3-save-svg.min.js') }}" ></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/FileSaver.min.js') }}" ></script>

@@ -43,9 +43,9 @@ def report_disabled():
 def get_core_sublist():
     pages = ["view_go", "sim_setup", "sim_result"]
     text_map = {
-        "view_go": "Visualizer",
-        "sim_setup": "Simulation Setup",
-        "sim_result": "Simulation Result"
+        "view_go": "Exploration",
+        "sim_setup": "Power Analysis Setup",
+        "sim_result": "Power Analysis Result"
     }
     sublist = []
     for example in pages:
@@ -402,44 +402,45 @@ def allowed_file(filename, allowed_extensions):
     return '.' in filename and \
                filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
+def parse_file(filename):
+    output_list = []
+    with open(filename, "r") as file:
+        for line in file:
+            go_id = line.strip()
+            output_list.append(go_id)
+    return output_list
+
 @app.route('/upload_view_file', methods = ['GET', 'POST'])
 def upload_view_file():
     # this is a file upload handler for lists (csv, txt)
     # it handles uploading files to CACHE_DIR/tmp
     # which may be destroyed after action is taken
     upload_dir = os.path.join(MAIN_FOLDER, "tmp")
-    launch_single_simulation_case(10)
+    # launch_single_simulation_case(10)
     format_sfx = ["csv", "txt", "tsv"]
-    if flask.request.method == 'POST':
+    go_term_list = []
+    if flask.request.method == "POST":
         # check if the post request has the file part
-        if 'file' not in flask.request.files:
-            # flask.flash('No file part')
-            logger.info("No file uploaded")
-            print(flask.request.url)
-            assert 0, "STOP"
-            # return flask.redirect(flask.request.url)
-        f = flask.request.files['file']
-        if f.filename == '':
-            # flask.flash('No selected file')
-            assert 0, "STOP"
-            return flask.redirect(flask.request.url)
-        logger.info("Uploading file: {}".format(f.filename))
-        if f and allowed_file(f.filename, format_sfx):
-            fn = werkzeug.secure_filename(f.filename)
-            f.save(os.path.join(upload_dir, fn))
-            # return flask.redirect(flask.url_for('uploaded_file', filename=fn))
+        if "file" in flask.request.files:
+            f = flask.request.files["file"]
+            if f and allowed_file(f.filename, format_sfx):
+                # save the uploaded file
+                fn = werkzeug.secure_filename(f.filename)
+                fn = os.path.join(upload_dir, fn)
+                f.save(fn)
+                logger.info("Saved file: {}".format(fn))
+                # read the uploaded file
+                go_term_list = parse_file(fn)
+                # return flask.redirect(flask.url_for('uploaded_file', filename=fn))
+                message = "success"
+            else:
+                message = "failed extensions"
         else:
-            logger.warning("File suffix must be in: {}".format(format_sfx))
-            # return flask.redirect(flask.request.url)
-        # response = app.response_class(
-        #     response=flask.json.dumps("Upload successful"),
-        #     status=200,
-        #     mimetype='application/json'
-        #     )
-        # return response
-        # return flask.render_template('view_go.html', task="view_go")
+            message = "failed to load file"
+        output = {"status": message,
+                  "terms": go_term_list}
         response = app.response_class(
-            response=flask.json.dumps("UPDATED DATA"),
+            response=flask.json.dumps(output),
             status=200,
             mimetype='application/json'
         )
