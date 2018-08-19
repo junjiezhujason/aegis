@@ -5,7 +5,6 @@ let config = general_config;
 config.main_mode = "visualizer";
 // config.curr_state.QueryAsContext = false;
 // config.curr_state.QueryAsFocus = false;
-config.uploaded_anchors = {"focus": [], "context": []};
 
 setup_full_go_canvas(config);
 let ss_manhattan_config = ssm_params(height=800,
@@ -74,10 +73,10 @@ function read_uploaded_list(input_id, form_id, icon_id) {
           })
           // data storage
           if (input_id == "#input_file_upload_focus") {
-            config.uploaded_anchors.focus = response.terms;
+            full_data.general_data.uploaded_anchors.focus = response.terms;
           }
           if (input_id == "#input_file_upload_context") {
-            config.uploaded_anchors.context = response.terms;
+            full_data.general_data.uploaded_anchors.context = response.terms;
           }
         } else {
           console.log("Something went wrong.")
@@ -108,12 +107,12 @@ $(function() {
   $("#input_file_upload_focus").change(function() {
     query_change_detected();
     button_icon_change("#focus_data_upload_button", "change");
-    config.uploaded_anchors.focus = [];
+    full_data.general_data.uploaded_anchors.focus = [];
   });
   $("#input_file_upload_context").change(function() {
     query_change_detected();
     button_icon_change("#context_data_upload_button", "change");
-    config.uploaded_anchors.context = [];
+    full_data.general_data.uploaded_anchors.context = [];
   });
   $("#focus_data_upload_button").click(function() {
     read_uploaded_list("#input_file_upload_focus",
@@ -134,13 +133,13 @@ $(function() {
     let use_list;
     let query_dict = {};
     // uploaded focus anchors rules over context anchors as query data
-    if (config.uploaded_anchors.focus.length > 0) {
-      use_list = config.uploaded_anchors.focus;
+    if (full_data.general_data.uploaded_anchors.focus.length > 0) {
+      use_list = full_data.general_data.uploaded_anchors.focus;
       config.curr_state.Highlight = "query_data";
       $("#highlight_node_select").val("query_data");
       $("#spinner_foc_gap_break").val(20000); // show all the focus nodes
     } else {
-      use_list = config.uploaded_anchors.context;
+      use_list = full_data.general_data.uploaded_anchors.context;
       config.curr_state.Highlight = "query_data"; // TODO: change later
       $("#highlight_node_select").val("query_data"); // TODO: change later
       $("#spinner_foc_gap_break").val(9); // show all only 9 context nodes
@@ -154,7 +153,21 @@ $(function() {
   });
 
   $("#query_to_navigation").click(function() {
+    $("#vizOptions_panel").addClass("collapsed");
+    $("#vizOptions_panel").attr("aria-expanded", "false");
+    $("#vizOptions").attr("aria-expanded", "false");
+    $("#vizOptions").removeClass("in");
+    // $("#vizOptions").css("height", "0px");
 
+    $("#vizDynamic_panel").removeClass("collapsed");
+    $("#vizDynamic_panel").attr("aria-expanded", "true");
+    $("#vizDynamic").attr("aria-expanded", "true");
+    $("#vizDynamic").addClass("in");
+    $("#vizDynamic").css("height", "");
+    var $panel = $("#vizDynamic").closest('.panel');
+      $('html,body').animate({
+          scrollTop: $panel.offset().top
+      }, 500);
   });
 
   // hide the main go panel

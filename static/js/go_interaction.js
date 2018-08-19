@@ -3,6 +3,7 @@ let tag_update_queue = [];
 let full_data = {
   // "summary_info": null,
   "general_data": {
+    "uploaded_anchors": {"focus": [], "context": []},
     "query_data": {},
     "go_gene_cnt": null,
     "ontology_root_id": null,
