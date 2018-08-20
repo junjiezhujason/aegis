@@ -1,6 +1,17 @@
 // gene ontology navigation setup
 // -----------------------------------------------------------------------------
 
+function open_context_focus_image() {
+  $("#graph_dialog").dialog({
+    autoOpen : false,
+    modal : true,
+    show : "blind",
+    hide : "blind",
+    width: "90%",
+  });
+  $("#graph_dialog").dialog("open");
+  ;
+}
 
 function get_valid_queries(query_list, search_dict, class_name) {
   // query_list: list of GO ids

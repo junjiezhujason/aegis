@@ -282,4 +282,25 @@
     </button>
   </div>
 </div>
-<div class="modal" id="go_ajax_modal"></div>
+<div class=widget>
+  <button onclick="open_context_focus_image()">
+    <span class="glyphicon glyphicon-download-alt"> </span>
+  </button>
+  Download focus-and-context graphs (with its current layout settings).
+</div>
+<div id="graph_dialog"
+     title="Focus and Context Graphs"
+     style="display: none;">
+  <div class="download-canvas" style="width: 800px; height: 800px;" >
+  </div>
+  <div>
+    <button class="btn btn-primary btn-sm" id="export_as_png_foc_con">
+      Export PNG
+    </button>
+    <button class="btn btn-primary btn-sm" id="export_as_svg_foc_con">
+      Export SVG
+    </button>
+  </div>
+</div>
+<!-- <div class="modal" id="go_ajax_modal"></div>
+ -->

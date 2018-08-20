@@ -249,7 +249,7 @@
          data-toggle="collapse"
          data-parent="#accordion"
          href="#vizDownload">
-         Data Download
+         Other
       </a>
     </h4>
   </div>
@@ -262,11 +262,13 @@
         <button id='export_as_png'>Export Figure as PNG</button>
         <button id='export_as_svg'>Export Figure as SVG</button>
       </div>
-
     </div>
   </div>
 </div>
-<div class="modal" id="ajax_modal"><!-- Place at bottom of page --></div>
+<!-- Modal for figure -->
+<!-- <div id="progress_dialog" title="Simulation Progress" style="display: none"> -->
+
+<div class="modal" id="go_ajax_modal"><!-- Place at bottom of page --></div>
 
 <script type="text/javascript" src="{{ url_for('static', filename='lib/bootstrap-filestyle/bootstrap-filestyle.min.js') }}" ></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/d3-save-svg.min.js') }}" ></script>
