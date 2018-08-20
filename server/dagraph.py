@@ -2509,6 +2509,36 @@ class GODAGraph(DAGraph):
         cntx_ids = sorted([cntx_id_map[nid] for nid in fnode_set])
         idx_map = { sorted_nodes[cid].id : i for i, cid in enumerate(cntx_ids)}
 
+        # get all focus node relatives and count how many nodes there are
+        subg = set() # the set of *ids* that are relatives of the focus
+        for relation in ["children", "parents"]:
+            subg = subg | set(self.relation_search(context_query, relation,
+                                                   node_map=context_map))
+        # we want to make sure we are counting among the *cids*
+        lev_cnt_rel = {}
+        for view in ["depth", "height", "flex"]:
+            if view == "flex":
+                n_levs = len(context_meta["level_counts"]["flex"])
+            else:
+                n_levs = len(ordered_context.fixed_level_nodes[view])
+            lev_cnt_rel[view] = []
+            for i_lev in range(n_levs):
+                lev_cnt_rel[view].append([])
+        for nid in subg:
+            # get the depth, height and flex level index of this node
+            cid = cntx_id_map[nid]
+            node = sorted_nodes[cid]
+            for view in ["depth", "height"]:
+                lev = getattr(node, view)
+                lev_cnt_rel[view][lev].append(cid)
+            # handle the buoyant search here
+            for i, start in enumerate(context_meta["level_starts"]["flex"]):
+                lev = i
+                if cid <= start:
+                    break
+            lev_cnt_rel["flex"][lev].append(cid)
+        context_meta["level_counts_focus_relatives"] = lev_cnt_rel
+
         focus_graph = self.prepare_focus_graph_output(context_query,
                                                       fnode_set,
                                                       idx_map,

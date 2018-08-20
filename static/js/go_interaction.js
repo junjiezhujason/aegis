@@ -153,7 +153,7 @@ function request_focus_data(request) {
       let c_grp_data = cntx_data.meta.level_starts.flex;
 
       if (config.main_mode == "visualizer") {
-        // let node_values = graph_data.results.fake_simulation_data;
+        // updates to create the binder plot
         let n_nodes = cntx_data.graph.node_data.length;
         let n_groups = c_grp_data.length;
         let node_values = []
@@ -339,6 +339,9 @@ function setup_focus_request() {
     focus_search_dict[node_name] = context_search_dict[node_name]
   }
   initialize_autocomplete(focus_search_dict, "#go_focus_tag_it", ".focus-block");
+  // set context anchors as initial focus anchors
+  // which is subject to maximum number of anchors constraint
+
   if (config.main_mode == "simulation_setup" |
       config.main_mode == "lite") {
     initialize_autocomplete(focus_search_dict,
@@ -349,8 +352,24 @@ function setup_focus_request() {
                             "#go_gene_tag_it",
                             ".gene-sel-block");
   }
+
+  let init_go_terms = context_data.init_focus_anchor;
+  if (config.main_mode == "visualizer") {
+    let uploaded_ancs =  full_data.general_data.uploaded_anchors;
+    if (uploaded_ancs.focus.length > 0) {
+      let valid_ids = [];
+      uploaded_ancs.focus.forEach(term_id => {
+        if (term_id in focus_search_dict) {
+          valid_ids.push(term_id);
+        }
+      });
+      if (valid_ids.length > 0) {
+        init_go_terms = valid_ids;
+      }
+    }
+  }
   let max_tags = $("#spinner_max_num_foc_anchors").val();
-  let init_go_terms = context_data.init_focus_anchor.slice(0, max_tags);
+  init_go_terms = init_go_terms.slice(0, max_tags);
   tag_based_focus_update(init_go_terms);
   // ----------------------------------------------------------------
   // this enables changes in the tag instantaneously update the focus
@@ -375,9 +394,6 @@ function request_context_data() {
     data: JSON.stringify(context_request),
     contentType: "application/json",
     success: function(context_data) {
-      // console.log("Context loaded success!");
-      // limit the search to only nodes in the context
-      // TODO: figure out what to do here
       context_data = reformat_context_data(context_data);
       context_data.init_focus_anchor = context_request.anchors;
       full_data.context_data = context_data;
@@ -449,9 +465,6 @@ function get_current_ontology_setup() {
 
 function request_main_ontology() {
   // core adjax call to request ontology data
-  $(".context-block").show();
-  $(".view-block").show();
-  $(".focus-block").show();
   console.log("Requesting Ontology...");
   let ontology_request = get_current_ontology_setup();
   $.ajax({
@@ -468,7 +481,7 @@ function request_main_ontology() {
       full_data.general_data.go_gene_cnt = general_data.go_gene_cnt;
       full_data.general_data.ontology_root_id = general_data.ontology_root_id;
       full_data.general_data.search_dict = general_data.search_dict;
-
+      let halted = false;
       // setup the auto complete function
       // --------------------------------
       let tag_id = "#go_context_tag_it";
@@ -491,13 +504,56 @@ function request_main_ontology() {
       if (config.main_mode == "simulation_setup") {
         refine = true;
       }
-      if ((config.main_mode == "visualizer") &
-          (config.curr_state.QueryAsContext) &
-          (Object.keys(full_data.general_data.query_data).length) > 0) {
-        anchor_rule = "waypoint";
-        for (let key in full_data.general_data.query_data) {
-          $(tag_id).tagit("createTag", key);
+
+      if (config.main_mode == "visualizer") {
+        let uploaded_ancs =  full_data.general_data.uploaded_anchors;
+        let uploaded_con_ancs = uploaded_ancs.context.length > 0;
+        let uploaded_foc_ancs = uploaded_ancs.focus.length > 0;
+        // update the context information
+        $("#query_data_summary").hide();
+        if (uploaded_con_ancs) {
+          let val_queries = get_valid_queries(uploaded_ancs.context,
+                                              general_data.search_dict,
+                                              "context anchors");
+          if (Object.keys(val_queries).length == 0) {
+            halted = true;
+            query_change_detected();
+            full_data.general_data.query_data = {};
+          } else {
+            $("#query_data_summary").show();
+            $("#focus_anchor_type").val("leaf");
+            $("#highlight_node_select").val("query_data");
+            $("#spinner_max_num_foc_anchors").val(9);
+            $("#spinner_foc_gap_break").val(20000);
+            for (let term_id in val_queries) {
+              $(tag_id).tagit("createTag", term_id);
+            }
+            anchor_rule = "waypoint";
+            full_data.general_data.query_data = val_queries;
+          }
+        } else {
+          $(tag_id).tagit("createTag", default_root);
         }
+        if (uploaded_foc_ancs) {
+          let val_queries = get_valid_queries(uploaded_ancs.focus,
+                                              general_data.search_dict,
+                                              "focus anchors");
+          // note: uploaded focus anchors rules over context
+          // so we check context anchors first anchors as query data
+          if (Object.keys(val_queries).length == 0) {
+            halted = true;
+            query_change_detected();
+            full_data.general_data.query_data = {};
+          } else {
+            $("#query_data_summary").show();
+            $("#focus_anchor_type").val("leaf");
+            $("#spinner_max_num_foc_anchors").val(100);
+            $("#spinner_foc_gap_break").val(20000);
+            $("#highlight_node_select").val("focus_relatives");
+            full_data.general_data.query_data = val_queries;
+          }
+        }
+        update_query_input_box("#query_list", full_data.general_data.query_data);
       } else if (config.main_mode == "simulation_result") {
         // update the context
         let context_params = full_data.general_data.simulation.context_params;
@@ -513,8 +569,18 @@ function request_main_ontology() {
       } else {
         $(tag_id).tagit("createTag", default_root);
       }
-      set_context_options(node_size_params, anchor_rule, refine);
-      setup_context_request();
+      config.curr_state.Highlight =$("#highlight_node_select").val();
+      if (halted) {
+        $(".context-block").hide();
+        $(".view-block").hide();
+        $(".focus-block").hide();
+      } else {
+        $(".context-block").show();
+        $(".view-block").show();
+        $(".focus-block").show();
+        set_context_options(node_size_params, anchor_rule, refine);
+        setup_context_request();
+      }
     },
     failure: function() {
         console.log("Server error.");

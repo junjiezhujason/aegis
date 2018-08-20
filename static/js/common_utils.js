@@ -1,5 +1,51 @@
 // gene ontology navigation setup
 // -----------------------------------------------------------------------------
+
+
+function get_valid_queries(query_list, search_dict, class_name) {
+  // query_list: list of GO ids
+  // search_dict: map from GO ids to GO term names
+  let query_dict = {};
+  let unidentified = [];
+  query_list.forEach(term => {
+    if (term in search_dict) {
+      query_dict[term] = search_dict[term];
+    } else {
+      unidentified.push(term);
+    }
+  });
+  let message;
+  if (unidentified.length > 0) {
+    if (query_list.length == unidentified.length) {
+      message = "None of the " +
+                class_name +
+                " were identified in the current ontology. " +
+                "Perhaps the wrong ontology was selected";
+    } else {
+      message = "Unidentified " +
+                 class_name +
+                 " terms in the current ontology:\n";
+      unidentified.forEach(term => {
+        message += (term + ", ");
+      });
+      message += "\nThese terms will be ignored."
+    }
+
+  } else {
+    message = "Successfully loaded all " + class_name + " terms";
+  }
+  alert(message);
+  return(query_dict);
+}
+
+function update_query_input_box(input_id, id_term_map) {
+  let list = "";
+  for (let id in id_term_map) {
+    list += ( id + " - " + id_term_map[id] + "\n");
+  }
+  $(input_id).val(list);
+}
+
 function add_searched_genes() {
   append_search("#gene_query_list", "#gene_tagsinput")
   let genes_requested = $("#gene_tagsinput").val().split(",");
@@ -60,42 +106,46 @@ function get_candidate_nodes_per_level(graph_data, main_config) {
   // highlighted nodes can be considered as candiates
 
   if (htype in main_config.context_highlights) {
-    let node_data = graph_data.context_info.graph.node_data;
-    let highlight_list;
-    // 1. get the list of nodes ot be highlighed
-    if (htype in {"self_nonnull":null, "comp_nonnull":null}) {
-      highlight_list = full_data.ground_truth_info[htype];
-    }
-    if (htype =="query_data" ) {
-      nid_map = full_data.context_data.name_id_map;
-      highlight_list = [];
-      for (let name in full_data.general_data.query_data){
-        highlight_list.push(nid_map[name]);
+    if (htype == "focus_relatives") {
+      level_nodes = graph_data.context_info.meta.level_counts_focus_relatives[view];
+    } else {
+      let node_data = graph_data.context_info.graph.node_data;
+      let highlight_list;
+      // 1. get the list of nodes ot be highlighed
+      if (htype in {"self_nonnull":null, "comp_nonnull":null}) {
+        highlight_list = full_data.ground_truth_info[htype];
       }
-    }
-    // 2. if the view is depth of height, then push the nodes to list
-    if (view == "depth" || view == "height") {
-      highlight_list.forEach( (d) => {
-        let level = node_data[d][view];
-        level_nodes[level].push(d);
-      });
-    }
-    if (view == "flex") {
-      let lev_idx = graph_data.context_info.meta.level_starts.flex;
-      // TODO: one could speed up
-      for (let i = 0; i < lev_idx.length; i ++ ) {
-        let min_val, max_val;
-        if ( i == 0 ) {
-          min_val = 0;
-        } else {
-          min_val = lev_idx[i-1] + 1;
+      if (htype =="query_data" ) {
+        nid_map = full_data.context_data.name_id_map;
+        highlight_list = [];
+        for (let name in full_data.general_data.query_data){
+          highlight_list.push(nid_map[name]);
         }
-        max_val = lev_idx[i];
+      }
+      // 2. if the view is depth of height, then push the nodes to list
+      if (view == "depth" || view == "height") {
         highlight_list.forEach( (d) => {
-          if ( (d >= min_val) & (d <= max_val)) {
-            level_nodes[i].push(d);
-          }
+          let level = node_data[d][view];
+          level_nodes[level].push(d);
         });
+      }
+      if (view == "flex") {
+        let lev_idx = graph_data.context_info.meta.level_starts.flex;
+        // TODO: one could speed up
+        for (let i = 0; i < lev_idx.length; i ++ ) {
+          let min_val, max_val;
+          if ( i == 0 ) {
+            min_val = 0;
+          } else {
+            min_val = lev_idx[i-1] + 1;
+          }
+          max_val = lev_idx[i];
+          highlight_list.forEach( (d) => {
+            if ( (d >= min_val) & (d <= max_val)) {
+              level_nodes[i].push(d);
+            }
+          });
+        }
       }
     }
   }

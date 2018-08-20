@@ -41,6 +41,9 @@ function bar_mode_select(graph_data, main_config) {
     case "query_data":
       return(["nodes in query data (" + num_nodes + ")",
               "other nodes in the context (" + num_other_nodes + ")"]);
+    case "focus_relatives":
+      return(["directly related to query terms (" + num_nodes + ")",
+              "other terms (" + num_other_nodes + ")"]);
     case "self_nonnull":
       return(["self-contained non-null (" + num_nodes + ")",
               "self-contained null (" + num_other_nodes + ")"]);
@@ -323,6 +326,8 @@ function update_context_display(bar_data, main_config){
         let text_node = update_enter[mode]
           .attr("x", d => (main_config.bar.text_dist + x_scale(d.high_val)))
           .attr("y", d => y_scale(d.level))
+          .attr("dy", "0.32em")
+          .attr("font-family", "sans-serif")
           .style("display", function(d) { // only show the last bar
             return d.grp_id == (bar_names.length-1) ? "block" : "none";
           })
@@ -347,9 +352,7 @@ function update_context_display(bar_data, main_config){
             } else {
               return "";
             }
-          })
-
-          ;
+          });
       }
       if (group == "tri_data") {
         update_enter[mode]
