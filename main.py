@@ -33,6 +33,7 @@ global dag
 global MAIN_FOLDER
 app = flask.Flask(__name__, static_url_path='/static')
 app.config["LITEVIEW"] = False
+app.config["VERSION"] = "20180719"
 
 # Set the secret key to some random bytes. Keep this really secret!
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -80,7 +81,6 @@ def get_lite_sublist(example_only=True):
             sublist.append({
               "id": ont + "_" + spe,
               "caption": text_map[ont],  # + " (" + text_map[spe] + ")",
-              # "caption": text_map[ont] + " (" + text_map[spe] + ")",
               "ontology": ont,
               "species": spe,
               "anchor_t": "root",
@@ -112,11 +112,11 @@ def create_lite_dag_dict():
 
     lite_list = get_lite_sublist()
     for item in lite_list:
-        dag = GODAGraph(cache_dir,
-                        ontology=item["ontology"],
-                        species=item["species"],
-                        name=item["id"])
-        dag.setup_full_dag(use_cache=True)
+        dag = GODAGraph(cache_dir, name=item["id"])
+        dag.setup_full_dag(item["ontology"],
+                           item["species"],
+                           app.config["VERSION"],
+                           use_cache=True)
 
         if item["id"]  in ["exp_chip", "exp_gwas"]:
             # load the context information
@@ -153,6 +153,12 @@ def about():
 def core(page):
     if app.config["LITEVIEW"]:
         return report_disabled()
+    cache_dir = os.path.join(MAIN_FOLDER, "local")
+    if not os.path.exists(cache_dir):
+        os.makedirs(cache_dir)
+    sim_dir = os.path.join(MAIN_FOLDER, "sim")
+    if not os.path.exists(sim_dir):
+        os.makedirs(sim_dir)
     logger.info("Calling core functionality: {}".format(page))
     return flask.render_template('{}.html'.format(page),
                                  task=page,
@@ -216,18 +222,16 @@ def request_general_and_context_info():
 def dag_setup_ontology():
     assert MAIN_FOLDER, "a local cache folder needs to be specified"
     cache_dir = os.path.join(MAIN_FOLDER, "local")
-    if not os.path.exists(cache_dir):
-        os.makedirs(cache_dir)
+    sim_dir = os.path.join(MAIN_FOLDER, "sim")
+    # this over-writes the global variable dag
+    global dag
+    dag = GODAGraph(cache_dir, name="go_dag", sim_dir=sim_dir)
 
     params = flask.request.get_json()["params"]
-    print(params)
-    # this rewrites the global variable dag
-    global dag
-    dag = GODAGraph(cache_dir,
-                    ontology=params["ontology"],
-                    species=params["species"],
-                    name="go_dag")
-    dag.setup_full_dag(use_cache=True)
+    dag.setup_full_dag(params["ontology"],
+                       params["species"],
+                       app.config["VERSION"],
+                       use_cache=True)
     general_info = dag.output_general_info()
     logger.info("Number of terms: {}".format(len(general_info["search_dict"])))
     response = app.response_class(
@@ -292,43 +296,25 @@ def dag_setup_focus():
 
 @app.route('/get_simulation_data', methods=['POST'])
 def get_simulation_data():
-    # data = {"fake_simulation_data": dag.generate_random_pvalues()};
-    sim_id = flask.request.get_json()["sim_id"]
     test_method = flask.request.get_json()["test_method"] # "simes"
     adjust_method = flask.request.get_json()["adjust_method"] # "BH"
+    # sim_id = lask.request.get_json()["sim_id"]
+    sim_id = setup_power_example(tissue="heart")["job_id"]
 
-    dat_dir = os.path.join(MAIN_FOLDER, "sim", sim_id)
+    sim_dir = os.path.join(MAIN_FOLDER, "sim")
     cache_dir = os.path.join(MAIN_FOLDER, "local")
-
-    # TODO: find a way to save the ontology and species info
-    tissue = sim_id.split("-")[0].split("_")[1]
-    out_data = setup_power_example(tissue=tissue)
-    ontology = out_data["ontology_params"]["ontology"]
-    species = out_data["ontology_params"]["species"]
-
-    # create the appropriate ontology
-    dag = GODAGraph(cache_dir,
-                    ontology=ontology,
-                    species=species,
-                    name="simulation")
-    dag.setup_full_dag(use_cache=True)
-    dag.restore_testing_configuration(dat_dir);
-
-    logger.info("Restored the simulation results to context!")
-    nonnulls = dag.output_non_null_go_terms(out_data["signal_genes"]);
-    matrix_data = dag.output_node_power_matrix(dat_dir,
-                                               test_method,
-                                               adjust_method)
-    out_data["nonnulls"] = nonnulls
-    out_data["matrix"] = matrix_data
-
+    dag = GODAGraph(cache_dir, name="simulation", sim_dir=sim_dir)
+    out_data = dag.restore_testing_configuration(sim_id);
+    # create the data for the heatmap here
+    out_data["matrix"] = dag.output_node_power_matrix(sim_id,
+                                                      test_method,
+                                                      adjust_method)
     response = app.response_class(
         response=flask.json.dumps(out_data),
         status=200,
         mimetype='application/json'
     )
     return response
-
 
 @app.route('/get_example_query_data', methods=['POST'])
 def get_example_query_data():
@@ -362,11 +348,8 @@ def get_ground_truth_data():
     genes = flask.request.get_json()['signal_genes']
     if len(genes) == 1 and genes[0] == '':
         genes = []
-    print(genes)
-    # logger.info("Requested genes names: {}".format(genes))
-    # retrive graph data
+    # this also modifies the internal stat data object
     data = dag.output_non_null_go_terms(genes)
-    # retrieve relevant annotations
     response = app.response_class(
         response=flask.json.dumps(data),
         status=200,
@@ -497,7 +480,6 @@ def start_from_terminal(app):
         start_tornado(app, port)
         # app.run(debug=False, host='0.0.0.0', port=port)
 
-    UPLOAD_FOLDER = os.path.join(MAIN_FOLDER, "tmp")
 
 if __name__ == '__main__':
     start_from_terminal(app)

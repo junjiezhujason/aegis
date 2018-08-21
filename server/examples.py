@@ -88,7 +88,9 @@ def setup_power_example(tissue="heart"):
 
     assert tissue in ["heart", "adipose"], "tissue type error"
 
-    ontology_parmams = {"ontology": "biological_process", "species": "human"}
+    ontology_parmams = {"ontology": "biological_process",
+                        "species": "human",
+                        "version": "20180719"}
     sweep_sample_size = True
 
     if (tissue == "heart"):
@@ -140,14 +142,36 @@ def setup_power_example(tissue="heart"):
 
 
     if sweep_sample_size:
-        dir_name = "example_{}-effect_{}".format(tissue, sim_params["eff_size"])
+        job_id = "case_{}-effect_{}".format(tissue, sim_params["eff_size"])
     else:
-        dir_name = "example_{}-sample_{}".format(tissue, sim_params["n_cases"])
+        job_id = "case_{}-sample_{}".format(tissue, sim_params["n_cases"])
+
+    test_params  = {
+        'method_alpha': [0.1],
+        'method_madj': ['Bonferroni',
+                        'BH'],
+        'method_test': ['simes',
+                        'binomial',
+                        'hypergeometric.gs',
+                        'hypergeometric.ga'],
+        'nonnull_params': {
+            'comp_nonnull': {
+                'case': 'average',
+                'ga': 1e-06,
+                'gs': 100},
+            'self_nonnull': {}},
+        'report_metrics': ['FDR',
+                           'Power',
+                           'NumRej']
+    }
+    if (tissue == "heart"):
+        test_params['nonnull_params']['comp_nonnull']['ga'] = 1e-05
 
     return {
         "ontology_params": ontology_parmams,
+        "test_params": test_params,
         "context_params": context_params,
         "signal_genes": signal_genes,
         "sim_params": sim_params,
-        "dir_name": dir_name,
+        "job_id": job_id,
     }

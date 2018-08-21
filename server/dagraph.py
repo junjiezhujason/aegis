@@ -1003,6 +1003,7 @@ class GOStat():
         self.report_metrics = ["FDR", "Power", "NumRej"]
 
     def set_test_attr_from_dict(self, in_dict):
+        logger.info("Testing parameters: {}".format(in_dict))
         for attr in self.test_attr_names:
             setattr(self, attr, in_dict[attr])
 
@@ -1117,7 +1118,7 @@ class GOStat():
         #     self.nonnull_params["comp_nonnull"]["gs"] = gene_set_size
         gene_set_size = self.nonnull_params["comp_nonnull"]["gs"]
         case = self.nonnull_params["comp_nonnull"]["case"]
-        logger.info("determining nulls based on '{}'".format(case))
+        logger.info("determining competitive nulls based on '{}'".format(case))
 
         self.nonnull_genes = set(gene_ids)
         for null_type in ["self_nonnull", "comp_nonnull"]:
@@ -1425,51 +1426,70 @@ class GODAGraph(DAGraph):
 
     def __init__(self,
                  cache_dir,
-                 ontology,
-                 species="human",
-                 name=None):
-        # super(DAGraph, self).__init__()
+                 name=None,
+                 sim_dir=None):
         DAGraph.__init__(self)
-        # TODO: make sure that this code is used in future versions
-        ontology_roots = {"cellular_component": "GO:0005575",
-                          "biological_process": "GO:0008150",
-                          "molecular_function": "GO:0003674"}
-        assert ontology in ontology_roots , "ontology error"
-        root = ontology_roots[ontology]
-
-        self.ontology = ontology
-        self.species = species
+        # book-keeping attributes
+        self.cache_dir = cache_dir
+        self.sim_dir = sim_dir
         self.name = name
-        self.gohelper = GOHelper(cache_dir, species=species)
-
-        # gene-related maps
+        self.go_fname =  None
+        # ontology-specific attributes
+        self.ontology = None
+        self.species = None
+        self.version = None
+        self.root = None
+        # gene-related attributes
         self.go_gene_map = {}
         self.gene_conversion_map = {}
         self.go_annotation = {}
         self.gene_go_map = {}
-
-        # context graph
+        # context and focus graph attributes
         self.context_graph = OrderedContext()
         self.context_params = {}
-        # focus graph
         self.focus_graph = None
         self.focus_params = {}
-
-        # TODO: remove this context
-        self.stat_test_context_nodes = None
-        self.main_test_context = OrderedContext()
-
+        # testing attributes
+        self.gohelper = None
         self.main_statistician = GOStat()
-        self.context_map = {"full_context": {}, "test_context": {}}
-        self.context_index_map = {"test_context": []}
 
-        self.output_precomputed_data = {}
-        self.root = root
-        self.cache_dir = cache_dir
-        if cache_dir:
-            assert self.root, "to store a cache root cannot be empty"
-            self.go_fname =  os.path.join(cache_dir,
-                    "godag_{}_{}.pkl".format(ontology, species))
+    def restore_testing_configuration(self, job_id):
+        data_dir = os.path.join(self.sim_dir, job_id)
+        p_fn, p_ft = self.get_file_info("meta_restore_params")
+        p_fn = os.path.join(data_dir, p_fn)
+        all_params = load_data_from_file(p_fn, p_ft)
+        # restore the appropriate (cached) ontology
+        ontology_params = all_params["ontology_params"]
+        self.setup_full_dag(
+            ontology_params["ontology"],
+            ontology_params["species"],
+            ontology_params["version"],
+            use_cache=True)
+        context_params = all_params["context_params"]
+        # restore the context (used for testing)
+        self.setup_context_graph(
+            context_params["anchor_rule"], context_params["anchors"],
+            min_w = int(context_params["min_node_size"]), # int
+            max_w = int(context_params["max_node_size"]), # int
+            refine_graph = context_params["refine_graph"], # boolean
+            store_context=True
+            )
+        # restore the testing parameters
+        test_params = all_params["test_params"]
+        mstat = self.main_statistician
+        mstat.set_test_attr_from_dict(test_params)
+        # restore the signal genes
+        g_fn, g_ft = self.get_file_info("meta_nonnull_gene_ids")
+        g_fn = os.path.join(data_dir, g_fn)
+        gene_list = load_data_from_file(g_fn, g_ft)
+        mstat.determine_non_null(gene_list)
+        # restore the simulation setup
+        sim_params = all_params["oneway_params"]
+        mstat.setup_simulation_oneway(sim_params)
+        logger.info("Finished restoration!")
+        # include other outputs
+        all_params["nonnulls"] = mstat.output_ground_truth_info()
+        return all_params
 
     def load_node_power_matrix(self, output_dir, test, multitest, nonnull_only=False):
         fname = "node_{}_{}.csv".format(test, multitest)
@@ -1485,14 +1505,15 @@ class GODAGraph(DAGraph):
             node_df = node_df.loc[node_cids]
         return node_df
 
-    def output_node_power_matrix(self, output_dir, test, multitest):
+    def output_node_power_matrix(self, job_id, test, multitest):
         # load the node power matrix
+        output_dir = os.path.join(self.sim_dir, job_id)
         node_df = self.load_node_power_matrix(output_dir, test, multitest)
         colnames = list(node_df.columns.values)
         rownames = list(node_df.index.values)
         node_df.columns = range(len(colnames))
         node_df["row_id"] = range(len(rownames))
-        node_df
+        # node_df
         melt_df = pd.melt(node_df, id_vars=["row_id"], var_name=["col_id"])
         mtx_data = {
             "col_ann": colnames,
@@ -1542,9 +1563,7 @@ class GODAGraph(DAGraph):
         node_df.columns = simulator.regime_names
         logger.info("{} - {} - {} - effect_{}".format(
             nn_type, test, multitest, simulator.general_params["eff_size"]))
-
         return node_df
-
 
     def summarize_trial_result(self, dat_dir, reg_i, rep_i):
         # create summary date frame with fields including fields:
@@ -1600,25 +1619,44 @@ class GODAGraph(DAGraph):
             sim_res.append(pd.concat(reg_res, ignore_index=True))
         return pd.concat(sim_res, ignore_index=True)
 
+    def generate_summary_files(self,
+                               data_dir):
+        summary_dir = os.path.join(data_dir, "summary")
+        if not os.path.exists(summary_dir):
+            os.makedirs(summary_dir)
+        sum_df = self.summarize_simulation_results(data_dir)
+        fn = os.path.join(summary_dir, "trial_summary.csv")
+        sum_df.to_csv(fn)
+        logger.info("Saved: {}".format(fn))
 
-    def launch_simulation_pipeline(self, cache_dir, cleanup=False):
+        mstat = self.main_statistician
+        for test_method in mstat.method_test:
+            for adj_method in mstat.method_madj:
+                node_df = self.generate_node_power_matrix(data_dir,
+                                                          test_method,
+                                                          adj_method)
+                fn = os.path.join(summary_dir,
+                    "node_{}_{}.csv".format(test_method, adj_method))
+                node_df.to_csv(fn)
+                logger.info("Saved: {}".format(fn))
+
+    def launch_simulation_pipeline(self, job_id, cleanup=False):
+        assert os.path.exists(self.sim_dir), "simulation directory does not exist"
+        cache_dir = os.path.join(self.sim_dir, job_id)
 
         # step 0: output the simulation setup and ground truth
         self.store_test_meta_data(cache_dir, simulation=True)
-        n_trials = self.main_statistician.simulator.n_trials
-        logger.info("Number of trials to simulate: {}".format(n_trials))
 
-        # TODO: multiprocessing does not bring much performance gain
-        # pool = mp.Pool(processes=8)
         # step 1: generate the gene p-values (and x , y data)
         t0 = time.time()
+        n_trials = self.main_statistician.simulator.n_trials
+        logger.info("Number of trials to simulate: {}".format(n_trials))
         for t_id in range(n_trials):
             self.generate_trial_gene_stats(cache_dir,
                                            t_id,
                                            simulation=True,
                                            save_xy=False)
-            # pool.apply(self.generate_trial_gene_stats,
-            #                  args=(cache_dir, t_id))
+
 
         t1 = time.time()
         logger.info("Generated gene-pvals used time: {:.5f}".format(t1-t0))
@@ -1641,53 +1679,18 @@ class GODAGraph(DAGraph):
         if cleanup:
             cleanup_dir(cache_dir)
 
-    def generate_summary_files(self,
-                               data_dir):
-        summary_dir = os.path.join(data_dir, "summary")
-        if not os.path.exists(summary_dir):
-            os.makedirs(summary_dir)
-        sum_df = self.summarize_simulation_results(data_dir)
-        fn = os.path.join(summary_dir, "trial_summary.csv")
-        sum_df.to_csv(fn)
-        logger.info("Saved: {}".format(fn))
-
-        mstat = self.main_statistician
-        for test_method in mstat.method_test:
-            for adj_method in mstat.method_madj:
-                node_df = self.generate_node_power_matrix(data_dir,
-                                                          test_method,
-                                                          adj_method)
-                fn = os.path.join(summary_dir,
-                    "node_{}_{}.csv".format(test_method, adj_method))
-                node_df.to_csv(fn)
-                logger.info("Saved: {}".format(fn))
-
-    def set_gene_level_params(self, param_name, value):
-        mstat = self.main_statistician
-        if param_name == "gene_threshold":
-            mstat.nonnull_params["comp_nonnull"]["ga"] = value
-        if param_name == "gene_set_size":
-            mstat.nonnull_params["comp_nonnull"]["gs"] = value
-
+    # def set_gene_level_params(self, param_name, value):
+    #     mstat = self.main_statistician
+    #     if param_name == "gene_threshold":
+    #         mstat.nonnull_params["comp_nonnull"]["ga"] = value
+    #     if param_name == "gene_set_size":
+    #         mstat.nonnull_params["comp_nonnull"]["gs"] = value
 
     def generate_trial_node_stats(self,
                                   data_dir,
                                   trial_id):
         trial_dir = os.path.join(data_dir, "trial_{}".format(trial_id))
         flag = "NODESTAT"
-        # load or read the gene list (gene ids)
-        # if flag_complete(data_dir, "check", "META"):
-        #     # search for the right file name
-        #     fpfx = "meta_gene_ids"
-        #     gene_list = []
-        #     for ftype in ["pkl", "json"]:
-        #         fn =  "{}.{}".format(fpfx, ftype)
-        #         logger.info("Searching for {} file".format(ftype))
-        #         infname = os.path.join(data_dir, fn)
-        #         if os.path.exists(infname):
-        #             gene_list = load_data_from_file(infname, ftype)
-        #             break
-        #     assert gene_list, "Gene list cannot be loaded!"
         mstat = self.main_statistician
         gene_list = mstat.get_simulation_gene_list()
         gene_pvals = None
@@ -1812,7 +1815,6 @@ class GODAGraph(DAGraph):
             logger.debug("[{}] Saved all trial data \n".format(flag))
 
         return gene_test_result
-
 
     def load_full_test_summary(self, data_dir):
         t0 = time.time()
@@ -2005,7 +2007,13 @@ class GODAGraph(DAGraph):
             elif fd == "meta_comp_nonnull_nodes":
                 outdata = mstat.nonnull_nodes["comp_nonnull"]
             elif fd == "meta_restore_params":
-                outdata = {"context_params": mstat.context_params,
+                outdata = {
+                           "ontology_params": {
+                               "ontology": self.ontology,
+                               "species": self.species,
+                               "version": self.version
+                                },
+                           "context_params": mstat.context_params,
                            "test_params": mstat.get_test_attr_as_dict(),
                            "oneway_params": mstat.oneway_params
                           }
@@ -2024,7 +2032,6 @@ class GODAGraph(DAGraph):
         return {"root" : self.root,
                 "min_w" : 1,
                 "max_w" : len(self.gene_go_map)}
-
 
     def output_context_summary(self, slow_reachability=False):
         out_dict = {}
@@ -2625,7 +2632,11 @@ class GODAGraph(DAGraph):
 
     # def store_gene_conversion_map(self, gene_conversion_map):
     #     self.gene_conversion_map = gene_conversion_map
-    def setup_full_dag(self, use_cache=True):
+    def setup_full_dag(self,
+                       ontology,
+                       species,
+                       version,
+                       use_cache=True):
         """
         Integrates annotaiton information to the GO DAG
 
@@ -2646,8 +2657,21 @@ class GODAGraph(DAGraph):
             a dictionary mapping from node indices to context Node objects
 
         """
-        if use_cache and os.path.exists(self.go_fname):
-            self.load_from_file()
+        self.ontology = ontology
+        self.species = species
+        self.version = version
+        self.go_fname =  os.path.join(self.cache_dir,
+                    "godag-{}-{}-{}.pkl".format(ontology, species, version))
+        ontology_roots = {"cellular_component": "GO:0005575",
+                          "biological_process": "GO:0008150",
+                          "molecular_function": "GO:0003674"}
+        assert ontology in ontology_roots , "ontology error"
+        self.root = ontology_roots[ontology]
+        self.gohelper = GOHelper(self.cache_dir, species=species)
+
+        if use_cache:
+            assert os.path.exists(self.go_fname), "cache file does not exist"
+            self.load_full_dag_from_file()
             return
 
         # Global variables: the full go graph
@@ -2660,118 +2684,73 @@ class GODAGraph(DAGraph):
 
         self.create_graph_from_root(is_a_only = is_a_only)
         self.update_with_gene_annotations()
-        self.save_to_file() # save information to file
-
-    def restore_testing_configuration(self, data_dir):
-        logger.info("Restoring testing configuration from {}".format(data_dir))
-        p_fn, p_ft = self.get_file_info("meta_restore_params")
-        p_fn = os.path.join(data_dir, p_fn)
-        all_params = load_data_from_file(p_fn, p_ft)
-        context_params = all_params["context_params"]
-        test_params = all_params["test_params"]
-        sim_params = all_params["oneway_params"]
-        # restore the testing context
-        self.setup_context_graph(
-            context_params["anchor_rule"], context_params["anchors"],
-            min_w = int(context_params["min_node_size"]), # int
-            max_w = int(context_params["max_node_size"]), # int
-            refine_graph = context_params["refine_graph"], # boolean
-            store_context=True
-            )
-        mstat = self.main_statistician
-        mstat.set_test_attr_from_dict(test_params)
-        # restore the signal genes
-        g_fn, g_ft = self.get_file_info("meta_nonnull_gene_ids")
-        g_fn = os.path.join(data_dir, g_fn)
-        gene_list = load_data_from_file(g_fn, g_ft)
-        mstat.determine_non_null(gene_list)
-        # restore the simulation setup
-        mstat.setup_simulation_oneway(sim_params)
-        logger.info("Finished restoration!")
-
-    # def restore_stat_test(self, data_dir):
-    #     logger.info("Restoring simulation from {}".format(data_dir))
-    #     # load the paramter files
-    #     p_fn, p_ft = self.get_file_info("meta_restore_params")
-    #     p_fn = os.path.join(data_dir, p_fn)
-    #     all_params = load_data_from_file(p_fn, p_ft)
-    #     init_params = all_params["init_params"]
-    #     test_params = all_params["test_params"]
-    #     sim_params = all_params["oneway_params"]
-    #     # load the nonnull genes
-    #     g_fn, g_ft = self.get_file_info("meta_nonnull_gene_ids")
-    #     g_fn = os.path.join(data_dir, g_fn)
-    #     gene_list = load_data_from_file(g_fn, g_ft)
-    #     # restore the pipeline
-    #     self.setup_stat_test_framework(root=init_params["root"],
-    #                                    min_w=init_params["min_w"],
-    #                                    max_w=init_params["max_w"])
-
-    #     mstat = self.main_statistician
-    #     mstat.set_test_attr_from_dict(test_params)
-    #     mstat.determine_non_null(gene_list)
-    #     # test_attr = mstat.get_test_attr_as_dict()
-    #     mstat.setup_simulation_oneway(sim_params)
-    #     logger.info("Finished restoration!")
+        self.save_full_dag_to_file() # save information to file
 
     # caching to save-load dag
-    def save_to_file(self):
-        # save the node list with parent-children indices to list
-        logger.warning("GO and simulation helpers will not be stored")
+    def save_full_dag_to_file(self):
+        logger.warning("GO helpers will not be stored")
         fname = self.go_fname
         out_data =  self.__dict__
-        out_data.pop("gohelper", None)
-        out_data.pop("simhelper", None)
+        exclude_attr = ["gohelper", "simhelper", "cache_dir", "sim_dir", "name"]
+        for attr in exclude_attr:
+            out_data.pop(attr, None)
         pickle.dump(out_data, open(fname, "wb"))
         logger.info("Saved DAG to file: {}".format(fname))
 
-    def load_from_file(self):
+    def load_full_dag_from_file(self):
+        # restore everything except for the name and
+        # and simulation folder name (job ids or what not)
+        cache_dir = self.cache_dir
+        sim_dir = self.sim_dir
+        name = self.name
         fname = self.go_fname
         logger.info("Loading DAG from file: {}".format(fname))
         self.__dict__ = pickle.load(open(fname, "rb"))
-        logger.warning("GO and Simulation helpers will not be loaded")
+        self.sim_dir = sim_dir
+        self.name = name
+        self.cache_dir = cache_dir
 
-    def generate_level_cnt_maps(self):
+    # def generate_level_cnt_maps(self):
 
-        levelcnt_map = {}
-        # append the test_in_full mode
-        tf_cnxt = "test_in_full"
-        levelcnt_map[tf_cnxt] = {}
-        for lev_t in ["depth", "height"]:
-            levelcnt_map[tf_cnxt][lev_t] = {}
-        # the test and full modes
-        for cxt_t in self.context_map:
-            levelcnt_map[cxt_t] = {}
-            for lev_t in ["depth", "height"]:
-                levelcnt_map[cxt_t][lev_t] = {}
-        for go in self.go_gene_map:
-            node_i = self.name_index_map[go]
-            for cxt_t in self.context_map:
-                if node_i in self.context_map[cxt_t]: # within context
-                    cnode = self.context_map[cxt_t][node_i]
-                    for lev_t in ["depth", "height"]:
-                        level = getattr(cnode, lev_t)
-                        if level in levelcnt_map[cxt_t][lev_t]:
-                            levelcnt_map[cxt_t][lev_t][level] += 1
-                        else:
-                            levelcnt_map[cxt_t][lev_t][level] = 1
-                        if (cxt_t == "full_context"):
-                            if node_i in self.context_map["test_context"]:
-                                if level in levelcnt_map[tf_cnxt][lev_t]:
-                                    levelcnt_map[tf_cnxt][lev_t][level] += 1
-                                else:
-                                    levelcnt_map[tf_cnxt][lev_t][level] = 1
-        # make the level maps into lists of values
-        for cxt_t in (list(self.context_map.keys()) + ["test_in_full"]):
-            for lev_t in ["depth", "height"]:
-                old_dict = levelcnt_map[cxt_t][lev_t]
-                n_lev = max(old_dict) + 1 # maximum level + 1
-                new_list = [0] * n_lev
-                for i_lev in range(n_lev):
-                    if i_lev in old_dict:
-                        new_list[i_lev] = levelcnt_map[cxt_t][lev_t][i_lev]
-                levelcnt_map[cxt_t][lev_t] = new_list
-        return levelcnt_map
+    #     levelcnt_map = {}
+    #     # append the test_in_full mode
+    #     tf_cnxt = "test_in_full"
+    #     levelcnt_map[tf_cnxt] = {}
+    #     for lev_t in ["depth", "height"]:
+    #         levelcnt_map[tf_cnxt][lev_t] = {}
+    #     # the test and full modes
+    #     for cxt_t in self.context_map:
+    #         levelcnt_map[cxt_t] = {}
+    #         for lev_t in ["depth", "height"]:
+    #             levelcnt_map[cxt_t][lev_t] = {}
+    #     for go in self.go_gene_map:
+    #         node_i = self.name_index_map[go]
+    #         for cxt_t in self.context_map:
+    #             if node_i in self.context_map[cxt_t]: # within context
+    #                 cnode = self.context_map[cxt_t][node_i]
+    #                 for lev_t in ["depth", "height"]:
+    #                     level = getattr(cnode, lev_t)
+    #                     if level in levelcnt_map[cxt_t][lev_t]:
+    #                         levelcnt_map[cxt_t][lev_t][level] += 1
+    #                     else:
+    #                         levelcnt_map[cxt_t][lev_t][level] = 1
+    #                     if (cxt_t == "full_context"):
+    #                         if node_i in self.context_map["test_context"]:
+    #                             if level in levelcnt_map[tf_cnxt][lev_t]:
+    #                                 levelcnt_map[tf_cnxt][lev_t][level] += 1
+    #                             else:
+    #                                 levelcnt_map[tf_cnxt][lev_t][level] = 1
+    #     # make the level maps into lists of values
+    #     for cxt_t in (list(self.context_map.keys()) + ["test_in_full"]):
+    #         for lev_t in ["depth", "height"]:
+    #             old_dict = levelcnt_map[cxt_t][lev_t]
+    #             n_lev = max(old_dict) + 1 # maximum level + 1
+    #             new_list = [0] * n_lev
+    #             for i_lev in range(n_lev):
+    #                 if i_lev in old_dict:
+    #                     new_list[i_lev] = levelcnt_map[cxt_t][lev_t][i_lev]
+    #             levelcnt_map[cxt_t][lev_t] = new_list
+    #     return levelcnt_map
 
     def output_general_info(self):
         """
@@ -2841,25 +2820,24 @@ class GODAGraph(DAGraph):
         }
         return output_data
 
-    def output_excluded_info(self, verbose = False):
-        full_cntx = self.context_map["full_context"]
-        test_cntx = self.context_map["test_context"]
-        go_gene_map = self.go_gene_map
-        go_annotation = self.go_annotation
-        out_info = []
-        for node_i in full_cntx:
-            if node_i not in test_cntx:
-                term = full_cntx[node_i].name
-                if verbose:
-                    gene_info = list(go_gene_map[term])
-                else:
-                    gene_info = len(go_gene_map[term])
-                out_info.append([term,
-                                 go_annotation[term],
-                                 gene_info])
-        logger.info("Excluded: {} terms".format(len(out_info)))
-        return out_info
-
+    # def output_excluded_info(self, verbose = False):
+    #     full_cntx = self.context_map["full_context"]
+    #     test_cntx = self.context_map["test_context"]
+    #     go_gene_map = self.go_gene_map
+    #     go_annotation = self.go_annotation
+    #     out_info = []
+    #     for node_i in full_cntx:
+    #         if node_i not in test_cntx:
+    #             term = full_cntx[node_i].name
+    #             if verbose:
+    #                 gene_info = list(go_gene_map[term])
+    #             else:
+    #                 gene_info = len(go_gene_map[term])
+    #             out_info.append([term,
+    #                              go_annotation[term],
+    #                              gene_info])
+    #     logger.info("Excluded: {} terms".format(len(out_info)))
+    #     return out_info
 
     # def prepare_index_mapping(self, small_set, large_set):
     #     assert isinstance(small_set, set), "Type-error of node_set"

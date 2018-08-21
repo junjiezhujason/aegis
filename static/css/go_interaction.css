@@ -1,0 +1,15 @@
+.full-canvas {
+  text-align: center;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /*height: 460px;*/
+  width: 100%;
+}
+
+.download-canvas {
+  width: 95%;
+  height: 75%;
+  margin: 10px;
+}
+

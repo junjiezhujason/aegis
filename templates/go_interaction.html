@@ -292,22 +292,36 @@
 <div id="graph_dialog"
      title="Graph Viewer"
      style="display: none;">
-  <div class="download-canvas" style="width: 95%; height: 75%; margin: 10px" >
-    <div id ="new_full_canvas_viewer" class="full-canvas">
-      <div id ="mirror_canvas_viewer">
-<!--         <svg class="full-mirror-display" id="full_mirror_viewer">
-        </svg> -->
+  <div id="view_of_focus_context">
+    <div class="download-canvas">
+      <div id ="new_full_canvas_viewer" class="full-canvas">
+        <div id ="mirror_canvas_viewer">
+        </div>
       </div>
     </div>
+    <div>
+      <button class="btn btn-primary btn-sm" id="export_as_png_foc_con">
+        Export PNG
+      </button>
+      <button class="btn btn-primary btn-sm" id="export_as_svg_foc_con">
+        Export SVG
+      </button>
+    </div>
   </div>
-  <div>
-    <button class="btn btn-primary btn-sm" id="export_as_png_foc_con">
-      Export PNG
-    </button>
-    <button class="btn btn-primary btn-sm" id="export_as_svg_foc_con">
-      Export SVG
-    </button>
+  <div id="view_of_binder">
+    <div class="download-canvas">
+      {% include "ss_manhattan.html" %}
+    </div>
+    <div>
+      <button class="btn btn-primary btn-sm" id="export_as_png_binder">
+        Export PNG
+      </button>
+      <button class="btn btn-primary btn-sm" id="export_as_svg_binder">
+        Export SVG
+      </button>
+    </div>
   </div>
+
 </div>
 <!-- <div class="modal" id="go_ajax_modal"></div>
  -->
