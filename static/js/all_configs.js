@@ -55,6 +55,58 @@ let all_color_mapping = {
   }
 };
 
+function get_full_canvas_config(x_size=0, y_size=0) {
+  let dim = {
+    "svg": {
+      "height": 600,
+      "width": 800,
+    },
+    "split": {},
+    "legend" : {
+      "rel_x": 0.72,
+      "rel_y": 0.05,
+    },
+    "transition": {
+      "exit_layer_time": 200,
+      "enter_layer_time": 200,
+      "total_buffer_time": 300,
+      "min_time": 2,
+      "exit_time": 500,
+      "update_time": 500,
+      "enter_time": 10000,
+      "prev_nlayers": 1,
+      "prev_node_lev_map": {},
+    },
+  }
+
+  let hspace =  {
+    "left_ann": 80,
+    "mid_ann": 43,
+    "right_ann": 10,
+  }
+
+
+  let x_lim = 20;
+  let y_lim = 25;
+  if (x_size > x_lim) {
+    dim.svg.width = x_size * (dim.svg.width / x_lim);
+  }
+  if (y_size > y_lim) {
+    dim.svg.height = y_size * (dim.svg.height / y_lim);
+  }
+  let res = dim.svg.width - hspace.left_ann - hspace.mid_ann - hspace.right_ann;
+  hspace.graph =  0.45 * res;
+  hspace.bar =  0.55 * res;
+  if (x_size > x_lim) {
+    hspace.graph = 0.5 * res;
+    hspace.bar =  0.5 * res;
+  }
+  dim.split = hspace;
+
+  return(dim);
+}
+
+
 let bar_graph_share = {
   "padding": {
     "top": 40,
@@ -62,42 +114,12 @@ let bar_graph_share = {
   }
 };
 
-let mirror_config = {
-  "svg": {
-    "height": 600,
-    "width": 800,
-  },
-  "split": {
-    "left_ann": 0.10,
-    "graph": 0.40,
-    "bar": 0.45,
-    "mid_ann": 0.05,
-    "right_ann": 0.00,
-  },
-  "legend" : {
-    "rel_x": 0.72,
-    "rel_y": 0.05,
-  },
-  "transition": {
-    "exit_layer_time": 200,
-    "enter_layer_time": 200,
-    "total_buffer_time": 300,
-    "min_time": 2,
-    "exit_time": 500,
-    "update_time": 500,
-    "enter_time": 10000,
-    "prev_nlayers": 1,
-    "prev_node_lev_map": {},
-  },
-}
-
 let mirror_graph_config = {
   "transition": {
     "delay": {
       "select": 200,
     },
     "start_x_pos": 0,
-    "end_x_pos": mirror_config.svg.width / 2,
   },
   "padding": {
     "top": bar_graph_share.padding.top,
@@ -195,7 +217,7 @@ let general_config = {
     },
   },
   "init_options": init_options,
-  "full_mirror": mirror_config,
+  "full_mirror": get_full_canvas_config(),
   "main_div": "",
   "main_mode": "simulation_setup",
   "margins": {top:20,right:40,bottom:60,left:40},

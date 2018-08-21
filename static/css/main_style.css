@@ -102,17 +102,6 @@ body.loading .modal {
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
-/*skyline-subway manhattan*/
-
-.full-canvas {
-  text-align: center;
-  white-space: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  /*height: 460px;*/
-  width: 100%;
-}
-
 
 /*Rest*/
 .sim-result-plot-blocks {

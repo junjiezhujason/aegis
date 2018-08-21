@@ -602,6 +602,24 @@ function setup_context_request() {
   })
 }
 
+function update_svg_dimension(svg_id, confg, fixed_dim=false) {
+  let viewer_svg = d3.select(svg_id);
+  let fm = get_data_dependent_dim(confg, fixed_dim=fixed_dim);
+  viewer_svg
+    .attr("height", fm.svg.height)
+    .attr("width",  fm.svg.width)
+    ;
+  let x_pos = fm.split.left_ann + fm.split.graph;
+  viewer_svg.select(".mid-ann")
+    .attr("transform", "translate(" + x_pos + ", 0)");
+  viewer_svg.select(".mid-ann").select(".yaxis")
+    .attr("transform", "translate(" + fm.split.mid_ann + ", 0)");
+  viewer_svg.select(".bar-layer").select(".legend-box")
+    .attr("transform", "translate("+
+    (fm.svg.width * fm.legend.rel_x)+","+
+    (fm.svg.height * fm.legend.rel_y) + ")")
+    ;
+}
 
 function setup_full_go_canvas(confg) {
   // propagate the default parameters from confg to the numbers
@@ -617,9 +635,8 @@ function setup_full_go_canvas(confg) {
   $("#go_focus_tag_it").tagit({});
 
   // create the svg elements needed for graph display
-  let svg_id = "full_mirror_display";
   let full_svg = d3.select("#mirror_canvas").append("svg")
-    .attr("id", svg_id)
+    .attr("id", "full_mirror_display")
     .attr("class", "full-mirror-display")
     .attr("height", confg.full_mirror.svg.height)
     .attr("width",  confg.full_mirror.svg.width)
@@ -630,6 +647,20 @@ function setup_full_go_canvas(confg) {
   full_svg.call(create_mid_ann, confg);
   full_svg.call(create_graph_group, confg);
   full_svg.call(create_bar_group, confg);
+
+  // create the svg elements for the graph viewer
+  // the width and height of this svg are set adaptively based on the data
+  // TODO: specify width, height
+  let viewer_svg = d3.select("#mirror_canvas_viewer").append("svg")
+    .attr("id", "full_mirror_viewer")
+    .attr("class", "full-mirror-display")
+    .style("border-width", "1px")
+    .style("border-style", "solid")
+    ;
+  viewer_svg.call(create_background, confg);
+  viewer_svg.call(create_mid_ann, confg); // specify transform
+  viewer_svg.call(create_graph_group, confg);
+  viewer_svg.call(create_bar_group, confg); // specify transform
 }
 
 function create_graph_group(svg, confg) {
@@ -648,10 +679,6 @@ function create_bar_group(svg, confg) {
   legend_g = bar_g.append("g").attr("class", "legend-box");
   legend_g.append("g").attr("class", "legend-symb");
   legend_g.append("g").attr("class", "legend-text");
-  legend_g.attr("transform", "translate("+
-    (confg.full_mirror.svg.width * confg.full_mirror.legend.rel_x)+","+
-    (confg.full_mirror.svg.height * confg.full_mirror.legend.rel_y) + ")");
-
 }
 
 function create_background(svg, confg) {
@@ -662,13 +689,7 @@ function create_background(svg, confg) {
 
 function create_mid_ann(svg, confg) {
   let mid_ann = svg.append("g").attr("class", "mid-ann");
-  // set the y-position of the mid-range
-  let fm = confg.full_mirror;
-  let x_pos = fm.svg.width * (fm.split.left_ann + fm.split.graph);
-  mid_ann.attr("transform", "translate(" + x_pos + ", 0)");
-  mid_ann.append("g")
-    .attr("class", "yaxis")
-    .attr("transform", "translate(" + fm.svg.width * fm.split.mid_ann + ", 0)");
+  mid_ann.append("g").attr("class", "yaxis");
   mid_ann.append("g").attr("class", "new-node-buttons");
 }
 
@@ -809,22 +830,24 @@ function draw_level_go_terms(level_n, graph_data, main_config) {
   }
 }
 
-function create_grid(container, main_config) {
-  let svg = d3.select(container).append("svg")
-    .attr("class", "grid-display")
-    .attr("height", main_config.svg_graph_height)
-    .attr("width",  main_config.svg_graph_width * 2) // TODO: make more general
-  svg.append("g").attr("class", "grid-break");
-  svg.append("g").attr("class", "grid-layer");
-}
+// function create_grid(container, main_config) {
+//   let svg = d3.select(container).append("svg")
+//     .attr("class", "grid-display")
+//     .attr("height", main_config.svg_graph_height)
+//     .attr("width",  main_config.svg_graph_width * 2) // TODO: make more general
+//   svg.append("g").attr("class", "grid-break");
+//   svg.append("g").attr("class", "grid-layer");
+// }
 
-function update_grid_display(graph_data, main_config) {
-  let container = ".grid-display";
+function update_grid_display(svg_id, graph_data, main_config, fixed_dim=false) {
+  // let container = ".grid-display";
   let curr_view = main_config.curr_state.View;
   let n_layers = main_config.graph.max_range[curr_view].y + 1;
-  let xy_scales = graph_scale_setup(curr_view, main_config);
+  let xy_scales = graph_scale_setup(main_config, fixed_dim=fixed_dim);
   let x_scale = xy_scales.x;
   let y_scale = xy_scales.y;
+
+  let fm = get_data_dependent_dim(main_config, fixed_dim=fixed_dim);
 
   function customYAxis(g, tick_range, tick_names=[], major=true) {
     let y_multi_axes = function(tick_range, major) {
@@ -839,7 +862,7 @@ function update_grid_display(graph_data, main_config) {
           }
       }
       let d3_axis = d3.axisRight(y_scale)
-        .tickSize(main_config.full_mirror.svg.width)
+        .tickSize(fm.svg.width)
         .tickValues(tick_range)
         .tickFormat(format_func)
         ;
@@ -861,26 +884,15 @@ function update_grid_display(graph_data, main_config) {
     }
   }
 
-  d3.select(container)
+  d3.select(svg_id)
+    .select(".background-layer")
     .select(".grid-break")
     .call(customYAxis,
           d3.range(0.5, n_layers+0.5, 1),
           tick_names=main_config.level_breaks[curr_view],
           major=true);
-  d3.select(container)
-    .select(".grid-layer")
-    .call(customYAxis,
-          d3.range(0, n_layers),
-          tick_names=[],
-          major=false);
-
-  d3.select(".background-layer")
-    .select(".grid-break")
-    .call(customYAxis,
-          d3.range(0.5, n_layers+0.5, 1),
-          tick_names=main_config.level_breaks[curr_view],
-          major=true);
-  d3.select(".background-layer")
+  d3.select(svg_id)
+    .select(".background-layer")
     .select(".grid-layer")
     .call(customYAxis,
           d3.range(0, n_layers),
@@ -892,12 +904,13 @@ function update_grid_display(graph_data, main_config) {
       .ticks(n_layers)
       .tickPadding(main_config.bar.left_tick_padding)
       ;
-  let fm = main_config.full_mirror;
-  d3.select(".mid-ann")
+  d3.select(svg_id)
+    .select(".mid-ann")
     .select(".yaxis")
     .call(yAxis)
     ;
-  let tear_add_bttns = d3.select(".mid-ann")
+  let tear_add_bttns = d3.select(svg_id)
+    .select(".mid-ann")
     .select(".new-node-buttons")
     .selectAll(".tear-add-button")
     .data(d3.range(0, n_layers, 1))
@@ -970,11 +983,25 @@ function update_tear_color(tear_add_sel, sym_color) {
     ;
 }
 
-function shared_y_scale_setup(layer_type, main_config) {
-  let fm = main_config.full_mirror;
-  let height = fm.svg.height;
+function get_data_dependent_dim(main_config, fixed_dim) {
+  // this is from all_configs.js
+  if (fixed_dim) {
+    return(get_full_canvas_config());
+  } else {
+    let curr_view = main_config.curr_state.View;
+    let max_lev =  main_config.graph.max_range[curr_view].y;
+    let max_width = main_config.graph.max_range[curr_view].x;
+    return(get_full_canvas_config(x_size = max_width, y_size = max_lev));
+  }
+}
+
+function shared_y_scale_setup(main_config, fixed_dim=false) {
+  let layer_type = main_config.curr_state.View;
   let padding = main_config.graph.padding;
   let max_lev =  main_config.graph.max_range[layer_type].y;
+  let fm = get_data_dependent_dim(main_config, fixed_dim=fixed_dim);
+  let height = fm.svg.height;
+
   if (max_lev < 10) {
     height = (max_lev+1) * 60;
   }
@@ -989,33 +1016,36 @@ function shared_y_scale_setup(layer_type, main_config) {
   return(d3.scaleLinear().domain(y_domain).range(y_range));
 }
 
-function graph_scale_setup(layer_type, main_config) {
-  let fm = main_config.full_mirror;
-  let width = fm.svg.width * fm.split.graph;
+function graph_scale_setup(main_config, fixed_dim=false) {
+  let layer_type = main_config.curr_state.View;
+  let fm = get_data_dependent_dim(main_config, fixed_dim=fixed_dim);
+  let width = fm.split.graph;
+  let offset = fm.split.left_ann;
+
   let padding = main_config.graph.padding;
-  let offset = fm.svg.width *  fm.split.left_ann;
   let x_range = [width-padding.right + offset, padding.left + offset];
   let x_domain = [0, Math.max(9, main_config.graph.max_range[layer_type].x)];
 
   return({
           "x": d3.scaleLinear().domain(x_domain).range(x_range),
-          "y": shared_y_scale_setup(layer_type, main_config),
+          "y": shared_y_scale_setup(main_config, fixed_dim=fixed_dim),
         });
 }
 
-function bar_scale_setup(layer_type, main_config) {
-  let fm = main_config.full_mirror;
-  let width = fm.svg.width * fm.split.bar;
-  let padding = main_config.bar.padding;
+function bar_scale_setup(main_config, fixed_dim=false) {
+  let layer_type = main_config.curr_state.View;
+  let fm = get_data_dependent_dim(main_config, fixed_dim=fixed_dim);
+  let width = fm.split.bar;
   let offset = fm.split.graph + fm.split.left_ann + fm.split.mid_ann ;
-  offset = fm.svg.width * offset;
+
+  let padding = main_config.bar.padding;
     // scaling for each node
   let x_range = [padding.left + offset, width-padding.right + offset];
   let x_domain = [0, main_config.bar.max_range[layer_type].x];
 
   return({
           "x": d3.scaleLinear().domain(x_domain).range(x_range),
-          "y": shared_y_scale_setup(layer_type, main_config),
+          "y": shared_y_scale_setup(main_config, fixed_dim=fixed_dim),
         });
 }
 

@@ -12,17 +12,6 @@ initialize_ssm_canvas(".plot-canvas",
 
 // helper functions for image viewing
 
-function open_context_focus_image() {
-  $("#graph_dialog").dialog({
-    autoOpen : false,
-    modal : true,
-    show : "blind",
-    hide : "blind",
-    width: "90%",
-  });
-  $("#graph_dialog").dialog("open");
-  ;
-}
 
 function button_icon_change(button_id, status) {
   let span_id = button_id + " span";

@@ -139,7 +139,7 @@ function prepare_bar_display_data(graph_data, main_config) {
 }
 
 //update bars
-function update_context_display(bar_data, main_config){
+function update_context_display(svg_id, bar_data, main_config, fixed_dim=false){
   // let container = main_config.main_div;
   let container = ".bar-layer";
   let width = main_config.svg_graph_width;
@@ -154,9 +154,9 @@ function update_context_display(bar_data, main_config){
   main_config.bar.max_range[curr_view].x = plot_data.meta.max_count;
 
   let leg_config = main_config.bar.legend;
-  let bar_legends = d3.select(container).select(".legend-box");
+  let bar_legends = d3.select(svg_id).select(container).select(".legend-box");
   let n_layers = main_config.bar.max_range[curr_view].y;
-  let xy_scales = bar_scale_setup(curr_view, main_config);
+  let xy_scales = bar_scale_setup(main_config, fixed_dim=fixed_dim);
   let x_scale = xy_scales.x;
   let y_scale = xy_scales.y;
   let yAxis = d3.axisLeft()
@@ -170,19 +170,22 @@ function update_context_display(bar_data, main_config){
   // let bar_width_prop = main_config.bar.width_prop;
   let bar_width_prop = main_config.bar.width_wide_prop;
   secondary_svg_g.forEach(function(svg_g){
-    d3.select(container)
+    d3.select(svg_id)
+      .select(container)
       .select(svg_g)
       .attr("visibility", "hidden");
   });
   if (curr_highlight in main_config.context_highlights) {
-    d3.select(container)
+    d3.select(svg_id)
+      .select(container)
       .select(".legend-box")
       .attr("visibility", "visble")
       ;
   }
 
   // determine drawing of bars and their specifics
-  d3.select(container)
+  d3.select(svg_id)
+    .select(container)
     .select(".yaxis")
     .call(yAxis)
     .attr("transform","translate("+(padding.left)+", 0)")
@@ -198,7 +201,8 @@ function update_context_display(bar_data, main_config){
   } else {
     xAxis_pos = y_scale(plot_data.meta.max_level + 0.5);
   }
-  d3.select(container)
+  d3.select(svg_id)
+    .select(container)
     .select(".xaxis")
     .call(xAxis)
     .attr("transform","translate(0, " + xAxis_pos + ")")
@@ -207,22 +211,26 @@ function update_context_display(bar_data, main_config){
   // console.log(plot_data);
   // console.log("updated bars");
   // data-binding and rendering
-  let rec_data = d3.select(container)
+  let rec_data = d3.select(svg_id)
+    .select(container)
     .select(".group-bars")
     .selectAll("rect")
     .data(plot_data.data, d => d.id)
     ;
-  let rec_text = d3.select(container)
+  let rec_text = d3.select(svg_id)
+    .select(container)
     .select(".group-text")
     .selectAll("text")
     .data(plot_data.data, d => d.id)
     ;
-  let tri_data = d3.select(container)
+  let tri_data = d3.select(svg_id)
+    .select(container)
     .select(".group-triang")
     .selectAll("path")
     .data(plot_data.data, d => d.id)
     ;
-  let tri_text = d3.select(container)
+  let tri_text = d3.select(svg_id)
+    .select(container)
     .select(".group-triang-text")
     .selectAll("text")
     .data(plot_data.data, d => d.id)

@@ -29,12 +29,12 @@ function create_links(main_nodes) {
   return main_links;
 }
 
-function update_node_features(graph_data, confg) {
+function update_node_features(graph_data, confg, fixed_dim=false) {
   let node_data = graph_data.focus_info.graph;
   let node_meta = graph_data.focus_info.meta;
   // for positional information
   let curr_view = confg.curr_state.View;
-  let xy_scales = graph_scale_setup(curr_view, confg);
+  let xy_scales = graph_scale_setup(confg, fixed_dim=fixed_dim);
   let x_scale = xy_scales.x;
   let y_scale = xy_scales.y;
   // for node colors
@@ -122,24 +122,14 @@ function default_node_appearance(d3_select_all, confg) {
  return out_select;
 }
 
-
-function update_focus_display(graph_data, confg) {
-  container = confg.main_div;
-  // let curr_cntx = confg.curr_state.Context;
+function update_focus_display(svg_id, graph_data, confg, fixed_dim=false) {
   let focus_info = graph_data.focus_info;
   let go_info = graph_data.context_info.graph.go_info;
-  // console.log(go_info);
   focus_info.links = create_links(focus_info.graph);
-  focus_info.graph = update_node_features(graph_data, confg);
-
-
-  // TODO: create a function to setup graph based on the baseline node idenity
-  render_node_link_pos(".graph-layer", focus_info, confg);
-  render_node_link_interaction(".graph-layer", focus_info, go_info, confg);
-  // update_node_link_interpretation(".graph-layer", graph_data, confg);
+  focus_info.graph = update_node_features(graph_data, confg, fixed_dim=fixed_dim);
+  render_node_link_pos(svg_id, focus_info, confg);
+  render_node_link_interaction(svg_id, focus_info, go_info, confg);
 }
-
-
 
 function render_node_link_interaction(container,
                                       focus_info,
@@ -548,55 +538,6 @@ function render_node_link_pos(container,
     // source:  https://bl.ocks.org/mbostock/24bdd02df2a72866b0ec
     let y_dt = 100;
     let total_update_time = layer_delay(y_dt, n_layers);
-
-    // exit effects
-    // -------------
-    // link_exit = link_exit.style("stroke", "brown");
-    // for (let link_end in link_exits) {
-    //   let trans_name = "link_exit_" + link_end;
-    //   link_exit = link_exit
-    //     .transition(trans_name)
-    //     .duration( d => exit_t.duration[exit_map[d[link_end].name]])
-    //     .delay( d => exit_t.delay[exit_map[d[link_end].name]])
-    // }
-    // node_exit = node_exit
-    //   .style("fill", "brown")
-    //   .style("opacity", 1.0)
-    //   .transition("node_exit_1")
-    //   .duration( d => exit_t.duration[exit_map[d.name]])
-    //   .delay( d => exit_t.delay[exit_map[d.name]])
-    //   // .attr("r", 0)
-    //   .attr("cx", confg.graph.transition.end_x_pos)
-    //   ;
-    // link_exit = link_exit
-    //   .style("stroke", "brown")
-    //   .transition("link_exit")
-    //   .duration(trans_confg.min_time)
-    //   .attr("stroke-opacity", 0)
-    //   ;
-
-    // first turn brown and then exit
-    // link_exit = link_exit.style("stroke", "brown");
-    // for (let link_end in link_exits) {
-    //   let coords = line_coords[link_end];
-    //   link_exits[link_exits] = link_exits[link_end]
-    //     .transition("link_exits_" + link_end)
-    //     .duration( d => exit_t.duration[exit_map[d[link_end].name]])
-    //     .delay( d => exit_t.delay[exit_map[d[link_end].name]])
-    //     .attr(coords.x, d => confg.graph.transition.end_x_pos )
-    //     // .attr(coords.y, d => d[link_end].cy )
-    //     // .duration( d => exit_t.duration[exit_map[d[link_end].name]])
-    //     // .delay( d => exit_t.delay[exit_map[d[link_end].name]])
-    //     // .duration(update_time)
-    //     // .delay(exit_time)
-    //     .transition("link_exits_" + link_end)
-    //     // .delay(trans_confg.min_time)
-    //     // .attr(coords.x, d => confg.graph.transition.end_x_pos )
-    //     .duration(100)
-    //     .attr(coords.x, 0)
-    //     ;
-    //
-    // }
 
     // -------------------------------
     // SIMPLE EXIT EFFECT

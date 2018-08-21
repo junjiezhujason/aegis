@@ -2,15 +2,26 @@
 // -----------------------------------------------------------------------------
 
 function open_context_focus_image() {
+  let graph_data = full_data.graph_data;
+  let conf = config;
+  let svg_id = "#full_mirror_viewer";
+  update_svg_dimension(svg_id, conf);
+  update_grid_display(svg_id, graph_data, conf);
+  update_focus_display(svg_id, graph_data, conf);
+  update_context_display(svg_id, graph_data, conf);
+
   $("#graph_dialog").dialog({
     autoOpen : false,
     modal : true,
     show : "blind",
     hide : "blind",
-    width: "90%",
+    // height: "60%",
+    width: "80%",
+    // maxWidth: "500px", // This does not work!
+    resizable: false,
   });
   $("#graph_dialog").dialog("open");
-  ;
+
 }
 
 function get_valid_queries(query_list, search_dict, class_name) {
@@ -547,9 +558,12 @@ function update_config_from_graph(graph_data, conf) {
 
 function update_all_graphs(graph_data, conf) {
   graph_data.curr_lev_nodes =  get_candidate_nodes_per_level(graph_data, conf);
-  update_grid_display(graph_data, conf);
-  update_focus_display(graph_data, conf);
-  update_context_display(graph_data, conf);
+  let svg_id = "#full_mirror_display";
+  let fixed_dim = true;
+  update_svg_dimension(svg_id, conf, fixed_dim=fixed_dim);
+  update_grid_display(svg_id, graph_data, conf, fixed_dim=fixed_dim);
+  update_focus_display(svg_id, graph_data, conf, fixed_dim=fixed_dim);
+  update_context_display(svg_id, graph_data, conf, fixed_dim=fixed_dim);
 }
 
 function test_ssm_data() {

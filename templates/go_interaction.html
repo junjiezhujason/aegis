@@ -288,10 +288,17 @@
   </button>
   Download focus-and-context graphs (with its current layout settings).
 </div>
+<!-- The Graph Viewer for Better Scaling and Download -->
 <div id="graph_dialog"
-     title="Focus and Context Graphs"
+     title="Graph Viewer"
      style="display: none;">
-  <div class="download-canvas" style="width: 800px; height: 800px;" >
+  <div class="download-canvas" style="width: 95%; height: 75%; margin: 10px" >
+    <div id ="new_full_canvas_viewer" class="full-canvas">
+      <div id ="mirror_canvas_viewer">
+<!--         <svg class="full-mirror-display" id="full_mirror_viewer">
+        </svg> -->
+      </div>
+    </div>
   </div>
   <div>
     <button class="btn btn-primary btn-sm" id="export_as_png_foc_con">
