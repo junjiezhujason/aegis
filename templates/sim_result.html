@@ -13,16 +13,69 @@
         </a>
       </h4>
     </div>
-    <div id="loadResults" class="panel-collapse collapse">
+    <div id="loadResults" class="panel-collapse collapse in">
       <div class="panel-body">
-        <p>
-          Load result here:
-          <button type="button"
-                  class="btn btn-primary btn-sm icon-btn-right"
-                  id="load_simulation_button">
+        <div class="go_panel">
+        <!-- data options line -->
+          <div  class="info-line data-driven-line">
+            <div class="options-block">
+              <div style="display: inline-block;">
+                <label>Load Result:</label>
+              </div>
+               <div class="general-options">
+                &nbsp;&nbsp;
+                Job ID  &nbsp;
+                <input style="width: 150px"
+                      type="text"
+                      class="form-control job-id-input"
+                      value="case_heart-effect_0.5"
+                      id="job_id_input">
+                &nbsp;
+                <span>&#124;</span>
+                &nbsp;
+                Test &nbsp;
+                <div class="select-control">
+                  <select class="form-control" id="result_test_method">
+                    <option value="simes">Simes</option>
+                    <option value="hypergeometric.ga">Hypergeometric</option>
+                  </select>
+                </div>
+                &nbsp;
+                &nbsp;
+                Correction &nbsp;
+                <div class="select-control">
+                  <select class="form-control" id="result_multi_method">
+                    <option value="Bonferroni">Bonferroni</option>
+                    <option value="BH">Benjamini Hochberg</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <button type="button"
+                class="btn btn-primary btn-sm icon-btn-right"
+                id="load_simulation_button">
               <span class="glyphicon glyphicon-refresh"> </span>
-          </button>
-        </p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Summary Panel -->
+  <div class="panel panel" id="simOutputPanel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel"
+           data-toggle="collapse"
+           data-parent="#accordion"
+           href="#simSummary">
+           Overall Result Summary
+        </a>
+      </h4>
+    </div>
+    <div id="simSummary" class="panel-collapse collapse">
+      <div class="panel-body">
+
       </div>
     </div>
   </div>

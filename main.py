@@ -296,17 +296,17 @@ def dag_setup_focus():
 
 @app.route('/get_simulation_data', methods=['POST'])
 def get_simulation_data():
-    test_method = flask.request.get_json()["test_method"] # "simes"
-    adjust_method = flask.request.get_json()["adjust_method"] # "BH"
-    # sim_id = lask.request.get_json()["sim_id"]
-    sim_id = setup_power_example(tissue="heart")["job_id"]
-
+    # option parsing
+    test_method = flask.request.get_json()["test_method"]
+    adjust_method = flask.request.get_json()["adjust_method"]
+    job_id = flask.request.get_json()["job_id"]
+    # dag setup and output rendering
     sim_dir = os.path.join(MAIN_FOLDER, "sim")
     cache_dir = os.path.join(MAIN_FOLDER, "local")
     dag = GODAGraph(cache_dir, name="simulation", sim_dir=sim_dir)
-    out_data = dag.restore_testing_configuration(sim_id);
+    out_data = dag.restore_testing_configuration(job_id);
     # create the data for the heatmap here
-    out_data["matrix"] = dag.output_node_power_matrix(sim_id,
+    out_data["matrix"] = dag.output_node_power_matrix(job_id,
                                                       test_method,
                                                       adjust_method)
     response = app.response_class(

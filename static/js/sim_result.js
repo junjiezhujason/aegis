@@ -7,14 +7,12 @@ setup_full_go_canvas(config);
 let ss_manhattan_config = ssm_params(width=config.full_mirror.width);
 initialize_ssm_canvas(".plot-canvas", ss_manhattan_config)
 
-
-
 $(function() {
   // update the query type to be "Upload" if file is selected
-  let job_name = "example_heart-effect_0.5";
+  let job_name = $("#job_id_input").val();
+  let test_method = $("#result_test_method").val();
+  let adjust_method = $("#result_multi_method").val();
   // let test_method = "hypergeometric.ga";
-  let test_method = "simes";
-  let adjust_method = "BH";
 
   $(".main-viz").hide();
   let fname = "subfig_" + job_name + "_" + test_method+ "_" + adjust_method;
@@ -54,7 +52,7 @@ $(function() {
       url: "/get_simulation_data",
       timeout: 10000,
       type: "POST",
-      data: JSON.stringify({"sim_id": job_name,
+      data: JSON.stringify({"job_id": job_name,
                             "test_method": test_method,
                             "adjust_method": adjust_method}),
       contentType: "application/json",
