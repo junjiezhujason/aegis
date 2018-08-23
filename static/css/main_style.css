@@ -592,3 +592,15 @@ Inline help tip
 .file-upload-input {
   width: 450px;
 }
+
+.disableddiv {
+  pointer-events: none;
+  opacity: 0.7;
+}
+/*.disableddiv:hover {
+  cursor: not-allowed;
+}*/
+
+.select_one_option {
+  width: 175px;
+}

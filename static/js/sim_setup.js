@@ -11,6 +11,15 @@ $(function() {
   initialize_gene_tagit();
   setup_simulation_highlight_options();
   setup_request_main_ontology();
+  $( "#option_eff_size" ).spinner({
+      step: 0.01,
+      numberFormat: "n1"
+  });
+  $( "#option_node_level" ).spinner({
+      step: 0.01,
+      numberFormat: "n1"
+  });
+
 })
 
 // handle simulation setup with a progress dialog
@@ -20,7 +29,32 @@ function cancelSimFunc() {
   source.close()
   $("#progress_dialog").dialog("close");
 }
+// TODO: hide the submission button when ajax is running as a lock
 function submitSim() {
+  // collect the parameters
+  let form_data = $('form[name="simulation_form"]').serializeArray();
+  ["option_comp_test", "option_self_test", "option_multi_test"].forEach(d => {
+    form_data.push({"name": d, "value": $("#" + d).val()})
+  });
+  $.ajax({
+    url: "/launch_simulation",
+    timeout: 10000,
+    type: "POST",
+    data: JSON.stringify(form_data),
+    contentType: "application/json",
+    success: function(out_data) {
+      console.log("Simulation completed successfully!");
+      console.log(out_data);
+    },
+    failure: function() {
+      console.log("Server error.");
+    },
+    error: function ( jqXHR, textStatus, errorThrown) {
+      console.log("errorThrown: " + errorThrown
+      + " textStatus:" + textStatus);
+    }
+  })
+
   source = new EventSource("/progress");
   // funciton to cancel the simulation
   source.onmessage = function(event) {

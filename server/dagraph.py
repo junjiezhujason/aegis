@@ -33,6 +33,8 @@ from .stathelper import OnewaySimulator
 logger = logging.getLogger(__name__)
 
 import shutil
+
+
 def cleanup_dir(cache_dir):
     if not os.path.isdir(cache_dir):
         assert 0, "{} does not exist!".format(cache_dir)

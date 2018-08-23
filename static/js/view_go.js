@@ -13,20 +13,6 @@ initialize_ssm_canvas(".plot-canvas",
 // helper functions for image viewing
 
 
-function button_icon_change(button_id, status) {
-  let span_id = button_id + " span";
-  if (status == "complete") {
-    $(button_id).prop("disabled", true);
-    $(button_id).switchClass("btn-primary", "btn-success");
-    $(span_id).switchClass("glyphicon-refresh", "glyphicon-ok");
-  }
-  if (status == "change") {
-    $(button_id).prop("disabled", false);
-    $(button_id).switchClass("btn-success", "btn-primary");
-    $(span_id).switchClass("glyphicon-ok", "glyphicon-refresh");
-  }
-}
-
 function query_change_detected() {
   button_icon_change("#upload_request_ontology_button", "change");
   update_query_input_box("#query_list", {});
@@ -135,19 +121,8 @@ $(function() {
   $("#query_to_navigation").click(function() {
     let qdata = full_data.general_data.query_data;
     if (Object.keys(qdata).length > 0) {
-      $("#vizOptions_panel").addClass("collapsed");
-      $("#vizOptions_panel").attr("aria-expanded", "false");
-      $("#vizOptions").attr("aria-expanded", "false");
-      $("#vizOptions").removeClass("in");
-      $("#vizDynamic_panel").removeClass("collapsed");
-      $("#vizDynamic_panel").attr("aria-expanded", "true");
-      $("#vizDynamic").attr("aria-expanded", "true");
-      $("#vizDynamic").addClass("in");
-      $("#vizDynamic").css("height", "");
-      var $panel = $("#vizDynamic").closest('.panel');
-        $('html,body').animate({
-            scrollTop: $panel.offset().top
-        }, 500);
+      move_to_next_section("#vizOptions_panel", "#vizOptions",
+                           "#vizDynamic_panel", "vizDynamic")
     } else {
       alert("There were problems with file uploading - please re-try.")
     }

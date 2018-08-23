@@ -9,12 +9,18 @@ initialize_ssm_canvas(".plot-canvas", ss_manhattan_config)
 
 $(function() {
   // update the query type to be "Upload" if file is selected
-  let job_name = $("#job_id_input").val();
-  let test_method = $("#result_test_method").val();
-  let adjust_method = $("#result_multi_method").val();
+
   // let test_method = "hypergeometric.ga";
 
   $(".main-viz").hide();
+  setup_simulation_highlight_options();
+
+  // TODO: move this elsewhere
+
+  let job_name = $("#job_id_input").val();
+  let test_method = $("#result_test_method").val();
+  let adjust_method = $("#result_multi_method").val();
+
   let fname = "subfig_" + job_name + "_" + test_method+ "_" + adjust_method;
   d3.select("#export_as_png").on('click', function(){
     save_d3_svg("#full_binder_plot", "png", fname + ".png")
@@ -23,9 +29,7 @@ $(function() {
   d3.select('#export_as_svg').on('click', function() {
     save_d3_svg("#full_binder_plot", "svg", fname)
   });
-
-  setup_simulation_highlight_options();
-
+  // important to avoid illustrator bugs
   d3.select(".ssm-svg")
     .selectAll(".tick")
     .selectAll("text")
@@ -34,15 +38,20 @@ $(function() {
 
   // submit the data as an option
   $("#load_simulation_button").click(function() {
+    // clicking this button restores the graph selected in simulation setup
+    let job_name = $("#job_id_input").val();
+    let test_method = $("#result_test_method").val();
+    let adjust_method = $("#result_multi_method").val();
+
+    move_to_next_section("#loadResultPanel", "#loadResult",
+                         "#goExplorePanel", "#goExplore")
     $(".main-viz").show();
-    $(".context-block").hide();
-    $(".view-block").hide();
-    $(".focus-block").hide();
-    $(".main-ontology-control").prop("disabled", false);
 
-    // job-specific and test-specific information
-
-
+    let disable_divs = [".data-driven-line",
+                        "#general_options",
+                        "#context_anchors",
+                        "#context_options"]
+    disable_divs.forEach(div => {$(div).addClass("disableddiv"); });
     $("#spinner_max_num_foc_anchors").val(20);
     $("#spinner_foc_gap_break").val(5000);
 
@@ -61,19 +70,14 @@ $(function() {
         full_data.general_data.simulation = out_data;
         full_data.ground_truth_info = out_data["nonnulls"];
         // unpack the data
-        let query_dict = out_data["query_term_dict"];
         // restore the ontology options and disable further changes
         $("#ontology_selection").val(out_data["ontology_params"]["ontology"]);
         $("#species_selection").val(out_data["ontology_params"]["species"]);
-        $(".main-ontology-control").prop("disabled", true);
-        // restore the context options and disable further changes
-        config.curr_state.Highlight = "self_nonnull";
+        // TODO: fix restore the context options and disable further changes
         $("#highlight_node_select").val("self_nonnull");
+        config.curr_state.Highlight = $("#highlight_node_select").val();
 
-        // debugger;
-        // $("#context_anchor_type").val("waypoint"); // handled later
-        // set the query to also be the context anchors
-        // use the way-point view instead of the root view
+        button_icon_change("#load_simulation_button", "complete");
         setup_request_main_ontology();
       },
       failure: function() {

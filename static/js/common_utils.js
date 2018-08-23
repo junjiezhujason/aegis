@@ -1,6 +1,20 @@
 // gene ontology navigation setup
 // -----------------------------------------------------------------------------
 
+function button_icon_change(button_id, status) {
+  let span_id = button_id + " span";
+  if (status == "complete") {
+    $(button_id).prop("disabled", true);
+    $(button_id).switchClass("btn-primary", "btn-success");
+    $(span_id).switchClass("glyphicon-refresh", "glyphicon-ok");
+  }
+  if (status == "change") {
+    $(button_id).prop("disabled", false);
+    $(button_id).switchClass("btn-success", "btn-primary");
+    $(span_id).switchClass("glyphicon-ok", "glyphicon-refresh");
+  }
+}
+
 function open_context_focus_image() {
   let graph_data = full_data.graph_data;
   let conf = config;

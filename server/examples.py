@@ -4,6 +4,40 @@ import numpy as np
 import logging
 logger = logging.getLogger(__name__)
 
+
+def get_default_params(param_type):
+    if (param_type == "test_params"):
+        params = {
+            'method_alpha': [0.1],
+            'method_madj': ['Bonferroni', 'BH'],
+            'method_test': ['simes','hypergeometric.ga'],
+            'nonnull_params': {
+                'comp_nonnull': {'case': 'average', 'ga': 1e-05, 'gs': 100},
+                'self_nonnull': {}
+                },
+            'report_metrics': ['FDR', 'Power', 'NumRej']
+            }
+    if (param_type == "sim_params_sweep_sample"):
+        params = {
+            "n_regimes": 5,
+            "n_reps" : 10,
+            "min_n" : 10,
+            "max_n": 130,
+            "eff_size": 0.5,
+            "sweep_sample_size": True
+            }
+    if (param_type == "sim_params_sweep_effect"):
+        params = {
+            "n_regimes": 10,
+            "n_reps" : 10,
+            "n_controls" : 10,
+            "n_cases": 10,
+            "max_eff_size": 1.5,
+            'sweep_sample_size': False
+            }
+    return(params)
+
+
 def setup_random_graph_example():
     ontology_parmams = {
         "ontology": "biological_process",
@@ -24,14 +58,8 @@ def setup_random_graph_example():
         "max_signal_genes": 5,
         "signal_type": "single_leaf",
     }
-    sim_params = {
-        "n_regimes": 5,
-        "n_reps" : 100,
-        "min_n" : 10,
-        "max_n": 130,
-        "eff_size": 0.5,
-        "sweep_sample_size": True
-    }
+    sim_params = get_default_params("sim_params_sweep_sample")
+    sim_params["n_reps"] = 100
 
     # output summary
     logger.info("Generating {} graphs:".format(graph_params["n_graphs"]))
@@ -65,7 +93,6 @@ def load_gwas_example(data_dir):
     fn = os.path.join(data_dir, "hysi_gwas_example.tsv" )
     df = pd.read_table(fn, header=None)
     ddict = dict(zip(df[0], df[1]))
-    # print(df.head())
     # update keys
     old_keys = list(ddict.keys())
     for old_key in old_keys:
@@ -91,30 +118,34 @@ def setup_power_example(tissue="heart"):
     ontology_parmams = {"ontology": "biological_process",
                         "species": "human",
                         "version": "20180719"}
+
     sweep_sample_size = True
+    if sweep_sample_size:
+        sim_params = get_default_params("sim_params_sweep_sample")
+    else:
+        sim_params = get_default_params("sim_params_sweep_effect")
 
     if (tissue == "heart"):
         # GO:0007507 heart development (198 genes)
         # its parent is GO:0048513 animal organ development (1221 genes)
         # but we're interested in GO:0007512 adult heart development (15 genes)
         # to generate the gene set
-        context_params = {'anchors': ['GO:0048513'], 'anchor_rule': 'root', 'refine_graph': True, 'min_node_size': '1', 'max_node_size': '17439'}
+        context_params = {
+            'anchors': ['GO:0048513'],
+            'anchor_rule': 'root',
+            'refine_graph': True,
+            'min_node_size': '1',
+            'max_node_size': '17439'
+            }
         signal_genes = ['ADRA1A', 'APLNR', 'NKX2-5', 'GJA1', 'MEF2D', 'MNAT1', 'MYH6', 'MYH7', 'MYH10', 'TCAP', 'HAND2', 'BMP10', 'CHD7', 'SCUBE1', 'APELA']
         if sweep_sample_size:
-            sim_params = {"n_regimes": 12,
-                          "n_reps" : 100,
-                          "min_n" : 10,
-                          "max_n": 120,
-                          "eff_size": 0.5,
-                         }
+            sim_params["n_regimes"] = 12
+            sim_params["n_reps"] = 100
+            sim_params["min_n"] = 10
+            sim_params["max_n"] = 120
+            sim_params["eff_size"] = 0.5
         else:
-            n_samples = 10
-            sim_params = {"n_regimes": 10,
-                          "n_reps" : 10,
-                          "n_controls" : n_samples,
-                          "n_cases": n_samples,
-                          "max_eff_size": 1.5,
-                         }
+            sim_params["n_regimes"] = 10
 
     if (tissue == "adipose"):
         # GO:0035337: fatty-acyl-CoA metabolic process (40 genes)
@@ -124,48 +155,24 @@ def setup_power_example(tissue="heart"):
         context_params = {'anchors': ['GO:0008150'], 'anchor_rule': 'root', 'refine_graph': True, 'min_node_size': '1', 'max_node_size': '17439'}
         signal_genes = ['THEM5', 'CBR4', 'ELOVL3', 'ELOVL5', 'TECR', 'PPT2', 'ELOVL7', 'ACSL6', 'ACSBG2', 'ACOT7']
         if sweep_sample_size:
-            sim_params = {"n_regimes": 10,
-                          "n_reps" : 10,
-                          "min_n" : 10,
-                          "max_n": 100,
-                          "eff_size": 0.8,
-                         }
+            sim_params["n_regimes"] = 10
+            sim_params["n_reps"] = 10
+            sim_params["min_n"] = 10
+            sim_params["max_n"] = 100
+            sim_params["eff_size"] = 0.8
         else:
-            n_samples = 10
-            sim_params = {"n_regimes": 10,
-                          "n_reps" : 10,
-                          "n_controls" : n_samples,
-                          "n_cases": n_samples,
-                          "max_eff_size": 1.5,
-                         }
-    sim_params["sweep_sample_size"] = sweep_sample_size
-
+            sim_params["n_regimes"] = 10
 
     if sweep_sample_size:
-        job_id = "case_{}-effect_{}".format(tissue, sim_params["eff_size"])
+        job_id = "20180823_{}-effect_{}".format(tissue, sim_params["eff_size"])
     else:
-        job_id = "case_{}-sample_{}".format(tissue, sim_params["n_cases"])
+        job_id = "20180823_{}-sample_{}".format(tissue, sim_params["n_cases"])
 
-    test_params  = {
-        'method_alpha': [0.1],
-        'method_madj': ['Bonferroni',
-                        'BH'],
-        'method_test': ['simes',
-                        'binomial',
-                        'hypergeometric.gs',
-                        'hypergeometric.ga'],
-        'nonnull_params': {
-            'comp_nonnull': {
-                'case': 'average',
-                'ga': 1e-06,
-                'gs': 100},
-            'self_nonnull': {}},
-        'report_metrics': ['FDR',
-                           'Power',
-                           'NumRej']
-    }
+    test_params  = get_default_params("test_params")
     if (tissue == "heart"):
         test_params['nonnull_params']['comp_nonnull']['ga'] = 1e-05
+    else:
+        test_params['nonnull_params']['comp_nonnull']['ga'] = 1e-06
 
     return {
         "ontology_params": ontology_parmams,

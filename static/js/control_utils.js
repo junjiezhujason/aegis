@@ -1,3 +1,19 @@
+function move_to_next_section(curr_panel, curr_div, next_panel, next_div) {
+  $(curr_panel).addClass("collapsed");
+  $(curr_panel).attr("aria-expanded", "false");
+  $(curr_div).attr("aria-expanded", "false");
+  $(curr_div).removeClass("in");
+  $(next_panel).removeClass("collapsed");
+  $(next_panel).attr("aria-expanded", "true");
+  $(next_div).attr("aria-expanded", "true");
+  $(next_div).addClass("in");
+  $(next_div).css("height", "");
+  var $panel = $(next_div).closest('.panel');
+    $('html,body').animate({
+        scrollTop: $panel.offset().top
+    }, 500);
+}
+
 function prepare_data_for_plotly(data,config) {
     //Add a field in the dictionary indicating members that are "others"
     let other = [];

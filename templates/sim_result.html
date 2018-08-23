@@ -8,47 +8,42 @@
         <a class="colpsible-panel"
            data-toggle="collapse"
            data-parent="#accordion"
-           href="#loadResults">
+           href="#loadResult">
            Load Power Analysis
         </a>
       </h4>
     </div>
-    <div id="loadResults" class="panel-collapse collapse in">
+    <div id="loadResult" class="panel-collapse collapse in">
       <div class="panel-body">
+        <div>
+          <p>
+            To load the results from a power analysis, a valid job ID must be specified.
+            This job ID is given either after using the web-interface or when
+            using AEGIS's Python API. Once the job is completed, the meta data
+            will be ready for the display here.
+          </p>
+          <p>
+            The next section will restore the ontology and context configurations.
+            Only nodes used for the power analysis will be included in the context graph.
+            While ontology and context graphs cannot be changed
+            for this interface, the focus graph can be adjusted for exploration. The specified
+            focus graph is used to render the binder plots in the result section, and can be iteratively
+            adjusted.
+          </p>
+        </div>
         <div class="go_panel">
-        <!-- data options line -->
+          <!-- data options line -->
           <div  class="info-line data-driven-line">
             <div class="options-block">
-              <div style="display: inline-block;">
-                <label>Load Result:</label>
+              <div class="label-block">
+                <label>Load Job ID:</label>
               </div>
-               <div class="general-options">
-                &nbsp;&nbsp;
-                Job ID  &nbsp;
-                <input style="width: 150px"
+              <div class="general-options">
+                <input style="width: 300px"
                       type="text"
                       class="form-control job-id-input"
                       value="case_heart-effect_0.5"
                       id="job_id_input">
-                &nbsp;
-                <span>&#124;</span>
-                &nbsp;
-                Test &nbsp;
-                <div class="select-control">
-                  <select class="form-control" id="result_test_method">
-                    <option value="simes">Simes</option>
-                    <option value="hypergeometric.ga">Hypergeometric</option>
-                  </select>
-                </div>
-                &nbsp;
-                &nbsp;
-                Correction &nbsp;
-                <div class="select-control">
-                  <select class="form-control" id="result_multi_method">
-                    <option value="Bonferroni">Bonferroni</option>
-                    <option value="BH">Benjamini Hochberg</option>
-                  </select>
-                </div>
               </div>
             </div>
             <button type="button"
@@ -61,24 +56,6 @@
       </div>
     </div>
   </div>
-  <!-- Summary Panel -->
-  <div class="panel panel" id="simOutputPanel">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a class="colpsible-panel"
-           data-toggle="collapse"
-           data-parent="#accordion"
-           href="#simSummary">
-           Overall Result Summary
-        </a>
-      </h4>
-    </div>
-    <div id="simSummary" class="panel-collapse collapse">
-      <div class="panel-body">
-
-      </div>
-    </div>
-  </div>
   <!-- Exploration Panel -->
   <div class="panel panel" id="goExplorePanel">
     <div class="panel-heading">
@@ -87,13 +64,58 @@
            data-toggle="collapse"
            data-parent="#accordion"
            href="#goExplore">
-           Focus-and-Context Navigation
+           Reference Graph for Testing
         </a>
       </h4>
     </div>
     <div id="goExplore" class="panel-collapse collapse">
       <div class="panel-body">
         {% include "go_interaction.html" %}
+      </div>
+    </div>
+  </div>
+  <!-- Summary Panel -->
+  <div class="panel panel" id="simOutputPanel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel"
+           data-toggle="collapse"
+           data-parent="#accordion"
+           href="#simSummary">
+           Power Analysis Result
+        </a>
+      </h4>
+    </div>
+    <div id="simSummary" class="panel-collapse collapse">
+      <div class="panel-body">
+         <div class="go_panel">
+          <!-- data options line -->
+          <div  class="info-line">
+            <div class="options-block">
+              <div class="label-block">
+                <label>Testing Options:</label>
+              </div>
+              <div class="general-options">
+                node-specific test &nbsp;
+                <div class="select-control">
+                  <select class="form-control" id="result_test_method">
+                    <option value="simes">Simes</option>
+                    <option value="hypergeometric.ga">Hypergeometric</option>
+                  </select>
+                </div>
+                &nbsp;
+                &nbsp;
+                multiplicity correction &nbsp;
+                <div class="select-control">
+                  <select class="form-control" id="result_multi_method">
+                    <option value="Bonferroni">Bonferroni</option>
+                    <option value="BH">Benjamini Hochberg</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

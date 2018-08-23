@@ -19,15 +19,16 @@ import optparse
 import tornado.wsgi
 import tornado.httpserver
 import json
+from random import randint
+
 
 from server.dagraph import GODAGraph
-from server.examples import load_chipseq_example, load_gwas_example, setup_power_example
+from server.examples import load_chipseq_example, load_gwas_example, get_default_params
 
 # global variables
 logger = logging.getLogger(__name__)
 logging.basicConfig(format='[%(asctime)s %(name)s %(levelname)s] %(message)s',
                             datefmt='%I:%M:%S', level=logging.INFO)
-
 global DAG_DICT
 global dag
 global MAIN_FOLDER
@@ -37,6 +38,14 @@ app.config["VERSION"] = "20180719"
 
 # Set the secret key to some random bytes. Keep this really secret!
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
+def get_job_id():
+    n = 4 # number of random digits
+    date = datetime.datetime.today().strftime('%Y%m%d')
+    range_start = 10**(n-1)
+    range_end = (10**n)-1
+    rand_num = randint(range_start, range_end)
+    return "{}_{}".format(date, rand_num)
 
 def report_disabled():
     return("Error: function disabled in this mode")
@@ -55,6 +64,64 @@ def get_core_sublist():
             "caption": text_map[example],
         })
     return(sublist)
+
+def get_sim_param_annotation():
+    return({
+        "min_n" : "Minimum of samples per case / control",
+        "max_n" : "Maximum of samples per case / control",
+        "n_regimes": "Number of linearly-spaced sample size regimes",
+        "n_reps": "Number of repetitions per regime",
+        "eff_size": "Gene effect size / signal strength",
+        "node_level": "Node p-value false discovery rate control level",
+        "comp_test": "Competitive test for each GO term",
+        "self_test": "Self-contained test for each GO term",
+        "multi_test": "Multiple-testing adjustment procedure",
+        # "gene_level": "Gene p-value cutoff ( for competitive tests only)",
+    })
+
+def get_sim_param_setup():
+    annotation_map = get_sim_param_annotation()
+    sim_params = get_default_params("sim_params_sweep_sample")
+    test_params = get_default_params("test_params")
+    options = {
+      "comp_test": [{"caption": "Hypergeometric", "value": "hypergeometric.ga"}],
+      "self_test": [{"caption": "Simes' (Composite)", "value": "simes"}],
+      "multi_test": [{"caption": "Bonferroni", "value": "Bonferroni"},
+                     {"caption": "Benjamini Hochberg", "value": "BH"}],
+    }
+    param_list = []
+    for param in annotation_map:
+        val = None
+        cla = ""
+        if (param in ["min_n", "max_n", "n_regimes", "n_reps", "eff_size", "node_level"]):
+            cla = "jquery_ui_spinner"
+            opt = []
+        if (param in ["comp_test", "self_test", "multi_test"]):
+            opt = options[param]
+            cla = "select_one_option"
+        if (param in sim_params):
+            val = sim_params[param]
+        else:
+            if (param == "node_level"):
+                val = test_params["method_alpha"][0]
+            if (param == "gene_level"):
+                val = test_params["nonnull_params"]["comp_nonnull"]["ga"]
+            if (param == "comp_test"):
+                val = "hypergeometric.ga"
+            if (param == "self_test"):
+                val = "simes"
+        param_dict = {
+            "id": "option_{}".format(param),
+            "caption": annotation_map[param],
+            "class": cla,
+            "value": val,
+            "options": opt,
+        }
+        param_list.append(param_dict)
+    return {
+        "list": param_list,
+        "options": options,
+        }
 
 def get_lite_sublist(example_only=True):
     ont_names = ["biological_process",
@@ -153,17 +220,17 @@ def about():
 def core(page):
     if app.config["LITEVIEW"]:
         return report_disabled()
-    cache_dir = os.path.join(MAIN_FOLDER, "local")
-    if not os.path.exists(cache_dir):
-        os.makedirs(cache_dir)
-    sim_dir = os.path.join(MAIN_FOLDER, "sim")
-    if not os.path.exists(sim_dir):
-        os.makedirs(sim_dir)
-    logger.info("Calling core functionality: {}".format(page))
+    page_options = [item["id"] for item in get_core_sublist()]
+    assert page in page_options, "The url for core/ is not recognized!"
+    if (page == "sim_setup"):
+        sim_params = get_sim_param_setup()
+    else:
+        sim_params = {}
     return flask.render_template('{}.html'.format(page),
                                  task=page,
                                  mode="full_mode",
-                                 sublist=get_core_sublist())
+                                 sublist=get_core_sublist(),
+                                 simparam=sim_params)
 
 # setup the pages for the light version
 @app.route('/lite/<page>')
@@ -179,7 +246,7 @@ def lite(page):
                                  mode="lite_mode",
                                  sublist=get_lite_sublist())
 
-
+# routes for data transfer
 @app.route('/lite/request_general_and_context_info', methods=['POST'])
 def request_general_and_context_info():
     if not app.config["LITEVIEW"]:
@@ -217,7 +284,6 @@ def request_general_and_context_info():
     )
     return response
 
-# pages for functional uses
 @app.route('/dag_setup_ontology', methods=['POST'])
 def dag_setup_ontology():
     assert MAIN_FOLDER, "a local cache folder needs to be specified"
@@ -294,6 +360,51 @@ def dag_setup_focus():
     )
     return response
 
+@app.route('/launch_simulation', methods=['POST'])
+def launch_simulation():
+    form_data = flask.request.get_json()
+    param_dict = {}
+    for entry in form_data:
+        key = entry["name"].split("option_")[1]
+        val = entry["value"]
+        param_dict[key] = val
+    print(param_dict)
+    sim_params = get_default_params("sim_params_sweep_sample")
+    test_params = get_default_params("test_params")
+
+    # update the form data
+    for key in param_dict:
+        if key in sim_params:
+            if key in ["eff_size"]:
+                sim_params[key] = float(param_dict[key])
+            else:
+                sim_params[key] = int(param_dict[key])
+        else:
+            if key == "node_level":
+                test_params['method_alpha'] = [float(param_dict[key])]
+    multi_test = param_dict["multi_test"]
+    assert multi_test in test_params['method_madj'], "{} not found".format(multi_test)
+    tests = [param_dict["comp_test"], param_dict["self_test"]]
+    for test in tests:
+        assert test in test_params["method_test"], "{} not found".format(test)
+    test_params['method_madj'] = [multi_test]
+    test_params["method_test"] = tests
+
+    stat = dag.main_statistician
+    stat.set_test_attr_from_dict(test_params)
+    stat.setup_simulation_oneway(sim_params)
+
+    job_id = get_job_id()
+    dag.launch_simulation_pipeline(job_id, cleanup=True)
+
+    # retrieve relevant annotations
+    out_data = {"job_id": job_id}
+    response = app.response_class(
+        response=flask.json.dumps(out_data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
 @app.route('/get_simulation_data', methods=['POST'])
 def get_simulation_data():
     # option parsing
@@ -467,7 +578,14 @@ def start_from_terminal(app):
 
     port = opts.port
     logger.info("Running on port: {}".format(port))
+    # handle the local folders here
     logger.info("Local folder : {}".format(MAIN_FOLDER))
+    cache_dir = os.path.join(MAIN_FOLDER, "local")
+    if not os.path.exists(cache_dir):
+        os.makedirs(cache_dir)
+    sim_dir = os.path.join(MAIN_FOLDER, "sim")
+    if not os.path.exists(sim_dir):
+        os.makedirs(sim_dir)
 
     if opts.lite:
         create_lite_dag_dict()

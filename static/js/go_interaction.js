@@ -20,11 +20,6 @@ Math.seedrandom('hello.');
 $(function(){
   $('[data-toggle="tooltip"]').tooltip();
   $(".jquery_ui_spinner" ).spinner();
-  $( "#spinner_maxsize" ).spinner({
-      step: 0.01,
-      numberFormat: "n1"
-  });
-  // https://stackoverflow.com/questions/18334717/how-to-upload-a-file-using-an-ajax-call-in-flask
 });
 
 function setup_request_main_ontology(onclick_only=false) {
@@ -555,17 +550,16 @@ function request_main_ontology() {
         }
         update_query_input_box("#query_list", full_data.general_data.query_data);
       } else if (config.main_mode == "simulation_result") {
-        // update the context
+        // restore the context parameters from the simulation meta data
         let context_params = full_data.general_data.simulation.context_params;
         ["min_node_size", "max_node_size"].forEach(p => {
           node_size_params[p] = context_params[p];
-        })
+        });
         refine = context_params.refine_graph;
         anchor_rule = context_params.anchor_rule;
         context_params.anchors.forEach(anchor => {
           $(tag_id).tagit("createTag", anchor);
         })
-        $(".main-context-control").prop("disabled", true);
       } else {
         $(tag_id).tagit("createTag", default_root);
       }

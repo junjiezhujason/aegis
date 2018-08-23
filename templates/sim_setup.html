@@ -133,61 +133,6 @@
              <span class="glyphicon glyphicon-duplicate"></span>
             </button>
           </div>
-          <!-- function from samples
-            <a class="btn icon-btn icon-btn-right btn-primary"  onclick="add_random_genes()">
-              <span class="glyphicon btn-glyphicon glyphicon-plus img-circle text-success"></span>
-              Add
-            </a>
-            <a class="btn icon-btn icon-btn-right btn-primary"  onclick="add_random_anchor_genes()">
-              <span class="glyphicon btn-glyphicon glyphicon-plus img-circle text-success"></span>
-              Add
-            </a>
-          -->
-        </div>
-       <!--  <hr>
-        <div class="go_panel">
-          <div class="info-line">
-            <div class="options-block">
-              <div class="label-block">
-                <label> Context for Testing </label>
-              </div>
-              <span>&#124;</span>
-              &nbsp;
-              <div class="general-options">
-                Use refinement
-                &nbsp;
-                <input id="stat_check_refine_context"
-                       name="stat_check_refine_context"
-                       type="checkbox"
-                       checked/>
-                <label for="stat_check_refine_context" class="label-primary"></label>
-              </div>
-              &nbsp;
-              <span>&#124;</span>
-              &nbsp;
-              <div class="general-options">
-                Use node size from above
-                &nbsp;
-                <input id="stat_limit_node_size"
-                       name="stat_limit_node_size"
-                       type="checkbox"
-                       checked/>
-                <label for="stat_limit_node_size" class="label-primary"></label>
-              </div>
-              &nbsp;
-              <span>&#124;</span>
-              &nbsp;
-              <div class="general-options">
-                Use full ontology
-                &nbsp;
-                <input id="stat_use_full_ontology"
-                       name="stat_use_full_ontology"
-                       type="checkbox"
-                       checked/>
-                <label for="stat_use_full_ontology" class="label-primary"></label>
-              </div>
-            </div>
-          </div> -->
         </div>
       </div>
     </div>
@@ -197,118 +142,42 @@
     <div class="panel-heading">
       <h4 class="panel-title">
         <a class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-          Other Parameters
+          Simulation Parameters
         </a>
       </h4>
     </div>
     <div id="collapseTwo" class="panel-collapse collapse">
       <div class="panel-body">
-        <form>
+        <form name="simulation_form">
+          {% for item in simparam.list %}
           <div class="form-group row">
-            <label for="spinner_min_nsamples" class="col-sm-5 col-form-label">
-              Minimum of samples per case / control
+            <label for="{{ item.id }}" class="col-sm-6 col-form-label">
+              {{ item.caption }}
             </label>
             <div class="col-sm-3">
-              <input id="spinner_nsamples" name="value" class="jquery_ui_spinner" value="10">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="spinner_max_nsamples" class="col-sm-5 col-form-label">
-              Maximum of samples per case / control
-            </label>
-            <div class="col-sm-3">
-              <input id="spinner_nsamples" name="value" class="jquery_ui_spinner" value="100">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="spinner_ncases" class="col-sm-5 col-form-label">
-              Number of linearly-spaced sample size regimes
-            </label>
-            <div class="col-sm-3">
-              <input id="spinner_ncases" name="value" class="jquery_ui_spinner" value="5">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="spinner_ntrials" class="col-sm-5 col-form-label">
-              Number of repetitions per regime
-            </label>
-            <div class="col-sm-3">
-              <input id="spinner_ntrials" name="value" class="jquery_ui_spinner"  value="10">
-            </div>
-          </div>
-           <div class="form-group row">
-            <label for="spinner_maxsize" class="col-sm-5 col-form-label">
-              Gene effect size / signal strength
-            </label>
-            <div class="col-sm-3">
-              <input id="spinner_maxsize" name="value" class="jquery_ui_spinner" value="0.50">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-5">
-              Competitive test for each GO term
-            </label>
-            <div class="col-sm-5">
-              <select class="form-control" id="co_test">
-                <option>Hypergeometric</option>
+              {% if item.class == 'jquery_ui_spinner' %}
+              <input id="{{ item.id }}"
+                     name="{{ item.id }}"
+                     class="{{ item.class }}"
+                     value="{{ item.value }}">
+              {% endif %}
+              {% if item.class == 'select_one_option' %}
+              <select class="form-control {{ item.class }}" id="{{ item.id }}">
+                {% for option in item.options %}
+                  <option value="{{ option.value }}">{{ option.caption }}</option>
+                {% endfor %}
               </select>
+              {% endif %}
             </div>
           </div>
-          <div class="form-group row">
-            <label class="col-sm-5">
-              Self-contained test for each GO term
-            </label>
-            <div class="col-sm-5">
-              <select class="form-control" id="sc_test">
-                <option>Simes' (Composite)</option>
-                <option>Bonferroni (Composite)</option>
-                <option>Fisher's Combination (Composite)</option>
-                <option>Mann-Whitney (ANOVA)</option>
-                <option>Kruskal-Wallis (ANOVA)</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-5">
-              Multiple-testing adjustment procedures
-            </label>
-            <div class="col-sm-5">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="testBonf" checked disabled>
-                <label class="form-check-label" for="testBonf">
-                  Bonferroni
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="testBonf" checked disabled>
-                <label class="form-check-label" for="testH">
-                  Benjamini Hochberg
-                </label>
-              </div>
-            </div>
-          </div>
+          {% endfor %}
         </form>
+        <div>
+          <button onclick="submitSim()" class="btn btn-primary">
+            Launch Simulation
+          </button>
+        </div>
       </div>
-    </div>
-  <!-- Final Review and Launch Panel -->
-  <div class="panel panel">
-  <div class="panel-heading">
-    <h4 class="panel-title">
-      <a class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
-        Review and Launch
-      </a>
-    </h4>
-  </div>
-  <div id="collapseFour" class="panel-collapse collapse">
-    <div class="panel-body">
-      <div>
-      </div>
-      <div>
-        <button onclick="submitSim()" class="btn btn-primary">
-          Launch Simulation
-        </button>
-      </div>
-
     </div>
   </div>
 </div>
