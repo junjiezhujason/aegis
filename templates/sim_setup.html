@@ -162,9 +162,15 @@
                      value="{{ item.value }}">
               {% endif %}
               {% if item.class == 'select_one_option' %}
-              <select class="form-control {{ item.class }}" id="{{ item.id }}">
+              <select class="form-control {{ item.class }}"
+                      id="{{ item.id }}"
+                      value="{{ item.value }}">
                 {% for option in item.options %}
-                  <option value="{{ option.value }}">{{ option.caption }}</option>
+                  <option value="{{ option.value }}"
+                    {% if item.value == option.value %}
+                          selected="selected"
+                    {% endif %}>
+                  {{ option.caption }}</option>
                 {% endfor %}
               </select>
               {% endif %}

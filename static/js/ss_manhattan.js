@@ -1,18 +1,8 @@
-function initialize_ssm_canvas(container,
-                               conf,
-                               show_name=true) {
+function get_ssm_parts(conf) {
   let type = conf.main_plot_type;
-  let show_context = conf.show_context; // true
+  let show_name = conf.show_name;
+  let show_context = conf.show_context;
   let graph_only = conf.graph_only;
-  // create an svg that spans the entire div
-  let main_svg = d3.select(container).append("svg")
-    .attr("class", "ssm-svg")
-    .attr("id", "full_binder_plot")
-    .attr("width", conf.total.width)
-    .attr("height", conf.total.height)
-    ;
-  // append svgs of the needed components
-
   let left_part, right_part, all_parts;
   if (show_name) {
     left_part = conf.component_breakdown.graph;
@@ -33,20 +23,23 @@ function initialize_ssm_canvas(container,
   } else {
     all_parts = left_part.concat(right_part);
   }
+  return(all_parts);
+}
 
-  let curr_offset = 0;
+function initialize_ssm_canvas(container, conf) {
+  // create the svg
+  let main_svg = d3.select(container).append("svg")
+    .attr("class", "ssm-svg")
+    .attr("id", "full_binder_plot")
+    ;
+  // create the svg sub elements
+  let all_parts = get_ssm_parts(conf);
   for (let comp_i in all_parts) {
-    let class_n = all_parts[comp_i].class;
-    // let grp_dim = conf.plot_type_dim[class_n];
-    let grp_dim = get_svg_dim(conf, class_n);
     let sub_svg = main_svg.append("g")
       .attr("id", all_parts[comp_i].id)
       .attr("class", all_parts[comp_i].class)
-      .attr("transform", "translate(" + curr_offset +", 0)")
       .call(initialize_subplots, conf);
-    curr_offset += grp_dim.width;
   }
-
   // ----------------------------------------------------------
   // CREATE LEGEND
   // http://bl.ocks.org/nbremer/a43dbd5690ccd5ac4c6cc392415140e7
@@ -75,8 +68,7 @@ function initialize_ssm_canvas(container,
   tempPoint = [];
   for(var i = 0; i < numStops; i++) {
     tempPoint.push(i * tempRange[2]/(numStops-1) + tempRange[0]);
-  }//for i
-
+  }
   //Create the gradient
   main_svg.append("defs")
     .append("linearGradient")
@@ -109,7 +101,7 @@ function initialize_ssm_canvas(container,
     // .attr("stroke", "darkgrey")
     ;
 
-  //Append title
+  // Append title
   // legendsvg.append("text")
   //   .attr("class", "legendTitle")
   //   .attr("x", 0)
@@ -139,7 +131,6 @@ function initialize_ssm_canvas(container,
 
 function initialize_subplots(grp, conf) {
   let class_n = grp.attr("class");
-  let grp_dim = get_svg_dim(conf, class_n);
   // all groups have a background layer
   grp.append("g").attr("class", "plot-background");
   if (class_n == "manhattan-plot") {
@@ -312,7 +303,21 @@ function get_svg_dim(ssm_conf, name) {
   // for (let att in ssm_conf.total) {
   //   svg_dim[att] = ssm_conf.total[att] * parseFloat(style[att]) / 100;
   // }
-  svg_dim = ssm_conf.plot_type_dim[name];
+  let svg_dim = ssm_conf.plot_type_dim[name];
+  let data_dim = ssm_conf.data_dim;
+  let shared_padding = ssm_conf.shared_padding;
+  if (!(data_dim == null)) {
+    svg_dim.height = ssm_conf.row_height * data_dim.y +
+                     shared_padding.top + shared_padding.bottom;
+    if (name == "arc-plot") {
+      svg_dim.width = ssm_conf.row_height * data_dim.y / 2;
+    }
+    if (name == "heatmap-plot"){
+      let mm_padding = ssm_conf.manhattan_plot.padding;
+      svg_dim.width = ssm_conf.row_height * data_dim.x +
+                      mm_padding.left + mm_padding.right;
+    }
+  }
   return svg_dim;
 }
 
@@ -467,23 +472,6 @@ function draw_heatmap(container, in_data, conf) {
             .attr("fill", d => colorScale(d.value))
             ;
         }
-        // if (data_t == "points") {
-        //   data_sel[data_t][state]
-        //       .attr("r", conf.manhattan_plot.scatter.radius)
-        //       .attr("fill", d => get_group_color(d.group, "points", conf) )
-        //       ;
-        //   if (mode == "heavy") {
-        //   data_sel[data_t][state]
-        //       .attr("cx", d => scales.x(d.value) )
-        //       .attr("cy", d => scales.y(d.rank) )
-        //       ;
-        //   } else {
-        //   data_sel[data_t][state]
-        //       .attr("cx", d => scales.x(d) )
-        //       .attr("cy", (d, i) => scales.y(i) )
-        //       ;
-        //   }
-        // }
         if (data_t == "blocks") {
           data_sel[data_t][state]
             .attr("x", 0)
@@ -765,7 +753,7 @@ function draw_arcgraph(container, f_data, f_nodes, conf) {
           data_sel[data_t][state]
             .attr("x", svg_dim.width - 18)
             .attr("y", d => scales.y(d.start))
-            .attr("width", svg_dim.width)
+            .attr("width", 20) // cover the nodes only
             .attr("height", d => (scales.y(d.end) - scales.y(d.start)))
             .attr("fill", d => get_group_color(d.id, "background", conf) )
             ;
@@ -923,24 +911,41 @@ function add_scale_attribute(in_data, conf, plot_id) {
   return out_data;
 }
 
-function update_binder_plot(container,
-                            node_values,
-                            focus_nodes,
-                            f_group_ordering,
-                            c_group_ordering, // TODO: replace with index breaks
-                            conf,
-                            mode) {
+function update_ssm_plot(container,
+                        node_values,
+                        focus_nodes,
+                        f_group_ordering,
+                        c_group_ordering, // TODO: replace with index breaks
+                        conf,
+                        mode) {
   // requirements:
   // 1. all children should have a larger index than its parent
   // 2. there is no edge crossing within each group
 
-  // the svg can be handled here
-  // console.log(node_values);
-  // console.log(focus_nodes);
-  // TODO: update the figure dimensions here!
-  // debugger;
-
-
+  let data_dim =  {"x": 8, "y": focus_nodes.length};
+  if (conf.main_plot_type == "matrix") {
+   data_dim.x = node_values.col_ann.length;
+  }
+  conf.data_dim = data_dim; // this is used in get_svg_dim()
+  // ------------------------
+  // svg dimension setup
+  // ------------------------
+  let main_svg = d3.select(container).select(".ssm-svg");
+  let all_parts = get_ssm_parts(conf);
+  let width_offset = 0;
+  let grp_dim;
+  for (let comp_i in all_parts) {
+    grp_dim = get_svg_dim(conf, all_parts[comp_i].class);
+    let sub_svg = main_svg.select("#"+all_parts[comp_i].id)
+      .attr("transform", "translate(" + width_offset +", 0)");
+    width_offset += grp_dim.width;
+  }
+  main_svg.attr("width", width_offset)
+          .attr("height", grp_dim.height) // this is shared, so we're fine
+          ;
+  // ------------------------
+  // data preparation
+  // ------------------------
   // let main_svg = d3.select(container).select(".ssm-svg");
   let f_data = prepare_group_info(f_group_ordering);
   if (conf.main_plot_type == "matrix") {

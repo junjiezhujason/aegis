@@ -6,9 +6,7 @@ setup_full_go_canvas(config);
 let ss_manhattan_config = ssm_params(height=800,
                                      width=800,
                                      main_mode=config.main_mode)
-initialize_ssm_canvas(".plot-canvas",
-                      ss_manhattan_config,
-                      show_name=true)
+initialize_ssm_canvas(".plot-canvas", ss_manhattan_config, show_name=true)
 
 // helper functions for image viewing
 
@@ -122,7 +120,7 @@ $(function() {
     let qdata = full_data.general_data.query_data;
     if (Object.keys(qdata).length > 0) {
       move_to_next_section("#vizOptions_panel", "#vizOptions",
-                           "#vizDynamic_panel", "vizDynamic")
+                           "#vizDynamic_panel", "#vizDynamic")
     } else {
       alert("There were problems with file uploading - please re-try.")
     }

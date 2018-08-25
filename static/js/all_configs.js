@@ -397,10 +397,12 @@ function ssm_params(height=350, width=700, main_mode="simulation_result") {
   if (main_mode == "visualizer") {
     graph_only = true;
     show_context = false;
+    show_name=true
     main_plot_type = "vector";
   } else {
     graph_only = false;
     show_context = false;
+    show_name=true
     main_plot_type = "matrix";
   }
   let ss_manhattan_dim = {
@@ -410,6 +412,9 @@ function ssm_params(height=350, width=700, main_mode="simulation_result") {
 
   let ss_manhattan_share = get_subplot_breakdown(ss_manhattan_dim);
   let ss_manhattan_config = {
+    "shared_padding": ss_manhattan_share.padding,
+    "row_height": 19,
+    "show_name": show_name,
     "main_plot_type": main_plot_type,
     "show_context": show_context,
     "graph_only": graph_only,

@@ -493,6 +493,26 @@ Inline help tip
   overflow: hidden;
   background-color: #F0F0F0;
 }
+
+.go_panel .form-line {
+  /*display: flex;*/
+  margin: 0.1rem;
+  align-items: center;  /* Makes everything centered*
+  /*height: 35px;*/
+  /*padding: 0.8rem;*/
+  /*overflow: hidden;*/
+  background-color: #F0F0F0;
+}
+
+
+
+.go_panel .form-line .tabel-label {
+  margin-top: 8px;
+}
+.go_panel .form-line .tabel-value {
+  margin-top: 5px;
+}
+
 // TODO: remove
 .search-line {
   display: flex;

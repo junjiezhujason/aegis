@@ -69,7 +69,7 @@
       </h4>
     </div>
     <div id="goExplore" class="panel-collapse collapse">
-      <div class="panel-body">
+      <div class="panel-body  result-panel">
         {% include "go_interaction.html" %}
       </div>
     </div>
@@ -87,8 +87,8 @@
       </h4>
     </div>
     <div id="simSummary" class="panel-collapse collapse">
-      <div class="panel-body">
-         <div class="go_panel">
+      <div class="panel-body result-panel">
+        <div class="go_panel">
           <!-- data options line -->
           <div  class="info-line">
             <div class="options-block">
@@ -115,28 +115,28 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Output Panel -->
-  <div class="panel panel" id="simOutputPanel">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a class="colpsible-panel"
-           data-toggle="collapse"
-           data-parent="#accordion"
-           href="#simOutput">
-           Download Results
-        </a>
-      </h4>
-    </div>
-    <div id="simOutput" class="panel-collapse collapse">
-      <div class="panel-body">
-        {% include "ss_manhattan.html" %}
-        <div>
-          <button id='export_as_png'>Export Figure as PNG</button>
-          <button id='export_as_svg'>Export Figure as SVG</button>
+          <div class="binder-plot">
+            <div class="canvas plot-sim-canvas"></div>
+          </div>
+          <div>
+            <form>
+              {% for item in simparam.list %}
+              <div class="form-group row form-line">
+                  <label for="{{ item.id }}" class="col-sm-6 tabel-label">
+                    {{ item.caption }}
+                  </label>
+                <div class="col-sm-4 tabel-value">
+                  <textarea  class="{{ item.class }}"
+                             id="{{ item.id }}"
+                             value="{{ item.value }}"
+                             type="text"
+                             readonly>
+                  </textarea>
+                </div>
+              </div>
+              {% endfor %}
+            </form>
+          </div>
         </div>
       </div>
     </div>

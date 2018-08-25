@@ -37,7 +37,7 @@ function submitSim() {
     form_data.push({"name": d, "value": $("#" + d).val()})
   });
   $.ajax({
-    url: "/launch_simulation",
+    url: "/simulation_launch",
     timeout: 10000,
     type: "POST",
     data: JSON.stringify(form_data),

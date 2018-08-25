@@ -65,32 +65,105 @@ def get_core_sublist():
         })
     return(sublist)
 
-def get_sim_param_annotation():
-    return({
+def get_sim_param_annotation(use_for="setup"):
+    setup_dict = {
         "min_n" : "Minimum of samples per case / control",
         "max_n" : "Maximum of samples per case / control",
         "n_regimes": "Number of linearly-spaced sample size regimes",
         "n_reps": "Number of repetitions per regime",
         "eff_size": "Gene effect size / signal strength",
-        "node_level": "Node p-value false discovery rate control level",
+        "node_level": "GO term false discovery rate level",
         "comp_test": "Competitive test for each GO term",
         "self_test": "Self-contained test for each GO term",
         "multi_test": "Multiple-testing adjustment procedure",
+        "num_tests": "Number of tested hypotheses",
+        "num_diff_genes": "Number of (true) signal genes",
+        "num_comp_nnulls": "Number of (true) competitive non-nulls",
+        "num_self_nnulls" : "Number of (true) self-contained non-nulls"
         # "gene_level": "Gene p-value cutoff ( for competitive tests only)",
-    })
+    }
 
-def get_sim_param_setup():
-    annotation_map = get_sim_param_annotation()
-    sim_params = get_default_params("sim_params_sweep_sample")
-    test_params = get_default_params("test_params")
+    if use_for == "setup":
+        use_list = ["min_n",
+                    "max_n" ,
+                    "n_regimes",
+                    "n_reps",
+                    "eff_size",
+                    "node_level",
+                    "comp_test",
+                    "self_test",
+                    "multi_test"]
+    elif use_for == "result":
+        use_list = ["num_tests",
+                    "num_diff_genes",
+                    "num_comp_nnulls",
+                    "num_self_nnulls",
+                    "n_reps",
+                    "eff_size",
+                    "node_level",
+                    "comp_test",
+                    "self_test",
+                    "multi_test"]
+    else:
+        use_list = []
+    return use_list, setup_dict
+
+def get_test_options():
     options = {
       "comp_test": [{"caption": "Hypergeometric", "value": "hypergeometric.ga"}],
       "self_test": [{"caption": "Simes' (Composite)", "value": "simes"}],
       "multi_test": [{"caption": "Bonferroni", "value": "Bonferroni"},
                      {"caption": "Benjamini Hochberg", "value": "BH"}],
     }
+    return options
+
+def get_sim_param_result():
+    use_list, field_map = get_sim_param_annotation(use_for="result")
     param_list = []
-    for param in annotation_map:
+    for param in use_list:
+        cla = "summary_lite"
+        param_list.append({
+            "id": "option_{}".format(param),
+            "caption": field_map[param],
+            "class": cla,
+            "value": ""
+            })
+    return { "list": param_list }
+
+def extract_sim_params(job_dat, dag):
+    use_list, _ = get_sim_param_annotation(use_for="result")
+    value_map = {}
+    for attr in use_list:
+        val = ""
+        if attr in ["n_reps", "min_n", "max_n" , "n_regimes", "eff_size"]:
+            val = job_dat["oneway_params"][attr]
+        if attr == "num_comp_nnulls":
+            val = len(job_dat["nonnulls"]["comp_nonnull"])
+        if attr == "num_self_nnulls":
+            val = len(job_dat["nonnulls"]["self_nonnull"])
+        if attr == "num_diff_genes":
+            val = len(dag.main_statistician.nonnull_genes)
+        if attr == "num_tests":
+            val = len(dag.context_graph.sorted_nodes)
+        if attr == "node_level":
+            val = job_dat["test_params"]["method_alpha"][0]
+        # TODO fixe these hard-codes later:
+        if attr == "comp_test":
+            val = "Hypergeometric"
+        if attr == "self_test":
+            val = "Simes' (Composite)"
+        if attr == "multi_test":
+            val = "Benjamini Hochberg"
+        value_map[attr] = val
+    return value_map
+
+def get_sim_param_setup():
+    use_list, annotation_map = get_sim_param_annotation(use_for="setup")
+    sim_params = get_default_params("sim_params_sweep_sample")
+    test_params = get_default_params("test_params")
+    options = get_test_options()
+    param_list = []
+    for param in use_list:
         val = None
         cla = ""
         if (param in ["min_n", "max_n", "n_regimes", "n_reps", "eff_size", "node_level"]):
@@ -110,6 +183,8 @@ def get_sim_param_setup():
                 val = "hypergeometric.ga"
             if (param == "self_test"):
                 val = "simes"
+            if (param == "multi_test"):
+                val = "BH"
         param_dict = {
             "id": "option_{}".format(param),
             "caption": annotation_map[param],
@@ -118,10 +193,7 @@ def get_sim_param_setup():
             "options": opt,
         }
         param_list.append(param_dict)
-    return {
-        "list": param_list,
-        "options": options,
-        }
+    return { "list": param_list }
 
 def get_lite_sublist(example_only=True):
     ont_names = ["biological_process",
@@ -136,8 +208,6 @@ def get_lite_sublist(example_only=True):
      "mouse": "Mouse",
      "exp_chip": "Example from ChIP-seq Study",
      "exp_gwas": "Example from Genome-wide Association Study"
-     # "exp_chip": "Example from CHIP-seq (Human)",
-     # "exp_gwas": "Example from CHIP-seq (Human)"
     }
     sublist = []
     if example_only:
@@ -222,8 +292,10 @@ def core(page):
         return report_disabled()
     page_options = [item["id"] for item in get_core_sublist()]
     assert page in page_options, "The url for core/ is not recognized!"
-    if (page == "sim_setup"):
+    if page == "sim_setup":
         sim_params = get_sim_param_setup()
+    elif page == "sim_result":
+        sim_params = get_sim_param_result()
     else:
         sim_params = {}
     return flask.render_template('{}.html'.format(page),
@@ -246,7 +318,6 @@ def lite(page):
                                  mode="lite_mode",
                                  sublist=get_lite_sublist())
 
-# routes for data transfer
 @app.route('/lite/request_general_and_context_info', methods=['POST'])
 def request_general_and_context_info():
     if not app.config["LITEVIEW"]:
@@ -283,7 +354,9 @@ def request_general_and_context_info():
         mimetype='application/json'
     )
     return response
-
+# -----------------------------
+# functions for graph requests
+# -----------------------------
 @app.route('/dag_setup_ontology', methods=['POST'])
 def dag_setup_ontology():
     assert MAIN_FOLDER, "a local cache folder needs to be specified"
@@ -292,7 +365,6 @@ def dag_setup_ontology():
     # this over-writes the global variable dag
     global dag
     dag = GODAGraph(cache_dir, name="go_dag", sim_dir=sim_dir)
-
     params = flask.request.get_json()["params"]
     dag.setup_full_dag(params["ontology"],
                        params["species"],
@@ -314,7 +386,6 @@ def dag_setup_context():
     min_w = int(flask.request.get_json()["min_node_size"]) # int
     max_w = int(flask.request.get_json()["max_node_size"]) # int
     refine_graph = flask.request.get_json()["refine_graph"] # boolean
-
     c_graph, c_params = dag.setup_context_graph(rule,
                                                 anchors,
                                                 min_w=min_w,
@@ -324,7 +395,6 @@ def dag_setup_context():
     context_info = dag.output_context_info(c_graph)
     for key in c_params:
         context_info[key] = c_params[key]
-
     response = app.response_class(
         response=flask.json.dumps(context_info),
         status=200,
@@ -360,8 +430,11 @@ def dag_setup_focus():
     )
     return response
 
-@app.route('/launch_simulation', methods=['POST'])
-def launch_simulation():
+# -----------------------------
+# simulation-specific functions
+# -----------------------------
+@app.route('/simulation_launch', methods=['POST'])
+def simulation_launch():
     form_data = flask.request.get_json()
     param_dict = {}
     for entry in form_data:
@@ -369,6 +442,7 @@ def launch_simulation():
         val = entry["value"]
         param_dict[key] = val
     print(param_dict)
+    # TODO: save param_dict appropriately
     sim_params = get_default_params("sim_params_sweep_sample")
     test_params = get_default_params("test_params")
 
@@ -405,18 +479,35 @@ def launch_simulation():
         mimetype='application/json'
     )
     return response
-@app.route('/get_simulation_data', methods=['POST'])
-def get_simulation_data():
-    # option parsing
-    test_method = flask.request.get_json()["test_method"]
-    adjust_method = flask.request.get_json()["adjust_method"]
-    job_id = flask.request.get_json()["job_id"]
+
+@app.route('/simulation_restore', methods=['POST'])
+def simulation_restore():
     # dag setup and output rendering
     sim_dir = os.path.join(MAIN_FOLDER, "sim")
     cache_dir = os.path.join(MAIN_FOLDER, "local")
     dag = GODAGraph(cache_dir, name="simulation", sim_dir=sim_dir)
+    # load the job specific information
+    job_id = flask.request.get_json()["job_id"]
     out_data = dag.restore_testing_configuration(job_id);
-    # create the data for the heatmap here
+    out_data["lite_summary"] = extract_sim_params(out_data, dag)
+    response = app.response_class(
+        response=flask.json.dumps(out_data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+@app.route('/simulation_details', methods=['POST'])
+def simulation_details():
+    # dag setup and output rendering
+    sim_dir = os.path.join(MAIN_FOLDER, "sim")
+    cache_dir = os.path.join(MAIN_FOLDER, "local")
+    dag = GODAGraph(cache_dir, name="simulation", sim_dir=sim_dir)
+    # load the job specific information
+    job_id = flask.request.get_json()["job_id"]
+    test_method = flask.request.get_json()["test_method"]
+    adjust_method = flask.request.get_json()["adjust_method"]
+    out_data = {}
     out_data["matrix"] = dag.output_node_power_matrix(job_id,
                                                       test_method,
                                                       adjust_method)
@@ -427,40 +518,12 @@ def get_simulation_data():
     )
     return response
 
-@app.route('/get_example_query_data', methods=['POST'])
-def get_example_query_data():
-    # data = {"fake_simulation_data": dag.generate_random_pvalues()};
-    example_id = flask.request.get_json()["example_id"]
-    upload_dir = os.path.join(MAIN_FOLDER, "tmp")
-    assert example_id in ["example1", "example2"], "example_id error"
-    if example_id == "example1":
-        term_id_name_map = load_chipseq_example(upload_dir)
-        # query_list = list(term_id_name_map.keys())
-        ontology = "cellular_component"
-        species = "human"
-    if example_id == "example2":
-        term_id_name_map = load_gwas_example(upload_dir)
-        # query_list = list(term_id_name_map.keys())
-        ontology = "biological_process"
-        species = "human"
-
-    data = {"query_term_dict": term_id_name_map,
-            "ontology": ontology,
-            "species": species}
-    response = app.response_class(
-        response=flask.json.dumps(data),
-        status=200,
-        mimetype='application/json'
-    )
-    return response
-
 @app.route('/get_ground_truth_data', methods=['POST'])
 def get_ground_truth_data():
     genes = flask.request.get_json()['signal_genes']
     if len(genes) == 1 and genes[0] == '':
         genes = []
-    # this also modifies the internal stat data object
-    data = dag.output_non_null_go_terms(genes)
+    data = dag.output_non_null_go_terms(genes) # also modifies the data object
     response = app.response_class(
         response=flask.json.dumps(data),
         status=200,
@@ -492,6 +555,9 @@ def progress():
             x = x + 1
     return flask.Response(generate(), mimetype= 'text/event-stream')
 
+# -----------------------------
+# functions for file uploading
+# -----------------------------
 def allowed_file(filename, allowed_extensions):
     return '.' in filename and \
                filename.rsplit('.', 1)[1].lower() in allowed_extensions

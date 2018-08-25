@@ -141,82 +141,12 @@ function request_focus_data(request) {
       full_data.graph_data = reformat_focus_data(focus_data,
                                                  context_data,
                                                  general_data);
-      // console.log(full_data);
       setup_graph_updates(full_data.graph_data, config);
-
-      let cntx_data = full_data.graph_data.context_info;
-      let c_grp_data = cntx_data.meta.level_starts.flex;
-
       if (config.main_mode == "visualizer") {
-        // updates to create the binder plot
-        let n_nodes = cntx_data.graph.node_data.length;
-        let n_groups = c_grp_data.length;
-        let node_values = []
-        for (let i =0; i < n_nodes; i++) {
-          node_values.push(0);
-        }
-        let f_nodes = full_data.graph_data.focus_info.graph;
-        let f_group_ordering = [];
-        for (let i = 0; i < n_groups; i ++) {
-          // i is the current level
-          f_group_ordering.push([]);
-        }
-        f_nodes.forEach(function(d) {
-          f_group_ordering[d.pos_info.flex.y].push(d.cid);
-          d.full_name = full_data.general_data.search_dict[d.name];
-        })
-        update_binder_plot(".plot-canvas",
-                         node_values,
-                         f_nodes,
-                         f_group_ordering,
-                         null,
-                         ss_manhattan_config,
-                         "light");
+        update_binder_plot(".plot-canvas", full_data, ss_manhattan_config);
       }
       if (config.main_mode == "simulation_result") {
-
-        // functions and interactions specific to result rendering
-        // handle context data
-        let n_groups = c_grp_data.length;
-        // handle focus data
-        let f_group_ordering = [];
-        for (let i = 0; i < n_groups; i ++) {
-          // i is the current level
-          f_group_ordering.push([]);
-        }
-        let f_nodes = full_data.graph_data.focus_info.graph;
-
-        f_nodes.forEach(function(d) {
-          f_group_ordering[d.pos_info.flex.y].push(d.cid);
-          d.full_name = full_data.general_data.search_dict[d.name];
-        })
-        let n_nodes = cntx_data.graph.node_data.length;
-        let seed = 1;
-        // Random number generator
-        let node_values = []
-        let data_type = ss_manhattan_config.main_plot_type;
-        if (data_type == "matrix") {
-          node_values = full_data.general_data.simulation[data_type];
-        } else { // vector
-          Math.seedrandom('hello.'); // https://github.com/davidbau/seedrandom
-          for (let i =0; i < n_nodes; i++) {
-            node_values.push(Math.random());
-          }
-        }
-
-        // let node_values = graph_data.results.fake_simulation_data;
-        update_binder_plot(".plot-canvas",
-                         node_values,
-                         f_nodes,
-                         f_group_ordering,
-                         c_grp_data,
-                         ss_manhattan_config,
-                         "light");
-        d3.select(".ssm-svg")
-        .selectAll(".tick")
-        .selectAll("text")
-        .style("font-family", "Arial")
-        ;
+        update_binder_plot(".plot-sim-canvas", full_data, ss_manhattan_config);
       }
     },
     failure: function() {

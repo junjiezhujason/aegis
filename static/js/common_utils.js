@@ -1,3 +1,19 @@
+function move_to_next_section(curr_panel, curr_div, next_panel, next_div) {
+  $(curr_panel).addClass("collapsed");
+  $(curr_panel).attr("aria-expanded", "false");
+  $(curr_div).attr("aria-expanded", "false");
+  $(curr_div).removeClass("in");
+  $(next_panel).removeClass("collapsed");
+  $(next_panel).attr("aria-expanded", "true");
+  $(next_div).attr("aria-expanded", "true");
+  $(next_div).addClass("in");
+  $(next_div).css("height", "");
+  var $panel = $(next_div).closest('.panel');
+    $('html,body').animate({
+        scrollTop: $panel.offset().top
+    }, 500);
+}
+
 // gene ontology navigation setup
 // -----------------------------------------------------------------------------
 
@@ -578,6 +594,41 @@ function update_all_graphs(graph_data, conf) {
   update_grid_display(svg_id, graph_data, conf, fixed_dim=fixed_dim);
   update_focus_display(svg_id, graph_data, conf, fixed_dim=fixed_dim);
   update_context_display(svg_id, graph_data, conf, fixed_dim=fixed_dim);
+}
+
+function update_binder_plot(container, full_data, ss_manhattan_config) {
+  let cntx_data = full_data.graph_data.context_info;
+  let c_grp_data = cntx_data.meta.level_starts.flex;
+  let n_nodes = cntx_data.graph.node_data.length;
+
+  let f_nodes = full_data.graph_data.focus_info.graph;
+  let n_groups = c_grp_data.length;
+  let f_group_ordering = [];
+  for (let i = 0; i < n_groups; i ++) {
+    // i is the current level
+    f_group_ordering.push([]);
+  }
+  f_nodes.forEach(d => {
+    f_group_ordering[d.pos_info.flex.y].push(d.cid);
+    d.full_name = full_data.general_data.search_dict[d.name];
+  })
+  let node_values = [];
+  let c_group_data = null;
+  for (let i =0; i < n_nodes; i++) {
+    node_values.push(0);
+  }
+  if (container == ".plot-sim-canvas") {
+    node_values = full_data.general_data.simulation["matrix"];
+    c_group_data = c_grp_data;
+  }
+  update_ssm_plot(container,
+                  node_values,
+                  f_nodes,
+                  f_group_ordering,
+                  c_grp_data,
+                  ss_manhattan_config,
+                  "light");
+
 }
 
 function test_ssm_data() {
