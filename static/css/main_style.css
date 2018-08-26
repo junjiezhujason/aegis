@@ -624,3 +624,15 @@ Inline help tip
 .select_one_option {
   width: 175px;
 }
+
+.plotly-summary-divs {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.plotly-summary-divs .plotly-div {
+  width: 33%;
+  height: 200px;
+  display: inline-block;
+}
