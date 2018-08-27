@@ -636,3 +636,10 @@ Inline help tip
   height: 200px;
   display: inline-block;
 }
+
+.btn-expand {
+  color: #fff;
+  background-color: #7A7A7A;
+  border-color: #9E9E9E;
+  /*width: 1px;*/
+}

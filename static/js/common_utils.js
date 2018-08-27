@@ -14,6 +14,21 @@ function move_to_next_section(curr_panel, curr_div, next_panel, next_div) {
     }, 500);
 }
 
+
+function button_div_hide_show(button_id, div_id) {
+  $(button_id).click(function() {
+    let span_id = button_id + " span";
+    let display = $(div_id).css('display');
+    if (display === "none") {
+      $(span_id).switchClass("glyphicon-plus", "glyphicon-minus");
+       $(div_id).css('display', "block");
+    } else {
+      $(span_id).switchClass("glyphicon-minus", "glyphicon-plus");
+       $(div_id).css('display', "none");
+    }
+  });
+}
+
 // gene ontology navigation setup
 // -----------------------------------------------------------------------------
 

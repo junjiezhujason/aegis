@@ -90,13 +90,12 @@
       <div class="panel-body result-panel">
         <div class="go_panel">
           <!-- data options line -->
-          <div  class="info-line">
+          <div class="info-line">
             <div class="options-block">
-              <div class="label-block">
-                <label>Testing Options:</label>
-              </div>
+              <label>Summary Statstics :</label>
               <div class="general-options">
-                node-specific test &nbsp;
+                &nbsp;&nbsp;
+                node-specific testing procedure &nbsp;
                 <div class="select-control">
                   <select class="form-control" id="result_test_method">
                     <option value="simes">Simes</option>
@@ -115,16 +114,31 @@
               </div>
             </div>
           </div>
-          <!-- <div class="plotly-summary-divs">
-            <div id="plotly_power" class="plotly-div"></div>
-            <div id="plotly_fdr" class="plotly-div"></div>
-            <div id="plotly_numrej" class="plotly-div"></div>
-          </div> -->
           <div class="plotly-summary-divs" id="ploty_all_summary"></div>
-          <div class="plotly-summary-divs" id="ploty_layer_summary"></div>
-          <div class="binder-plot">
+          <div class="info-line">
+            <div class="options-block">
+              <label>Binder Plot Summary (Focus Graph)</label>
+            </div>
+            <button type="button"
+              class="btn btn-sm btn-expand icon-btn-right"
+              id="expand_binder_summary">
+              <span class="glyphicon glyphicon-plus"> </span>
+            </button>
+          </div>
+          <div class="binder-plot" id="power_binder_plot" style="display: none">
             <div class="canvas plot-sim-canvas"></div>
           </div>
+          <div class="info-line">
+            <div class="options-block">
+              <label>Level Summary Statistics (Context Graph)</label>
+            </div>
+            <button type="button"
+              class="btn btn-sm btn-expand icon-btn-right"
+              id="expand_level_summary">
+              <span class="glyphicon glyphicon-plus"> </span>
+            </button>
+          </div>
+          <div class="plotly-summary-divs" id="ploty_layer_summary" style="display: none"></div>
           <div>
             <form>
               {% for item in simparam.list %}
@@ -150,6 +164,8 @@
   </div>
 </div>
 
+<script type="text/javascript" src="{{ url_for('static', filename='lib/plotly/plotly-latest.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plotly_summary.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/sim_result.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/d3-save-svg.min.js') }}" ></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/FileSaver.min.js') }}" ></script>
