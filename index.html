@@ -93,53 +93,51 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#welcome">Welcome!</a></li>
-            <li><a href="#installation">Installation</a></li>
-            <li><a href="#how-to-setup-locally">How to Setup Locally</a></li>
+            <li><a href="#instructions-to-run-the-full-version">Instructions to Run the Full Version</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
 <h1 id="welcome">Welcome!</h1>
-<h2 id="installation">Installation</h2>
-<p><em>Important Requirement</em>: Python3 (and virtual environment recommended)</p>
-<p>See the following links for more information:</p>
-<pre><code>http://docs.python-guide.org/en/latest/
-https://virtualenv.pypa.io/en/stable/
-</code></pre>
-<p>To install dependencies, simply use:</p>
+<p>This is the documentation webpage for AEGIS. AEGIS is an open-source software with an interactive information-retrieval framework that enables an investigator to navigate through the entire Gene Ontology (GO) graph (with tens of thousands of nodes) and focus on fine-grained details without losing the context. It features interpretable visualization of GO terms reported from studies, flexible exploratory analysis of the GO DAG, as well as principled power analysis that is biologically relevant.</p>
+<p><img src="../static/img/aegis_painting.jpg" width="200px"/></p>
+<h2 id="instructions-to-run-the-full-version">Instructions to Run the Full Version</h2>
+<p>AEGIS is an open-source software, and the back-end and front-end implementations in Python and Javscript are available under the MIT License.</p>
+<h3 id="install-dependencies">Install dependencies</h3>
+<p><em>Prerequisites</em>: <a href="http://docs.python-guide.org/en/latest/">Python3</a> (required),
+<a href="https://virtualenv.pypa.io/en/stable/">virtualenv</a> or other package managements (recommended).</p>
+<p>Installing of dependencies only requires one line:</p>
 <pre><code>pip3 install -r requirements.txt
 </code></pre>
-<h2 id="how-to-setup-locally">How to Setup Locally</h2>
-<p>AEGIS requires specification of a folder: <code>${LOCALPATH}</code> to store the 
-cached files. This is mainly for performance and version control. For typical 
-analysis (excluding simulation outputs), the files typically will typically 
-include no more than 250M of disk space. </p>
-<h3 id="optional-download-cached-files">(Optional) Download Cached Files</h3>
-<p>You can pre-propagate some local files in <code>${LOCALPATH}</code> to reduce setup time. 
-Otherwise, the latest version of the GO and annotation files will be downloaded.</p>
-<p>You can download the light cache files of (version-controlled) 
-species/ontologies <a href="http://stanford.edu/~jjzhu/fileshare/aegis">here</a> 
-and unpack to the directory <code>${LOCALPATH}</code>, e.g.,</p>
-<pre><code>local_${VERSION}.tar.gz
-</code></pre>
-<p>Or here is an example of the workflow:</p>
+<p>AEGIS also requires specification of a folder: <code>${LOCALPATH}</code> to store the
+cached files. This is mainly for version control and speed performance.
+For most of the analyses (excluding simulation outputs), the files will typically
+require no more than 250M of disk space.</p>
+<p><em>Note</em>: If this is the first time that you are running AEGIS locally, Internet connection
+will be required to download data (or our cached files below) from the online databases.</p>
+<h3 id="download-cached-files-optional">Download Cached Files (Optional)</h3>
+<p>You can manually pre-propagate some local files in <code>${LOCALPATH}</code> to reduce setup time.
+Once the cache is stored, most features of AEGIS can be performed locally
+without Internet connection for ontology or data download.</p>
+<p>Simply download the light cache files of (version-controlled)
+species/ontologies <a href="http://stanford.edu/~jjzhu/fileshare/aegis">here</a>
+and unpack to the directory <code>${LOCALPATH}</code>, e.g., <code>local_${VERSION}.tar.gz</code>
+Make sure to expand the files in the <code>${LOCALPATH}</code> so that the folder includes
+them in the following format: <code>${LOCALPATH}/local/godag_*.pkl</code></p>
+<p>Here is an example of the command line workflow:</p>
 <pre><code>cd ${LOCALPATH}
 wget http://stanford.edu/~jjzhu/fileshare/aegis/local_20180710.tar.gz
 tar -xvzf local_20180710.tar.gz
 </code></pre>
-<p>Make sure to expand the file in the <code>${LOCALPATH}</code> so that the folder includes
-files of the following form</p>
-<pre><code>${LOCALPATH}/local/godag_*.pkl
-</code></pre>
-<p>Once the cache is stored once, most features can be performed locally
-without internet connection for ontology or data download.</p>
+<p><em>Note</em>: If you skip this step, the latest version of the GO and annotation files will be downloaded,
+and the total setup time will take longer.</p>
 <h3 id="launch-the-local-server">Launch the Local Server</h3>
-<p>To launch the server, run: </p>
+<p>To launch the server, run:</p>
 <pre><code>python3 main.py --port 5000 --folder ${LOCALPATH}
 </code></pre>
-<p>Note that both the port and the local path options are required.</p>
+<p><em>Note</em>: both the port number and the local path options are required.</p>
 <p>If this is your first time running AEGIS and you did not download our cached
-files, AEGIS will automatically download the latest gene and go annotations. 
+files, AEGIS will automatically download the latest gene and go annotations.
 This may take a while, and the following files will be automatically generated
 inside the local directory:</p>
 <pre><code>${LOCALPATH}/local/gene2go
@@ -147,13 +145,12 @@ ${LOCALPATH}/local/go-basic.obo
 ${LOCALPATH}/local/geneid2sym_human.json
 ${LOCALPATH}/local/geneid2sym_mouse.json
 </code></pre>
-<p>and later, the program will also generate the cached files </p>
+<p>and later, the program will also generate the cached files</p>
 <pre><code>${LOCALPATH}/local/godag_*.pkl
 </code></pre>
-<p>By default, AEGIS  will continue this version if the same ${LOCALPATH} is 
+<p>By default, AEGIS  will continue this version if the same ${LOCALPATH} is
 specified. To update the version, simply create a new local path to repeat
-the analysis above. </p>
-<p>Finally, open your local browser with</p>
+the analysis above. Finally, open your local browser with</p>
 <pre><code>http://localhost:5000/
 </code></pre></div>
         </div>
@@ -238,5 +235,5 @@ the analysis above. </p>
 
 <!--
 MkDocs version : 1.0
-Build Date UTC : 2018-08-03 21:44:08
+Build Date UTC : 2018-08-28 16:34:35
 -->
