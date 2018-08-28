@@ -32,6 +32,11 @@ function initialize_ssm_canvas(container, conf) {
     .attr("class", "ssm-svg")
     .attr("id", "full_binder_plot")
     ;
+  main_svg.append("text")
+    .attr("class", "error-message")
+    .style("text-anchor", "middle")
+    .style("visibility", "visible")
+    ;
   // create the svg sub elements
   let all_parts = get_ssm_parts(conf);
   for (let comp_i in all_parts) {
@@ -81,18 +86,20 @@ function initialize_ssm_canvas(container, conf) {
     .attr("offset", function(d,i) { return tempScale( tempPoint[i] )/width; })
     .attr("stop-color", function(d,i) { return colorScale( tempPoint[i] ); });
 
-  var legendWidth = 120;
+  let legendWidth = 120;
 
   //Color Legend container
-  var legendsvg = main_svg.append("g")
+  let legendsvg = main_svg.append("g")
     .attr("class", "legendWrapper")
-    .attr("transform", "translate(" + 300 + "," + (conf.total.height-height*4) + ")");
+    .attr("transform", "translate(0, 0)")
+    .style("visibility", "hidden")
+    ;
 
-  var stretch = 1;
+  let stretch = 1;
   //Draw the Rectangle
   legendsvg.append("rect")
     .attr("class", "legendRect")
-    .attr("x", -legendWidth/2)
+    .attr("x", 0)
     .attr("y", 0)
     // .attr("rx", 8/2)
     .attr("width", legendWidth + stretch)
@@ -102,16 +109,16 @@ function initialize_ssm_canvas(container, conf) {
     ;
 
   // Append title
-  // legendsvg.append("text")
-  //   .attr("class", "legendTitle")
-  //   .attr("x", 0)
-  //   .attr("y", -10)
-  //   .style("text-anchor", "middle")
-  //   .text("average number of rejections");
+  legendsvg.append("text")
+    .attr("class", "legendTitle")
+    .attr("x", -70)
+    .attr("y", 12)
+    .style("text-anchor", "middle")
+    .text("rejection frequency");
 
   //Set scale for x-axis
   var xScale = d3.scaleLinear()
-     .range([-legendWidth/2, legendWidth/2])
+     .range([0, legendWidth])
      .domain(tmpdomain);
 
   //Define x-axis
@@ -151,6 +158,11 @@ function initialize_subplots(grp, conf) {
     grp.append("g")
       .attr("class", "plot-border")
       .append("rect")
+      ;
+    grp.append("text")
+      .attr("class", "ylabel")
+      .style("text-anchor", "middle")
+      .text("number of case/control samples")
       ;
   }
   if (class_n == "arc-plot") {
@@ -345,8 +357,6 @@ function draw_background_border(container,
                                 col_anns=[]) {
   let d3_sel = d3.select(".ssm-svg").select(container);
   let padding = conf.manhattan_plot.padding
-  let xAxis_pos = padding.left;
-  let yAxis_pos = conf.total.height - padding.bottom;
   let xAxis;
   if (container == "#focus-graph-heatmap" |
       container == "#context-graph-heatmap") {
@@ -361,13 +371,7 @@ function draw_background_border(container,
         .ticks(conf.n_value_tick)
         ;
   }
-
-  d3_sel
-    .select(".xaxis")
-    .call(xAxis)
-    .attr("transform","translate(0, " + yAxis_pos + ")")
-    ;
-
+  d3_sel.select(".xaxis").call(xAxis);
   let border_width, border_height, border_left, border_right;
   border_height = svg_dim.height - padding.top - padding.bottom;
   border_right = padding.top;
@@ -378,9 +382,7 @@ function draw_background_border(container,
     .ticks(dat_len)
     .tickFormat("")
     ;
-    d3_sel.select(".yaxis").call(yAxis)
-      .attr("transform","translate(" + xAxis_pos + ", 0)")
-      ;
+    d3_sel.select(".yaxis").call(yAxis);
     if (container == "#focus-graph-heatmap" ) {
       border_width = svg_dim.width -padding.left-padding.right;
     } else {
@@ -799,22 +801,6 @@ function draw_arcgraph(container, f_data, f_nodes, conf) {
     d3_sel.select(".nodes")
       .selectAll("circle")
       .transition("node_mouse_over_out")
-      // .delay(o => {
-      //   if (parents.includes(o.id) || children.includes(o.id)) {
-      //     return confg.graph.transition.delay.select;
-      //   }
-      //   if (o.id in ancestors || o.id in descendents) {
-      //     return 2 * confg.graph.transition.delay.select;
-      //   }
-      //   return 0;
-      // })
-      // .style('opacity', o => {
-      //   if (o.id in ancestors || o.id in descendents || o.id == d.id) {
-      //     return 1.0;
-      //   } else {
-      //     return confg.graph.opacity.hidden;
-      //   }
-      // })
       .style('fill', (o) => {
         let oid = fn_map[o.cid].id;
         let did = fn_map[d.cid].id;
@@ -922,6 +908,7 @@ function update_ssm_plot(container,
   // 1. all children should have a larger index than its parent
   // 2. there is no edge crossing within each group
 
+
   let data_dim =  {"x": 8, "y": focus_nodes.length};
   if (conf.main_plot_type == "matrix") {
    data_dim.x = node_values.col_ann.length;
@@ -931,6 +918,22 @@ function update_ssm_plot(container,
   // svg dimension setup
   // ------------------------
   let main_svg = d3.select(container).select(".ssm-svg");
+
+  if (focus_nodes.length > conf.max_node_display) {
+    let message_w = 400;
+    let message_h = 20;
+    main_svg.select(".error-message")
+      .text("Error: failed to display binder plots due to too many focus nodes.")
+      .attr("x", message_w/2)
+      .attr("y", message_h/2)
+      .style("visibility", "visibility")
+      ;
+    main_svg.attr("width", message_w)
+          .attr("height", message_h) // this is shared, so we're fine
+          ;
+    return
+  }
+
   let all_parts = get_ssm_parts(conf);
   let width_offset = 0;
   let grp_dim;
@@ -938,11 +941,30 @@ function update_ssm_plot(container,
     grp_dim = get_svg_dim(conf, all_parts[comp_i].class);
     let sub_svg = main_svg.select("#"+all_parts[comp_i].id)
       .attr("transform", "translate(" + width_offset +", 0)");
+    if (all_parts[comp_i].class == "heatmap-plot") {
+      let padding = conf.manhattan_plot.padding;
+      let xAxis_pos = padding.left;
+      let yAxis_pos = grp_dim.height - padding.bottom;
+      main_svg.select(".heatmap-plot").select(".xaxis")
+        .attr("transform","translate(0, " + yAxis_pos + ")");
+      main_svg.select(".heatmap-plot").select(".yaxis")
+        .attr("transform","translate(" + xAxis_pos + ", 0)");
+      main_svg.select(".heatmap-plot").select(".ylabel")
+        .attr("x", grp_dim.width / 2)
+        .attr("y", yAxis_pos + 35)
+        ;
+      let legend_x = width_offset - 130;
+      let legend_y = grp_dim.height - 25;
+      main_svg.select(".legendWrapper")
+        .style("visibility", "visible")
+        .attr("transform", "translate("+ legend_x +", "+ legend_y +")");
+    }
     width_offset += grp_dim.width;
   }
   main_svg.attr("width", width_offset)
           .attr("height", grp_dim.height) // this is shared, so we're fine
           ;
+
   // ------------------------
   // data preparation
   // ------------------------

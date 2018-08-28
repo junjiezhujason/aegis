@@ -6,7 +6,7 @@ setup_full_go_canvas(config);
 let ss_manhattan_config = ssm_params(height=800,
                                      width=800,
                                      main_mode=config.main_mode)
-initialize_ssm_canvas(".plot-canvas", ss_manhattan_config, show_name=true)
+initialize_ssm_canvas(".plot-sim-canvas", ss_manhattan_config, show_name=true)
 
 // helper functions for image viewing
 

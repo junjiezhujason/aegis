@@ -143,7 +143,11 @@ function request_focus_data(request) {
                                                  general_data);
       setup_graph_updates(full_data.graph_data, config);
       if (config.main_mode == "visualizer") {
-        update_binder_plot(".plot-canvas", full_data, ss_manhattan_config);
+        update_binder_plot(".plot-sim-canvas", full_data, ss_manhattan_config);
+        $("#open_graph_viewer").off().on("click", function() {
+          // open the context focus image to display the binder plots
+          open_context_focus_image(full_data.graph_data, config);
+        });
       }
       if (config.main_mode == "simulation_result") {
         request_simulation_details();

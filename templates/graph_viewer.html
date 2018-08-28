@@ -1,0 +1,42 @@
+<!-- The Graph Viewer for Better Scaling and Download -->
+<div id="graph_dialog"
+     title="Graph Viewer"
+     style="display: none;">
+  <div id="view_of_focus_context">
+    <div class="download-canvas">
+      <div id ="new_full_canvas_viewer" class="full-canvas">
+        <div id ="mirror_canvas_viewer">
+        </div>
+      </div>
+    </div>
+    <div>
+      <button class="btn btn-primary btn-sm" id="export_as_png_foc_con">
+        Export PNG
+      </button>
+      <button class="btn btn-primary btn-sm" id="export_as_svg_foc_con">
+        Export SVG
+      </button>
+    </div>
+  </div>
+  <div id="view_of_binder">
+    <div class="download-canvas">
+      <div class="binder-plot">
+        <div class="canvas plot-sim-canvas"></div>
+      </div>
+    </div>
+    <div>
+      <button class="btn btn-primary btn-sm" id="export_as_png_binder">
+        Export PNG
+      </button>
+      <button class="btn btn-primary btn-sm" id="export_as_svg_binder">
+        Export SVG
+      </button>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='lib/bootstrap-filestyle/bootstrap-filestyle.min.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/d3-save-svg.min.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/FileSaver.min.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/canvas-toBlob.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/d3_save_utils.js') }}"></script>

@@ -14,7 +14,6 @@ function move_to_next_section(curr_panel, curr_div, next_panel, next_div) {
     }, 500);
 }
 
-
 function button_div_hide_show(button_id, div_id) {
   $(button_id).click(function() {
     let span_id = button_id + " span";
@@ -46,15 +45,12 @@ function button_icon_change(button_id, status) {
   }
 }
 
-function open_context_focus_image() {
-  let graph_data = full_data.graph_data;
-  let conf = config;
+function open_context_focus_image(graph_data, conf) {
   let svg_id = "#full_mirror_viewer";
   update_svg_dimension(svg_id, conf);
   update_grid_display(svg_id, graph_data, conf);
   update_focus_display(svg_id, graph_data, conf);
   update_context_display(svg_id, graph_data, conf);
-
   $("#graph_dialog").dialog({
     autoOpen : false,
     modal : true,
@@ -66,7 +62,6 @@ function open_context_focus_image() {
     resizable: false,
   });
   $("#graph_dialog").dialog("open");
-
 }
 
 function get_valid_queries(query_list, search_dict, class_name) {
@@ -632,7 +627,7 @@ function update_binder_plot(container, full_data, ss_manhattan_config) {
   for (let i =0; i < n_nodes; i++) {
     node_values.push(0);
   }
-  if (container == ".plot-sim-canvas") {
+  if (full_data.general_data.simulation !== null) {
     node_values = full_data.general_data.simulation["matrix"];
     c_group_data = c_grp_data;
   }

@@ -95,13 +95,13 @@ function plotly_boxplot(config, task="init", in_data={}) {
       title: 'number of case/control samples',
       titlefont: {
         family: 'Arial',
-        size: 16,
+        size: 14,
         // color: '#7f7f7f'
       }
     },
     titlefont: {
       family: 'Arial',
-      size: 18,
+      size: 16,
     },
   };
   $(".plotly-div").css("width", config.full_mirror.svg.width / 3);

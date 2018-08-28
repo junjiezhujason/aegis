@@ -126,12 +126,13 @@
             <button type="button"
               class="btn btn-sm btn-expand icon-btn-right"
               id="expand_binder_summary">
-              <span class="glyphicon glyphicon-plus"> </span>
+              <span>View</span>
+              <!-- <span class="glyphicon glyphicon-eye-open"> </span> -->
             </button>
           </div>
-          <div class="binder-plot" id="power_binder_plot" style="display: none">
+<!--           <div class="binder-plot" id="power_binder_plot" style="display: none">
             <div class="canvas plot-sim-canvas"></div>
-          </div>
+          </div> -->
           <!-- <div class="info-line">
             <div class="options-block">
               <label>Level Summary Statistics (Context Graph)</label>
@@ -167,15 +168,9 @@
     </div>
   </div>
 </div>
-
+{% include "graph_viewer.html" %}
 <script type="text/javascript" src="{{ url_for('static', filename='lib/plotly/plotly-latest.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/sim_result.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/plotly_summary.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/d3-save-svg.min.js') }}" ></script>
-<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/FileSaver.min.js') }}" ></script>
-<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/canvas-toBlob.js') }}" ></script>
-<script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
-<script src="https://cdn.rawgit.com/eligrey/canvas-toBlob.js/f1a01896135ab378aa5c0118eadd81da55e698d8/canvas-toBlob.js"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/d3_save_utils.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/sim_result.js') }}"></script>
 {% endblock %}
 

@@ -26,6 +26,16 @@ function request_simulation_details() {
       // full_data.general_data.simulation["statistics"] = out_data["statistics"];
       plotly_boxplot(config, "update", out_data.statistics);
       update_binder_plot(".plot-sim-canvas", full_data, ss_manhattan_config);
+
+      $("#expand_binder_summary").off().on("click", function() {
+        // always switch to buoyant view
+        $("#view_select").val("flex");
+        config.curr_state.View = $("#view_select").val();
+        // update the interactive panel
+        update_all_graphs(full_data.graph_data, config);
+        // open the context focus image to display the binder plots
+        open_context_focus_image(full_data.graph_data, config);
+      });
     },
     failure: function() {
       console.log("Server error.");
@@ -92,7 +102,6 @@ function request_simulation_restore() {
   })
 }
 
-
 function render_binder_plot() {
   let job_name = $("#job_id_input").val();
   let test_method = $("#result_test_method").val();
@@ -123,15 +132,10 @@ $(function() {
   setup_simulation_highlight_options();
   // $("#result_test_method").val("hypergeometric.ga");
   plotly_boxplot(config, "init");
-  button_div_hide_show("#expand_binder_summary", "#power_binder_plot");
+  // button_div_hide_show("#expand_binder_summary", "#power_binder_plot");
   // button_div_hide_show("#expand_level_summary", "#ploty_layer_summary");
   // submit the data as an option
   $("#load_simulation_button").click(function() {
-    // render_plotly_summary("plotly_power");
-    // render_plotly_summary("plotly_fdr");
-    // render_plotly_summary("plotly_numrej");
-
-
     // clicking this button restores the graph selected in simulation setup
     $("#spinner_max_num_foc_anchors").val(20);
     $("#spinner_foc_gap_break").val(5000);
@@ -145,41 +149,3 @@ $(function() {
     request_simulation_restore();
   });
 });
-
-
-
-// // old:
-// let data;
-// let precomp_data;
-// let result_data;
-// let config = general_config;
-// let go_awesomplete;
-// // core-setup
-// config.main_mode = "simulation_result";
-// config.main_div = "#go_panel";
-// config.completeID = go_awesomplete;
-// go_interaction_core_setup(config);
-// initialize_plot_canvas(".plot-canvas", ss_manhattan_config)
-
-// $('.panel-collapse').on('shown.bs.collapse', function (e) {
-//   var $panel = $(this).closest('.panel');
-//   $('html,body').animate({
-//       scrollTop: $panel.offset().top
-//   }, 500);
-// });
-
-// $(function(){
-//   $("#go_tagsinput").tagsinput({tagClass: "cust-tags"});
-//   $('[data-toggle="tooltip"]').tooltip();
-//   $(".sim_spinner").spinner();
-// });
-
-
-// // Set-up the export button
-// d3.select("#export_as_png").on('click', function(){
-//     save_d3_svg(".svg-table", "png", "export.png")
-// });
-// // https://github.com/edeno/d3-save-svg
-// d3.select('#export_as_svg').on('click', function() {
-//   save_d3_svg(".svg-table", "svg", "export.svg")
-// });

@@ -230,6 +230,12 @@
     <div id="vizDynamic" class="panel-collapse collapse">
       <div class="panel-body">
         {% include "go_interaction.html" %}
+        <div class=widget>
+          <button id="open_graph_viewer">
+            <span class="glyphicon glyphicon-download-alt"> </span>
+          </button>
+          Download focus-and-context graphs (with its current layout settings).
+        </div>
       </div>
     </div>
   </div>
@@ -238,12 +244,7 @@
 <!-- <div id="progress_dialog" title="Simulation Progress" style="display: none"> -->
 
 <div class="modal" id="go_ajax_modal"><!-- Place at bottom of page --></div>
-
-<script type="text/javascript" src="{{ url_for('static', filename='lib/bootstrap-filestyle/bootstrap-filestyle.min.js') }}" ></script>
-<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/d3-save-svg.min.js') }}" ></script>
-<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/FileSaver.min.js') }}" ></script>
-<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/canvas-toBlob.js') }}" ></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/d3_save_utils.js') }}"></script>
+{% include "graph_viewer.html" %}
 <script type="text/javascript" src="{{ url_for('static', filename='js/view_go.js') }}"></script>
 
 {% endblock %}

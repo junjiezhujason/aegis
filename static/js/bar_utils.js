@@ -42,7 +42,7 @@ function bar_mode_select(graph_data, main_config) {
       return(["nodes in query data (" + num_nodes + ")",
               "other nodes in the context (" + num_other_nodes + ")"]);
     case "focus_relatives":
-      return(["directly related to query terms (" + num_nodes + ")",
+      return(["directly related to focus anchors (" + num_nodes + ")",
               "other terms (" + num_other_nodes + ")"]);
     case "self_nonnull":
       return(["self-contained non-null (" + num_nodes + ")",
