@@ -147,13 +147,13 @@ def extract_sim_params(job_dat, dag):
             val = len(dag.context_graph.sorted_nodes)
         if attr == "node_level":
             val = job_dat["test_params"]["method_alpha"][0]
-        # TODO fixe these hard-codes later:
+        # TODO: fix these hard-codes later:
         if attr == "comp_test":
-            val = "Hypergeometric"
+            val = "hypergeometric.ga"
         if attr == "self_test":
-            val = "Simes' (Composite)"
+            val = "simes"
         if attr == "multi_test":
-            val = "Benjamini Hochberg"
+            val = "BH"
         value_map[attr] = val
     return value_map
 
@@ -485,6 +485,7 @@ def simulation_restore():
     # dag setup and output rendering
     sim_dir = os.path.join(MAIN_FOLDER, "sim")
     cache_dir = os.path.join(MAIN_FOLDER, "local")
+    global dag
     dag = GODAGraph(cache_dir, name="simulation", sim_dir=sim_dir)
     # load the job specific information
     job_id = flask.request.get_json()["job_id"]
@@ -502,11 +503,12 @@ def simulation_details():
     # dag setup and output rendering
     sim_dir = os.path.join(MAIN_FOLDER, "sim")
     cache_dir = os.path.join(MAIN_FOLDER, "local")
-    dag = GODAGraph(cache_dir, name="simulation", sim_dir=sim_dir)
+    # dag = GODAGraph(cache_dir, name="simulation", sim_dir=sim_dir)
     # load the job specific information
     job_id = flask.request.get_json()["job_id"]
     test_method = flask.request.get_json()["test_method"]
     adjust_method = flask.request.get_json()["adjust_method"]
+    global dag
     out_data = {}
     out_data["matrix"] = dag.output_node_power_matrix(job_id,
                                                       test_method,
