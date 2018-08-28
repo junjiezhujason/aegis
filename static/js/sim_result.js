@@ -6,10 +6,12 @@ setup_full_go_canvas(config);
 let ss_manhattan_config = ssm_params();
 initialize_ssm_canvas(".plot-sim-canvas", ss_manhattan_config)
 
+
 function request_simulation_details() {
   let job_name = $("#job_id_input").val();
   let test_method = $("#result_test_method").val();
-  let adjust_method =  $("#result_multi_method").val();
+  let adjust_method =  $("#option_multi_test").attr("true_value");
+  // console.log(test_method);
   $.ajax({
     url: "/simulation_details",
     timeout: 10000,
@@ -21,6 +23,9 @@ function request_simulation_details() {
     success: function(out_data) {
       console.log("Simulation details loaded succesfully!");
       full_data.general_data.simulation["matrix"] = out_data["matrix"];
+      // full_data.general_data.simulation["statistics"] = out_data["statistics"];
+      plotly_boxplot(config, "update", out_data.statistics);
+      update_binder_plot(".plot-sim-canvas", full_data, ss_manhattan_config);
     },
     failure: function() {
       console.log("Server error.");
@@ -44,6 +49,12 @@ function request_simulation_restore() {
     //                       "adjust_method": adjust_method}),
     contentType: "application/json",
     success: function(out_data) {
+      let name_alias = {
+        "hypergeometric.ga" : "Hypergeometric",
+        "simes": "Simes' (Composite)",
+        "BH": "Benjamini Hochberg",
+        "Bonferroni": "Bonferroni",
+      };
       console.log("Simulation data loaded succesfully!");
       $(".result-panel").show();
 
@@ -59,10 +70,16 @@ function request_simulation_restore() {
       button_icon_change("#load_simulation_button", "complete");
       // update the simulation parameters
       for (let sim_param in out_data.lite_summary) {
-        console.log(sim_param);
-        $("#option_"+sim_param).val(out_data.lite_summary[sim_param]);
+        let param_value = out_data.lite_summary[sim_param];
+        let display_value;
+        if (["comp_test", "self_test", "multi_test"].includes(sim_param)) {
+          display_value = name_alias[param_value]
+        } else {
+          display_value = param_value;
+        }
+        $("#option_"+sim_param).attr("true_value", param_value);
+        $("#option_"+sim_param).val(display_value);
       }
-      request_simulation_details();
       setup_request_main_ontology();
     },
     failure: function() {
@@ -74,7 +91,6 @@ function request_simulation_restore() {
     }
   })
 }
-
 
 
 function render_binder_plot() {
@@ -105,8 +121,17 @@ function render_binder_plot() {
 $(function() {
   $(".result-panel").hide();
   setup_simulation_highlight_options();
+  // $("#result_test_method").val("hypergeometric.ga");
+  plotly_boxplot(config, "init");
+  button_div_hide_show("#expand_binder_summary", "#power_binder_plot");
+  // button_div_hide_show("#expand_level_summary", "#ploty_layer_summary");
   // submit the data as an option
   $("#load_simulation_button").click(function() {
+    // render_plotly_summary("plotly_power");
+    // render_plotly_summary("plotly_fdr");
+    // render_plotly_summary("plotly_numrej");
+
+
     // clicking this button restores the graph selected in simulation setup
     $("#spinner_max_num_foc_anchors").val(20);
     $("#spinner_foc_gap_break").val(5000);

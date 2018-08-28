@@ -146,7 +146,10 @@ function request_focus_data(request) {
         update_binder_plot(".plot-canvas", full_data, ss_manhattan_config);
       }
       if (config.main_mode == "simulation_result") {
-        update_binder_plot(".plot-sim-canvas", full_data, ss_manhattan_config);
+        request_simulation_details();
+        $("#result_test_method").off().on("change", function() {
+          request_simulation_details();
+        });
       }
     },
     failure: function() {

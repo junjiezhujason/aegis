@@ -1524,6 +1524,31 @@ class GODAGraph(DAGraph):
         }
         return mtx_data
 
+    def output_summary_stats(self, job_id, test_method, adjust_method):
+        output_dir = os.path.join(self.sim_dir, job_id)
+        df = pd.read_csv(os.path.join(output_dir, "summary", "trial_summary.csv"), index_col=0)
+        p_fn, p_ft = self.get_file_info("meta_restore_params")
+        p_fn = os.path.join(output_dir, p_fn)
+        oneway_params = load_data_from_file(p_fn, p_ft)["oneway_params"]
+        reg_names = list(np.rint(np.linspace(oneway_params["min_n"],
+                                             oneway_params["max_n"],
+                                             oneway_params["n_regimes"])))
+        data_for_plotly = {}
+        alias_map_out = {"empirical_fdr": "FDR",
+                         "empirical_power":"Power",
+                         "num_rejections" : "Number_of_rejections"}
+        n_regimes = len(reg_names)
+        # reg_names = self.main_statistician.simulator.regime_names
+        for metric in alias_map_out:
+            values = []
+            for reg_i in range(n_regimes):
+                sub_df = df[(df["testing_method"] == test_method) &
+                        (df["adjustment_method"] == adjust_method) &
+                        (df["regime_id"] == reg_i)]
+                values.append(list(sub_df[metric]))
+            data_for_plotly[metric] = {"names": reg_names, "values": values}
+        return data_for_plotly
+
     def generate_node_power_matrix(self,
                                    output_dir,
                                    test,
