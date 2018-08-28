@@ -511,6 +511,9 @@ def simulation_details():
     out_data["matrix"] = dag.output_node_power_matrix(job_id,
                                                       test_method,
                                                       adjust_method)
+    out_data["statistics"] = dag.output_summary_stats(job_id,
+                                                      test_method,
+                                                      adjust_method)
     response = app.response_class(
         response=flask.json.dumps(out_data),
         status=200,

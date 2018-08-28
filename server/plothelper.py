@@ -9,12 +9,12 @@ import seaborn as sns
 
 logger = logging.getLogger(__name__)
 
-metric_map = {"FDR": "empirical_fdr", 
+metric_map = {"FDR": "empirical_fdr",
               "Power": "empirical_power",
               "NumRej": "num_rejections"}
 
 
-    
+
 def plot_box_plot(res_dir, test_method, adj_method, metric, save_to=""):
     # read the summary data
     df = pd.read_csv(os.path.join(res_dir, "summary", "trial_summary.csv"))
@@ -22,16 +22,16 @@ def plot_box_plot(res_dir, test_method, adj_method, metric, save_to=""):
     node_df = pd.read_csv(os.path.join(res_dir, "summary", fname), index_col=0)
     regimes = node_df.columns.values
     with open(os.path.join(res_dir, "meta_restore_params.json")) as json_file:
-        alpha = json.load(json_file)["test_params"]["method_alpha"][0]    
+        alpha = json.load(json_file)["test_params"]["method_alpha"][0]
 
     rule = (df["adjustment_method"] == adj_method) & (df["testing_method"] == test_method)
     subdf = df.loc[rule]
-    sub_df = subdf[["regime_id", 
-                    "repetition_id", 
+    sub_df = subdf[["regime_id",
+                    "repetition_id",
                     metric_map[metric]]]
     fig, ax = plt.subplots(figsize=(3.4,2.9))
-    bp = sub_df.boxplot(column=metric_map[metric], 
-                           by="regime_id", 
+    bp = sub_df.boxplot(column=metric_map[metric],
+                           by="regime_id",
                            ax=ax,
                            return_type="dict",
                            sym="x",
@@ -41,24 +41,24 @@ def plot_box_plot(res_dir, test_method, adj_method, metric, save_to=""):
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
     ax.set_ylim(-0.05, 1.05)
-    
+
     border_col = 'black'
     border_width = 1
-    
+
     if metric == "FDR":
         mid_border_col = "#000080";
         face_col = "#BFFFFF";
     elif metric == "Power":
         mid_border_col = "darkorange";
         face_col = "#FFFABF";
-    else: 
+    else:
         mid_border_col = border_col;
-        
+
     if metric == "FDR":
         ax.axhline(y=alpha, color='red', linestyle='--', linewidth=1)
- 
+
     for key in bp.keys():
-        # borders 
+        # borders
         for item in bp[key]["boxes"]:
             item.set_facecolor(face_col)
             item.set_edgecolor(border_col)
@@ -95,19 +95,19 @@ def plot_box_plot(res_dir, test_method, adj_method, metric, save_to=""):
         print("Saving to: {}".format(fn))
         plt.savefig(fn, transparent=True, bbox_inches='tight')
     plt.show()
-    
+
 
 def plot_all_summary(res_dir):
-    
+
     # main data and parameters
     df = pd.read_csv(os.path.join(res_dir, "summary", "trial_summary.csv"), index_col=0)
     with open(os.path.join(res_dir, "meta_restore_params.json")) as json_file:
-        test_params = json.load(json_file)["test_params"]    
+        test_params = json.load(json_file)["test_params"]
     method_test = test_params["method_test"]
     method_madj = test_params["method_madj"]
     metrics = test_params["report_metrics"]
     alpha = test_params["method_alpha"][0]
-    
+
     # additional parameters
     if (len(method_madj) == 2):
         method_cols = ["#0020AE", "#FFA200"]
@@ -124,12 +124,12 @@ def plot_all_summary(res_dir):
             ax = axes[i_row][i_col]
             method = method_test[i_col]
             metric = metrics[i_row]
-            
+
             rule = (df["testing_method"] == method)
             subdf = df.loc[rule]
             subdf = subdf[["regime_id", "repetition_id", "adjustment_method", metric_map[metric]]]
-           
-            
+
+
             in_dict = {}
             for adj in  method_madj:
                 in_dict[adj] = {}
@@ -164,7 +164,7 @@ def plot_all_summary(res_dir):
     for ax, col in zip(axes[0], method_test):
         ax.set_title(col)
     plt.tight_layout()
-    
+
 
 def plot_group_bars(grp_data,
                     grp_ids,

@@ -114,7 +114,11 @@
               </div>
             </div>
           </div>
-          <div class="plotly-summary-divs" id="ploty_all_summary"></div>
+          <div class="plotly-summary-divs">
+            <div class="plotly-div" id="boxplot_empirical_power"></div>
+            <div class="plotly-div" id="boxplot_empirical_fdr"></div>
+            <div class="plotly-div" id="boxplot_num_rejections"></div>
+          </div>
           <div class="info-line">
             <div class="options-block">
               <label>Binder Plot Summary (Focus Graph)</label>
@@ -165,8 +169,8 @@
 </div>
 
 <script type="text/javascript" src="{{ url_for('static', filename='lib/plotly/plotly-latest.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/plotly_summary.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/sim_result.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/plotly_summary.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/d3-save-svg.min.js') }}" ></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/FileSaver.min.js') }}" ></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/canvas-toBlob.js') }}" ></script>

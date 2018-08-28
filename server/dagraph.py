@@ -1524,6 +1524,34 @@ class GODAGraph(DAGraph):
         }
         return mtx_data
 
+    def output_summary_stats(self, job_id, test_method, adjust_method):
+        output_dir = os.path.join(self.sim_dir, job_id)
+        df = pd.read_csv(os.path.join(output_dir, "summary", "trial_summary.csv"), index_col=0)
+
+        data_for_plotly = {}
+        alias_map_out = {"empirical_fdr": "FDR",
+                         "empirical_power":"Power",
+                         "num_rejections" : "Number_of_rejections"}
+        n_regimes = len(np.unique(df.regime_id))
+        method_madj = [adjust_method]
+        test = test_method
+        for metric in alias_map_out:
+            metric_result = {}
+            for adjust in method_madj:
+                mean = [0] *n_regimes
+                err =  [0] *n_regimes
+                for reg_i in range(n_regimes):
+                    sub_df = df[(df["testing_method"] == test) &
+                            (df["adjustment_method"] == adjust) &
+                            (df["regime_id"] == reg_i)]
+                    mean[reg_i] = np.mean(sub_df[metric])
+                    err[reg_i] = np.std(sub_df[metric])
+                adj_result = {"mean": mean,
+                              "err": err}
+                metric_result[adjust] = adj_result
+            data_for_plotly[alias_map_out[metric]] = metric_result
+        return data_for_plotly
+
     def generate_node_power_matrix(self,
                                    output_dir,
                                    test,

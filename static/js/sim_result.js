@@ -22,6 +22,15 @@ function request_simulation_details() {
     success: function(out_data) {
       console.log("Simulation details loaded succesfully!");
       full_data.general_data.simulation["matrix"] = out_data["matrix"];
+      full_data.general_data.simulation["statistics"] = out_data["statistics"];
+      // let stat = prepare_plotly_graph_data([out_data["statistics"]], plotly_config);
+      // initialize_bar("ploty_all_summary", stat, plotly_config)
+
+    // let graph_data = prepare_plotly_graph_data(big_data, plotly_config);
+    // initialize_bar("ploty_layer_summary",graph_data,plotly_config);
+
+    // let graph_data_small = prepare_plotly_graph_data(small_data, plotly_config);
+    // initialize_bar("ploty_all_summary", graph_data_small, plotly_config)
     },
     failure: function() {
       console.log("Server error.");
@@ -113,10 +122,6 @@ $(function() {
     // render_plotly_summary("plotly_fdr");
     // render_plotly_summary("plotly_numrej");
 
-    let graph_data = prepare_plotly_graph_data(big_data, plotly_config);
-    initialize_bar("ploty_layer_summary",graph_data,plotly_config);
-    let graph_data_small = prepare_plotly_graph_data(small_data, plotly_config);
-    initialize_bar("ploty_all_summary", graph_data_small, plotly_config)
 
     // clicking this button restores the graph selected in simulation setup
     $("#spinner_max_num_foc_anchors").val(20);

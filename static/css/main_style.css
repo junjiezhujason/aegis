@@ -632,8 +632,8 @@ Inline help tip
 }
 
 .plotly-summary-divs .plotly-div {
-  width: 33%;
-  height: 200px;
+  /*width: 33%;*/
+  height: 300px;
   display: inline-block;
 }
 
