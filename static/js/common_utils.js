@@ -504,6 +504,31 @@ function reformat_focus_data(in_data, cntx_data, general_data) {
 }
 
 
+function get_data_dependent_dim(main_config, fixed_dim) {
+  let curr_view = main_config.curr_state.View;
+  let max_lev =  main_config.graph.max_range[curr_view].y;
+  let max_width = main_config.graph.max_range[curr_view].x;
+  return(get_full_canvas_config(max_width, max_lev, fixed_dim));
+}
+
+function update_svg_dimension(svg_id, confg, fixed_dim=false) {
+  let viewer_svg = d3.select(svg_id);
+  let fm = get_data_dependent_dim(confg, fixed_dim=fixed_dim);
+  viewer_svg
+    .attr("height", fm.svg_background.height)
+    .attr("width",  fm.svg_background.width)
+    ;
+  let x_pos = fm.split.left_ann + fm.split.graph;
+  viewer_svg.select(".mid-ann")
+    .attr("transform", "translate(" + x_pos + ", 0)");
+  viewer_svg.select(".mid-ann").select(".yaxis")
+    .attr("transform", "translate(" + fm.split.mid_ann + ", 0)");
+  viewer_svg.select(".bar-layer").select(".legend-box")
+    .attr("transform", "translate("+
+    (fm.svg.width * fm.legend.rel_x)+","+
+    (fm.svg.height * fm.legend.rel_y) + ")")
+    ;
+}
 
 function setup_graph_updates(graph_data, confg) {
   // this is where all possible ways to update the graph should be specified

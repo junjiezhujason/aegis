@@ -52,56 +52,86 @@ let all_color_mapping = {
     "hide": "#BDC3C7",
     "focus_relatives": "#752481",
     "fcux_ancs_2": "#2753AD",
-  }
+  },
 };
 
-function get_full_canvas_config(x_size=0, y_size=0) {
+function get_full_canvas_config(x_size, y_size, fixed=false) {
+  // debugger;
+  // default for fixed view
+  let back_height = 600;
+  let back_width = 800;
+  let mid_ann = 43;
+  let left_ann = 80;
+  let right_ann = 60;
+
+  let graph_width, bar_width, height;
+  if (fixed) {
+    let nominal_width = (x_size + 1) * 30;
+    let nominal_height = (y_size + 1) * 50;
+    height = Math.min(back_height, nominal_height);
+    graph_width = Math.min(back_width / 2 - left_ann, nominal_width);
+    bar_width = back_width / 2 - right_ann;
+    left_ann = back_width / 2 - graph_width;
+  } else { // adaptive according to the graph
+    let x_lim = 7; // minimum number of nodes in each layer for scaling
+    let y_lim = 25;
+    let col_width = 18;  // graph width per node
+    if (x_size < x_lim) {
+      graph_width = x_lim * col_width;
+    } else {
+      graph_width = x_size * col_width;
+    }
+    height = (y_size + 1) * 32;
+    back_height = height;
+    bar_width = graph_width + mid_ann + left_ann - right_ann;
+    back_width = bar_width + graph_width + left_ann + right_ann;
+  }
+
+  let hspace =  {
+    "left_ann": left_ann,
+    "mid_ann": mid_ann,
+    "right_ann": right_ann,
+    "graph": graph_width,
+    "bar": bar_width,
+  };
+  // add the margins to the width
+  width = graph_width + bar_width + left_ann + mid_ann + right_ann;
   let dim = {
     "svg": {
-      "height": 600,
-      "width": 800,
+      "height": height,
+      "width": width,
     },
-    "split": {},
+    "svg_background": {
+      "height": back_height,
+      "width": back_width,
+    },
+    "split": hspace,
     "legend" : {
       "rel_x": 0.72,
       "rel_y": 0.05,
     },
-    "transition": {
-      "exit_layer_time": 200,
-      "enter_layer_time": 200,
-      "total_buffer_time": 300,
-      "min_time": 2,
-      "exit_time": 500,
-      "update_time": 500,
-      "enter_time": 10000,
-      "prev_nlayers": 1,
-      "prev_node_lev_map": {},
-    },
-  }
-
-  let hspace =  {
-    "left_ann": 80,
-    "mid_ann": 43,
-    "right_ann": 10,
-  }
+  };
 
 
-  let x_lim = 20;
-  let y_lim = 25;
-  if (x_size > x_lim) {
-    dim.svg.width = x_size * (dim.svg.width / x_lim);
-  }
-  if (y_size > y_lim) {
-    dim.svg.height = y_size * (dim.svg.height / y_lim);
-  }
-  let res = dim.svg.width - hspace.left_ann - hspace.mid_ann - hspace.right_ann;
-  hspace.graph =  0.45 * res;
-  hspace.bar =  0.55 * res;
-  if (x_size > x_lim) {
-    hspace.graph = 0.5 * res;
-    hspace.bar =  0.5 * res;
-  }
-  dim.split = hspace;
+  // if (max_lev < 10) {
+  //   height = (max_lev+1) * 60;
+  // }
+  // let x_lim = 20;
+  // let y_lim = 25;
+  // if (x_size > x_lim) {
+  //   dim.svg.width = x_size * (dim.svg.width / x_lim);
+  // }
+  // if (y_size > y_lim) {
+  //   dim.svg.height = y_size * (dim.svg.height / y_lim);
+  // }
+  // let res = dim.svg.width - hspace.left_ann - hspace.mid_ann - hspace.right_ann;
+  // hspace.graph =  0.45 * res;
+  // hspace.bar =  0.55 * res;
+  // if (x_size > x_lim) {
+  //   hspace.graph = 0.5 * res;
+  //   hspace.bar =  0.5 * res;
+  // }
+  // dim.split = hspace;
 
   return(dim);
 }
@@ -125,7 +155,7 @@ let mirror_graph_config = {
     "top": bar_graph_share.padding.top,
     "bottom": bar_graph_share.padding.bottom,
     "left": 0,
-    "right": 25,
+    "right": 30,
   },
   "node":  {
     "radius": 7,
@@ -200,7 +230,6 @@ let mirror_bar_config = {
   },
 };
 
-
 let general_config = {
   "access_dag": "",
   "requests": {
@@ -217,7 +246,23 @@ let general_config = {
     },
   },
   "init_options": init_options,
-  "full_mirror": get_full_canvas_config(),
+  "plotly": {
+    "svg": {
+      "width": 800/3,
+      "height": 400,
+    },
+  },
+  "transition": {
+    "exit_layer_time": 200,
+    "enter_layer_time": 200,
+    "total_buffer_time": 300,
+    "min_time": 2,
+    "exit_time": 500,
+    "update_time": 500,
+    "enter_time": 10000,
+    "prev_nlayers": 1,
+    "prev_node_lev_map": {},
+  },
   "main_div": "",
   "main_mode": "simulation_setup",
   "margins": {top:20,right:40,bottom:60,left:40},
@@ -260,97 +305,6 @@ let general_config = {
     "depth": [],
     "height": [],
     "flex": [],
-  },
-};
-
-let config_caseslider = {
-  "init_trial":0,
-  "init_case": 0,
-  "layout" : {
-    "marker_layout" :  {
-      "marker" : {
-        "size": 8,
-        "color": [
-          "pink",
-          "purple",
-          "red",
-          "green"
-        ]
-      },
-      "hoverinfo" :"x+y"
-    },
-    "graph_layout":{
-      // "legend" : {
-      //   x: 1.1,
-      //   y: 1.0,
-      //   traceorder: 'normal',
-      //   font: {
-      //     family: 'sans-serif',
-      //     size: 12,
-      //     color: '#000'
-      //   },
-      //   bgcolor: '#E2E2E2',
-      //   bordercolor: '#FFFFFF',
-      //   borderwidth: 2
-      // },
-      "margin" : {
-        t : 10,
-        pad : 10
-      },
-      "hovermode" : 'closest',
-      "xaxis" : {
-        title: 'jaccard_distance',
-        showgrid: true,
-        zeroline: false,
-        hoverformat: '.2f'
-      },
-      "yaxis": {
-        title: 'raw_pvalue',
-        showgrid: true,
-        zeroline: false,
-        range : [-0.1,1.1],
-          hoverformat: '.2f'
-      },
-      "sliders" : {
-        pad: {t: 30,
-                b : 30},
-        x: 0.05,
-        y: 2.3,
-        len: 0.905,
-        currentvalue: {
-          xanchor: 'right',
-          prefix: 'Case: ',
-          font: {
-            color: '#888',
-            size: 13
-          }
-        },
-        transition: {duration: 500}
-      },
-      "updatemenus" : {
-        type: 'buttons',
-        showactive: false,
-        x: 0.05,
-        y: 2.3,
-        xanchor: 'right',
-        yanchor: 'top',
-        pad: {t: 60, r: 20},
-        buttons: [{
-          label: 'Play',
-          method: 'animate',
-          args: [null, {
-            fromcurrent: true,
-            frame: {redraw: false, duration: 1000},
-            transition: {duration: 500}
-          }]
-        }]
-      }
-    }
-  },
-  "step_config":{
-    "mode": 'immediate',
-    "frame": {redraw: false, duration: 500},
-    "transition": {duration: 500}
   },
 };
 

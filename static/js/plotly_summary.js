@@ -82,8 +82,8 @@ function plotly_boxplot(config, task="init", in_data={}) {
   let common_layout = {
     // title: 'Box Plot Styling Outliers',
     showlegend: false,
-    width : config.full_mirror.svg.width / 3,
-    height : config.full_mirror.svg.width / 2,
+    width : config.plotly.svg.width,
+    height : config.plotly.svg.height,
     "margin": {
       l: 30,
       r: 30,
@@ -104,8 +104,8 @@ function plotly_boxplot(config, task="init", in_data={}) {
       size: 16,
     },
   };
-  $(".plotly-div").css("width", config.full_mirror.svg.width / 3);
-  $(".plotly-div").css("height", config.full_mirror.svg.width / 2);
+  $(".plotly-div").css("width", config.plotly.svg.width);
+  $(".plotly-div").css("height", config.plotly.svg.height);
   stats.forEach(stat => {
     let elmt_id = "boxplot_".concat(stat);
     if (task == "init") {

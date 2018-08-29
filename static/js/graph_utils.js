@@ -503,7 +503,7 @@ function render_node_link_pos(container,
   let node_lev_map = compute_id_lev_map(nodes);
   let n_layers = confg.graph.max_range[confg.curr_state.View].y + 1;
 
-  let trans_confg = confg.full_mirror.transition;
+  let trans_confg = confg.transition;
   // let exit_time   = trans_confg.exit_time;
   // let update_time = trans_confg.update_time;
   // let enter_time  = trans_confg.enter_time;
