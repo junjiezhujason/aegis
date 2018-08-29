@@ -918,7 +918,7 @@ function update_ssm_plot(container,
   // svg dimension setup
   // ------------------------
   let main_svg = d3.select(container).select(".ssm-svg");
-
+  // do not display graph if it is too large
   if (focus_nodes.length > conf.max_node_display) {
     let message_w = 400;
     let message_h = 20;
@@ -928,9 +928,7 @@ function update_ssm_plot(container,
       .attr("y", message_h/2)
       .style("visibility", "visibility")
       ;
-    main_svg.attr("width", message_w)
-          .attr("height", message_h) // this is shared, so we're fine
-          ;
+    main_svg.attr("width", message_w).attr("height", message_h);
     return
   }
 
