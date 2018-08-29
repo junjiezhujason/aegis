@@ -557,18 +557,11 @@ function setup_full_go_canvas(confg) {
   full_svg.call(create_bar_group, confg);
 
   // create the svg elements for the graph viewer
-  // the width and height of this svg are set adaptively based on the data
-  // TODO: specify width, height
-  let viewer_svg = d3.select("#mirror_canvas_viewer").append("svg")
-    .attr("id", "full_mirror_viewer")
-    .attr("class", "full-mirror-display")
-    .style("border-width", "1px")
-    .style("border-style", "solid")
-    ;
-  viewer_svg.call(create_background, confg);
-  viewer_svg.call(create_mid_ann, confg); // specify transform
-  viewer_svg.call(create_graph_group, confg);
-  viewer_svg.call(create_bar_group, confg); // specify transform
+  let v_svg = d3.select("#mirror_canvas_viewer").select("#full_mirror_viewer");
+  v_svg.call(create_background, confg);
+  v_svg.call(create_mid_ann, confg); // specify transform
+  v_svg.call(create_graph_group, confg);
+  v_svg.call(create_bar_group, confg); // specify transform
 }
 
 function create_graph_group(svg, confg) {

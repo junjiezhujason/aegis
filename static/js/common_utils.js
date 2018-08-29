@@ -28,6 +28,50 @@ function button_div_hide_show(button_id, div_id) {
   });
 }
 
+function enable_svg_saving(fname, svg_container, btn_container) {
+  // important to avoid illustrator bugs
+  // svg_container = ".ssm-svg"
+  d3.select(svg_container)
+    .selectAll("text")
+    .style("font-family", "Arial")
+    ;
+  // let fname = "subfig_" + job_name + "_" + test_method;
+  d3.select(btn_container).select(".export_as_png").on('click', function(){
+    console.log("Saving " + svg_container + " to " + fname + ".png");
+    save_d3_svg(svg_container, "png", fname + ".png")
+  });
+  // https://github.com/edeno/d3-save-svg
+  d3.select(btn_container).select('.export_as_svg').on('click', function() {
+    console.log("Saving " + svg_container + " to " + fname + ".svg");
+    save_d3_svg(svg_container, "svg", fname)
+  });
+}
+
+function open_context_focus_image(graph_data, conf) {
+  let svg_id = "#full_mirror_viewer";
+  update_svg_dimension(svg_id, conf);
+  update_grid_display(svg_id, graph_data, conf);
+  update_focus_display(svg_id, graph_data, conf);
+  update_context_display(svg_id, graph_data, conf);
+  enable_svg_saving("fig_foc_con",
+                  "#full_mirror_viewer",
+                  "#buttons_save_focus_context");
+  enable_svg_saving("fig_binder",
+                    "#full_binder_plot",
+                    "#buttons_save_binder");
+  $("#graph_dialog").dialog({
+    autoOpen : false,
+    modal : true,
+    show : "blind",
+    hide : "blind",
+    // height: "60%",
+    width: "80%",
+    // maxWidth: "500px", // This does not work!
+    resizable: false,
+  });
+  $("#graph_dialog").dialog("open");
+}
+
 // gene ontology navigation setup
 // -----------------------------------------------------------------------------
 
@@ -43,25 +87,6 @@ function button_icon_change(button_id, status) {
     $(button_id).switchClass("btn-success", "btn-primary");
     $(span_id).switchClass("glyphicon-ok", "glyphicon-refresh");
   }
-}
-
-function open_context_focus_image(graph_data, conf) {
-  let svg_id = "#full_mirror_viewer";
-  update_svg_dimension(svg_id, conf);
-  update_grid_display(svg_id, graph_data, conf);
-  update_focus_display(svg_id, graph_data, conf);
-  update_context_display(svg_id, graph_data, conf);
-  $("#graph_dialog").dialog({
-    autoOpen : false,
-    modal : true,
-    show : "blind",
-    hide : "blind",
-    // height: "60%",
-    width: "80%",
-    // maxWidth: "500px", // This does not work!
-    resizable: false,
-  });
-  $("#graph_dialog").dialog("open");
 }
 
 function get_valid_queries(query_list, search_dict, class_name) {

@@ -27,11 +27,9 @@ function get_ssm_parts(conf) {
 }
 
 function initialize_ssm_canvas(container, conf) {
-  // create the svg
-  let main_svg = d3.select(container).append("svg")
-    .attr("class", "ssm-svg")
-    .attr("id", "full_binder_plot")
-    ;
+
+  let main_svg = d3.select(container).select(".ssm-svg");
+  // create the svg sub-components
   main_svg.append("text")
     .attr("class", "error-message")
     .style("text-anchor", "middle")

@@ -663,3 +663,8 @@ Inline help tip
   overflow-x: auto;
   white-space: nowrap;
 }
+
+#mirror_canvas_viewer #full_mirror_viewer {
+  border-width: 1px;
+  border-style: solid;
+}

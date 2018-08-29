@@ -102,30 +102,6 @@ function request_simulation_restore() {
   })
 }
 
-function render_binder_plot() {
-  let job_name = $("#job_id_input").val();
-  let test_method = $("#result_test_method").val();
-  let fname = "subfig_" + job_name + "_" + test_method;
-  d3.select("#export_as_png").on('click', function(){
-    d3.select(".ssm-svg")
-      .selectAll(".tick")
-      .selectAll("text")
-      .style("font-family", "Arial")
-      ;
-    save_d3_svg("#full_binder_plot", "png", fname + ".png")
-  });
-  // https://github.com/edeno/d3-save-svg
-  d3.select('#export_as_svg').on('click', function() {
-    d3.select(".ssm-svg")
-      .selectAll(".tick")
-      .selectAll("text")
-      .style("font-family", "Arial")
-      ;
-    save_d3_svg("#full_binder_plot", "svg", fname)
-  });
-  // important to avoid illustrator bugs
-
-}
 
 $(function() {
   $(".result-panel").hide();
