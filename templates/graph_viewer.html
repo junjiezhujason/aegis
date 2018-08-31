@@ -2,22 +2,53 @@
 <div id="graph_dialog"
      title="Graph Viewer"
      style="display: none;">
+  <!-- <div id="view_of_focus_context"> -->
   <div class="download-canvas">
-      <div id ="new_full_canvas_viewer" class="full-canvas">
-        <div id ="mirror_canvas_viewer">
-          <svg class="full-mirror-display" id="viewer_foc_con_png"></svg>
-        </div>
+    <div id ="new_full_canvas_viewer" class="full-canvas">
+      <div id ="mirror_canvas_viewer">
+        <svg class="full-mirror-display" id="viewer_foc_con_png"></svg>
       </div>
     </div>
+  </div>
+
+  <div id="btns_save_foc_con">
+    Export Focus-and-Context Graphs
+    <button class="btn btn-primary btn-sm viewer">
+      View
+    </button>
+    :
+    <button class="btn btn-primary btn-sm export_as_png">
+      PNG
+    </button>
+    <button class="btn btn-primary btn-sm export_as_svg">
+      SVG
+    </button>
+  </div>
+
+  <div class="download-canvas">
     <div class="binder-plot">
       <div class="canvas plot-sim-canvas">
         <svg class="ssm-svg" id="viewer_ssm_png"></svg>
       </div>
     </div>
   </div>
+
+  <div id="btns_save_ssm">
+    Export Binder Plots
+    <button class="btn btn-primary btn-sm viewer">
+      View
+    </button>
+    :
+    <button class="btn btn-primary btn-sm export_as_png">
+      PNG
+    </button>
+    <button class="btn btn-primary btn-sm export_as_svg">
+      SVG
+    </button>
+  </div>
+
 </div>
-<div id="graph_saver"
-     style="display: none;">
+<div id="saver" style="display: block;">
   <div>
     <!-- used for saving svgs -->
     <div class="full-canvas">
@@ -28,6 +59,7 @@
     </div>
   </div>
 </div>
+
 
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/FileSaver.min.js') }}" ></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/canvas-toBlob.js') }}" ></script>

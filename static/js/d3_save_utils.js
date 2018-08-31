@@ -34,7 +34,6 @@ function getSVGString( svgNode ) {
     var svgString = serializer.serializeToString(svgNode);
     svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink='); // Fix root xlink without namespace
     svgString = svgString.replace(/NS\d+:href/g, 'xlink:href'); // Safari NS namespace fix
-
     return svgString;
 
     function getCSSStyles( parentElement ) {

@@ -36,7 +36,9 @@ function enable_svg_saving(fname, type, svg_id, btn_container) {
     // .style("font-size", "16px")
     ;
   let btn_id = ".export_as_".concat(type);
+  // debugger;
   d3.select(btn_container).select(btn_id).on('click', function(){
+    $("#graph_dialog").dialog("close");
     console.log("Saving " + svg_id + " to " + fname + "." + type);
     let file_name = fname;
     if (type != "svg") {
@@ -53,13 +55,14 @@ function enable_graph_all_saving() {
     file_type.forEach(format => {
       let fname = "fig_" + graph;
       let svg_id = "#viewer_" + graph + "_" + format;
-      let btn_container = "#btns_save_+" + graph;
-      enable_svg_saving(fname, format, svg_id, "#btns_save_foc_con");
+      let btn_container = "#btns_save_" + graph;
+      enable_svg_saving(fname, format, svg_id, btn_container);
     });
   });
 }
 
 function open_context_focus_image() {
+  enable_graph_all_saving();
   let conf = config;
   let graph_data = full_data.graph_data;
   // graph viewer update
