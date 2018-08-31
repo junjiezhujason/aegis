@@ -15,10 +15,10 @@ function save_d3_svg(svg_id, data_type, file_name) {
     }
     if (data_type == "svg") {
         // Dependency: d3_save_svg.min.js
-        let config = {
+        let conf = {
             filename: file_name,
         };
-      d3_save_svg.save(d3.select(svg_id).node(), config);
+      d3_save_svg.save(d3.select(svg_id).node(), conf);
     }
 }
 

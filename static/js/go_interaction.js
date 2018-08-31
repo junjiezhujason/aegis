@@ -63,7 +63,8 @@ function request_ground_truth_data() {
       // console.log(ground_truth_info)
       full_data.ground_truth_info = ground_truth_info;
       // request_ground_truth_data(genes_requested);
-      update_all_graphs(full_data.graph_data, config);
+      update_all_graphs("#full_mirror_display", graph_data, confg);
+
     },
     failure: function() {
       console.log("Server error.");
@@ -143,10 +144,9 @@ function request_focus_data(request) {
                                                  general_data);
       setup_graph_updates(full_data.graph_data, config);
       if (config.main_mode == "visualizer") {
-        update_binder_plot(".plot-sim-canvas", full_data, ss_manhattan_config);
+        update_binder_plot("#graph_saver", full_data, ss_manhattan_config);
         $("#open_graph_viewer").off().on("click", function() {
-          // open the context focus image to display the binder plots
-          open_context_focus_image(full_data.graph_data, config);
+          open_context_focus_image();
         });
       }
       if (config.main_mode == "simulation_result") {
@@ -547,21 +547,17 @@ function setup_full_go_canvas(confg) {
   $("#go_focus_tag_it").tagit({});
 
   // create the svg elements needed for graph display
-  let full_svg = d3.select("#mirror_canvas").append("svg")
-    .attr("id", "full_mirror_display")
-    .attr("class", "full-mirror-display")
-    ;
-  full_svg.call(create_background, confg);
-  full_svg.call(create_mid_ann, confg);
-  full_svg.call(create_graph_group, confg);
-  full_svg.call(create_bar_group, confg);
+  create_all_groups("#full_mirror_display", confg);
+  create_all_groups("#viewer_foc_con_png", config);
+  create_all_groups("#viewer_foc_con_svg", config);
+}
 
-  // create the svg elements for the graph viewer
-  let v_svg = d3.select("#mirror_canvas_viewer").select("#full_mirror_viewer");
-  v_svg.call(create_background, confg);
-  v_svg.call(create_mid_ann, confg); // specify transform
-  v_svg.call(create_graph_group, confg);
-  v_svg.call(create_bar_group, confg); // specify transform
+function create_all_groups(svg_id, confg) {
+  let svg = d3.select(svg_id);
+  svg.call(create_background, confg);
+  svg.call(create_mid_ann, confg); // specify transform
+  svg.call(create_graph_group, confg);
+  svg.call(create_bar_group, confg); // specify transform
 }
 
 function create_graph_group(svg, confg) {

@@ -1,11 +1,13 @@
 
 // configuration info and initializations
 let config = general_config;
+let ss_manhattan_config = ssm_params();
 config.main_mode = "simulation_result";
 setup_full_go_canvas(config);
-let ss_manhattan_config = ssm_params();
-initialize_ssm_canvas(".plot-sim-canvas", ss_manhattan_config)
-
+create_all_groups("#viewer_foc_con_png", config);
+create_all_groups("#viewer_foc_con_svg", config);
+initialize_ssm_canvas("#viewer_ssm_png", ss_manhattan_config);
+initialize_ssm_canvas("#viewer_ssm_svg", ss_manhattan_config);
 
 function request_simulation_details() {
   let job_name = $("#job_id_input").val();
@@ -25,16 +27,17 @@ function request_simulation_details() {
       full_data.general_data.simulation["matrix"] = out_data["matrix"];
       // full_data.general_data.simulation["statistics"] = out_data["statistics"];
       plotly_boxplot(config, "update", out_data.statistics);
-      update_binder_plot(".plot-sim-canvas", full_data, ss_manhattan_config);
-
+      update_binder_plot("#viewer_ssm_png", full_data, ss_manhattan_config);
+      update_binder_plot("#viewer_ssm_svg", full_data, ss_manhattan_config);
+      enable_graph_all_saving();
       $("#expand_binder_summary").off().on("click", function() {
         // always switch to buoyant view
-        $("#view_select").val("flex");
-        config.curr_state.View = $("#view_select").val();
+        // $("#view_select").val("flex");
+        // config.curr_state.View = $("#view_select").val();
         // update the interactive panel
-        update_all_graphs(full_data.graph_data, config);
+        // update_all_graphs("#full_mirror_display", full_data.graph_data, config);
         // open the context focus image to display the binder plots
-        open_context_focus_image(full_data.graph_data, config);
+        open_context_focus_image();
       });
     },
     failure: function() {
@@ -105,6 +108,7 @@ function request_simulation_restore() {
 
 $(function() {
   $(".result-panel").hide();
+  // enable_graph_viewer_saving();
   setup_simulation_highlight_options();
   // $("#result_test_method").val("hypergeometric.ga");
   plotly_boxplot(config, "init");

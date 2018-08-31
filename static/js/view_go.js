@@ -1,11 +1,11 @@
-// ---------------------------
 // configuration info and initializations
 let config = general_config;
 config.main_mode = "visualizer";
-setup_full_go_canvas(config);
 let ss_manhattan_config = ssm_params(height=800, width=800,
                                      main_mode=config.main_mode)
-initialize_ssm_canvas(".plot-sim-canvas", ss_manhattan_config, show_name=true);
+setup_full_go_canvas(config);
+initialize_ssm_canvas("#viewer_ssm_png", ss_manhattan_config, show_name=true);
+initialize_ssm_canvas("#viewer_ssm_svg", ss_manhattan_config, show_name=true);
 
 function query_change_detected() {
   button_icon_change("#upload_request_ontology_button", "change");

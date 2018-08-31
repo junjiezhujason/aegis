@@ -28,46 +28,55 @@ function button_div_hide_show(button_id, div_id) {
   });
 }
 
-function enable_svg_saving(fname, svg_container, btn_container) {
+function enable_svg_saving(fname, type, svg_id, btn_container) {
   // important to avoid illustrator bugs
-  // svg_container = ".ssm-svg"
-  d3.select(svg_container)
+  d3.select(svg_id)
     .selectAll("text")
     .style("font-family", "Arial")
+    // .style("font-size", "16px")
     ;
-  // let fname = "subfig_" + job_name + "_" + test_method;
-  d3.select(btn_container).select(".export_as_png").on('click', function(){
-    console.log("Saving " + svg_container + " to " + fname + ".png");
-    save_d3_svg(svg_container, "png", fname + ".png")
-  });
-  // https://github.com/edeno/d3-save-svg
-  d3.select(btn_container).select('.export_as_svg').on('click', function() {
-    console.log("Saving " + svg_container + " to " + fname + ".svg");
-    save_d3_svg(svg_container, "svg", fname)
+  let btn_id = ".export_as_".concat(type);
+  d3.select(btn_container).select(btn_id).on('click', function(){
+    console.log("Saving " + svg_id + " to " + fname + "." + type);
+    let file_name = fname;
+    if (type != "svg") {
+      file_name = fname + "." + type;
+    }
+    save_d3_svg(svg_id, type, fname);
   });
 }
 
-function open_context_focus_image(graph_data, conf) {
-  let svg_id = "#full_mirror_viewer";
-  update_svg_dimension(svg_id, conf);
-  update_grid_display(svg_id, graph_data, conf);
-  update_focus_display(svg_id, graph_data, conf);
-  update_context_display(svg_id, graph_data, conf);
-  enable_svg_saving("fig_foc_con",
-                  "#full_mirror_viewer",
-                  "#buttons_save_focus_context");
-  enable_svg_saving("fig_binder",
-                    "#full_binder_plot",
-                    "#buttons_save_binder");
+function enable_graph_all_saving() {
+  let graph_type = ["foc_con", "ssm"];
+  let file_type = ["png", "svg"];
+  graph_type.forEach(graph => {
+    file_type.forEach(format => {
+      let fname = "fig_" + graph;
+      let svg_id = "#viewer_" + graph + "_" + format;
+      let btn_container = "#btns_save_+" + graph;
+      enable_svg_saving(fname, format, svg_id, "#btns_save_foc_con");
+    });
+  });
+}
+
+function open_context_focus_image() {
+  let conf = config;
+  let graph_data = full_data.graph_data;
+  // graph viewer update
+  update_binder_plot("#viewer_ssm_png", full_data, ss_manhattan_config);
+  update_all_graphs("#viewer_foc_con_png", graph_data, conf, fixed_dim = false);
+  // graph saver update
+  update_binder_plot("#viewer_ssm_svg", full_data, ss_manhattan_config);
+  update_all_graphs("#viewer_foc_con_svg", graph_data, conf, fixed_dim = false);
   $("#graph_dialog").dialog({
-    autoOpen : false,
+    // autoOpen : false,
     modal : true,
-    show : "blind",
-    hide : "blind",
+    // show : "blind",
+    // hide : "blind",
     // height: "60%",
     width: "80%",
     // maxWidth: "500px", // This does not work!
-    resizable: false,
+    // resizable: false,
   });
   $("#graph_dialog").dialog("open");
 }
@@ -538,6 +547,9 @@ function get_data_dependent_dim(main_config, fixed_dim) {
 
 function update_svg_dimension(svg_id, confg, fixed_dim=false) {
   let viewer_svg = d3.select(svg_id);
+  if (!fixed_dim) { // hide the middle buttons
+    viewer_svg.select(".new-node-buttons").style("visibility", "hidden");
+  }
   let fm = get_data_dependent_dim(confg, fixed_dim=fixed_dim);
   viewer_svg
     .attr("height", fm.svg_background.height)
@@ -558,7 +570,8 @@ function update_svg_dimension(svg_id, confg, fixed_dim=false) {
 function setup_graph_updates(graph_data, confg) {
   // this is where all possible ways to update the graph should be specified
   update_config_from_graph(graph_data, confg);
-  update_all_graphs(graph_data, confg);
+  update_all_graphs("#full_mirror_display", graph_data, confg);
+  update_all_graphs("#viewer_foc_con_svg", graph_data, confg, fixed_dim = false);
 
   $("#view_select").off().on("change", function() {
     if (this.value == "flex")  {
@@ -568,13 +581,15 @@ function setup_graph_updates(graph_data, confg) {
       $("#full_go_dag").css("display", "flex")
     }
     confg.curr_state.View = this.value;
-    update_all_graphs(graph_data, confg);
+    update_all_graphs("#full_mirror_display", graph_data, confg);
+    update_all_graphs("#viewer_foc_con_svg", graph_data, conf, fixed_dim = false);
   })
 
    $("#highlight_node_select").off().on("change", function() {
      // confg.curr_state.Htype = this.value;
      confg.curr_state.Highlight = this.value;
-     update_all_graphs(graph_data, confg);
+     update_all_graphs("#full_mirror_display", graph_data, confg);
+     update_all_graphs("#viewer_foc_con_svg", graph_data, conf, fixed_dim = false);
    })
   // functions and interactions specific to simulation setup
   function gene_tagit_remove_update(event, ui) {
@@ -600,22 +615,16 @@ function setup_graph_updates(graph_data, confg) {
         afterTagRemoved: null,
       })
       $("#go_gene_tag_it").tagit("removeAll");
-      // request simulation data
-      // update_all_graphs(graph_data, confg);
       $("#go_gene_tag_it").tagit({
         afterTagRemoved: gene_tagit_remove_update,
       })
       request_ground_truth_data();
     });
     $("#add_random_num_genes").off().on('click', function() {
-      // request simulfation data
-      // update_all_graphs(graph_data, confg);
       append_random_genes("num_genes")
       request_ground_truth_data();
     });
     $("#add_random_prop_genes").off().on('click', function() {
-      // request simulation data
-      // update_all_graphs(graph_data, confg);
       append_random_genes("prop_genes")
       request_ground_truth_data();
     });
@@ -642,21 +651,20 @@ function update_config_from_graph(graph_data, conf) {
       conf.level_breaks[view] = cntx_meta.level_breaks[view];
     }
   }
-  // console.log(conf);
   return conf;
 }
 
-function update_all_graphs(graph_data, conf) {
+function update_all_graphs(svg_id, graph_data, conf, fixed_dim = true) {
   graph_data.curr_lev_nodes =  get_candidate_nodes_per_level(graph_data, conf);
-  let svg_id = "#full_mirror_display";
-  let fixed_dim = true;
+  // let svg_id = "#full_mirror_display";
+  // let fixed_dim = true;
   update_svg_dimension(svg_id, conf, fixed_dim=fixed_dim);
   update_grid_display(svg_id, graph_data, conf, fixed_dim=fixed_dim);
   update_focus_display(svg_id, graph_data, conf, fixed_dim=fixed_dim);
   update_context_display(svg_id, graph_data, conf, fixed_dim=fixed_dim);
 }
 
-function update_binder_plot(container, full_data, ss_manhattan_config) {
+function update_binder_plot(svg_id, full_data, ss_manhattan_config) {
   let cntx_data = full_data.graph_data.context_info;
   let c_grp_data = cntx_data.meta.level_starts.flex;
   let n_nodes = cntx_data.graph.node_data.length;
@@ -681,7 +689,7 @@ function update_binder_plot(container, full_data, ss_manhattan_config) {
     node_values = full_data.general_data.simulation["matrix"];
     c_group_data = c_grp_data;
   }
-  update_ssm_plot(container,
+  update_ssm_plot(svg_id,
                   node_values,
                   f_nodes,
                   f_group_ordering,

@@ -60,9 +60,12 @@ function get_full_canvas_config(x_size, y_size, fixed=false) {
   // default for fixed view
   let back_height = 600;
   let back_width = 800;
-  let mid_ann = 43;
+  let mid_ann = 10;
   let left_ann = 80;
   let right_ann = 60;
+  if (fixed) {
+    mid_ann = 43; // leave space for buttons
+  }
 
   let graph_width, bar_width, height;
   if (fixed) {
@@ -75,13 +78,13 @@ function get_full_canvas_config(x_size, y_size, fixed=false) {
   } else { // adaptive according to the graph
     let x_lim = 7; // minimum number of nodes in each layer for scaling
     let y_lim = 25;
-    let col_width = 18;  // graph width per node
+    let col_width = 20;  // graph width per node
     if (x_size < x_lim) {
       graph_width = x_lim * col_width;
     } else {
       graph_width = x_size * col_width;
     }
-    height = (y_size + 1) * 32;
+    height = (y_size + 1) * 38;
     back_height = height;
     bar_width = graph_width + mid_ann + left_ann - right_ann;
     back_width = bar_width + graph_width + left_ann + right_ann;
@@ -166,7 +169,7 @@ let mirror_graph_config = {
 
   },
   "opacity": {
-    "background_link": 0.5,
+    "background_link": 0.8,
     "hidden": 0.2,
   },
   "simulation": null,

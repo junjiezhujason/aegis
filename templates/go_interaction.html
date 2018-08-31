@@ -175,7 +175,9 @@
     </span>
   </div>
   <div id ="new_full_canvas" class="full-canvas view-block">
-    <div id ="mirror_canvas"></div>
+    <div id ="mirror_canvas">
+      <svg class="full-mirror-display" id="full_mirror_display"></svg>
+    </div>
   </div>
 
   <!-- focus anchor search line -->
@@ -279,6 +281,26 @@
             class="btn btn-sm btn-primary icon-btn-right"
             id="focus_option_2_update">
      <span class="glyphicon glyphicon-refresh"></span>
+    </button>
+  </div>
+</div>
+<div>
+  <div id="btns_save_foc_con">
+    Focus and Context Graphs:
+    <button class="btn btn-primary btn-sm export_as_png">
+      Export PNG
+    </button>
+    <button class="btn btn-primary btn-sm export_as_svg">
+      Export SVG
+    </button>
+  </div>
+  <div id="btns_save_binder">
+    Binder Plots:
+    <button class="btn btn-primary btn-sm export_as_png">
+      Export PNG
+    </button>
+    <button class="btn btn-primary btn-sm export_as_svg">
+      Export SVG
     </button>
   </div>
 </div>
