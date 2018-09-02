@@ -45,6 +45,12 @@ function update_node_features(graph_data, confg, fixed_dim=false) {
   } else {
     highlight_col = confg.colors.node_highlight["default"];
   }
+  let highlight_anchors = node_meta.anchors;
+  if (highlight_mode == "focus_relatives") {
+    // only let the outer nodes be the highlighted anchors
+    highlight_anchors = node_meta.outers;
+  }
+  // debugger;
   node_data.forEach(function(d) {
     d.lev_x = d.pos_info[curr_view].x;
     d.lev_y = d.pos_info[curr_view].y;
@@ -54,7 +60,7 @@ function update_node_features(graph_data, confg, fixed_dim=false) {
     d.y = d.cy;
     d.fx = null;
     d.fy = null;
-    d.anchor = d.name in node_meta.anchors;
+    d.anchor = d.name in highlight_anchors;
     d.prolif = d.name in node_meta.prolifs;
     d.r = node_rad_wid_col(d, confg)[0];
     d.col = confg.colors.node_base; // this is the base color of each node

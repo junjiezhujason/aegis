@@ -534,128 +534,23 @@ class DAGraph(object):
         node_parents = [[node_i for node_i in context_map[node_i].parents
                             if node_i in focus_nodes]
                                 for node_i in node_ids]
+        # get the sort index according asceding order of context ids (cid)
+        node_cids = [context_map[node_i].cid for node_i in node_ids]
+        node_order = list(np.argsort(node_cids))
         # 2. run the core algorithm
         logger.info("Running {} mode".format( "block" if block_merge else "node" ))
         layer_list = bubble_float_algo(node_ids,
                                        node_weights,
                                        node_depths,
                                        node_parents,
-                                       gap_break = gap_break,
-                                       block_merge = block_merge)
+                                       node_order=node_order,
+                                       gap_break=gap_break,
+                                       block_merge=block_merge)
         logger.info("Number of flex levels: {}".format(len(layer_list)))
         # 3. append the node attribtues in context
         for layer, layer_nodes in enumerate(layer_list):
             for node_i in layer_nodes:
                 context_map[node_i].flex = layer
-
-        # TODO: layer_list could be used to send some meta information
-        # to the output if necessary
-
-    def focus_node_layout(self,
-                          context_query,
-                          context=None,
-                          flex_layer=True,
-                          gap_break = 5000):
-        # context_query: set of query indices (anchor nodes)
-        # translation needed for mapping to a new context
-        # context: is a mapping from original indices to Node objects
-
-        # focus nodes are nodes that are related to query nodes
-        # here the nodes are grouped into multiple sets, then
-        # their ordering is decided within a group prior to display
-        # within "context" the node levels are already assigned
-
-        if context is None: # use the self.nodes list to create the context map
-            context = {i : n for i, n in enumerate(self.nodes)}
-        # check and make sure query is in context
-
-        groups = self.create_node_grouping(context_query, restrict_set=context)
-
-        logger.info("Created {} groups in the focus graph".format(len(groups)))
-        logger.debug(groups)
-        # the focus nodes are the ones that will be output to a graph display
-        focus_nodes = set.union(*groups)
-        if flex_layer : # compute flexible layer type based on the focus node
-            self.compute_focus_flex_level(focus_nodes,
-                                          context,
-                                          gap_break = gap_break)
-            level_types = ["depth", "height", "flex"]
-        else:
-            level_types = ["depth", "height"]
-        for level_type in level_types:
-            logger.info("Generating layout for {} levels".format(level_type))
-            logger.info("Number of node groups: {}".format(len(groups)))
-            # a map from the focus nodes to their levels
-            focus_node_level = {}
-            for node_index in focus_nodes:
-                context_node = context[node_index] # retrieve the Node object
-                focus_node_level[node_index] = getattr(context_node, level_type)
-
-            g_sizes = {i : 0 for i in range(len(groups))}
-            g_widths = {i : 0 for i in range(len(groups))}
-            for i_group, group in enumerate(groups):
-                g_lev_map = self.create_level_node_map(focus_node_level,
-                                                       node_indices=group)
-                g_sizes[i_group] = sum([len(g_lev_map[l]) for l in g_lev_map])
-                g_widths[i_group] = max([len(g_lev_map[l]) for l in g_lev_map])
-            # pick the narrowest group as the starting point
-            g_narrowest = 0
-            min_width = len(focus_node_level)
-            for i_group in g_widths.keys():
-                width = g_widths[i_group]
-                if width < min_width:
-                    min_width = width
-                    g_narrowest = i_group
-
-            # key info to be updated for node group order and node ordering
-            node_group_orders = {}
-            node_orders = {}
-            res_node_lev = focus_node_level.copy()
-            curr_offset = 0
-            while len(g_sizes) > 0:
-                if len(g_sizes) == len(groups):
-                    include_group = g_narrowest # first iteration
-                else: # pick the group with the smallest group size
-                    include_group = min(g_sizes, key = g_sizes.get)
-
-                logger.debug("Including group: {}".format(include_group))
-
-                old_group_node_ids =  groups[include_group]
-                # move the nodes in the group into a new group
-                n_to_order = []
-                for node_id in old_group_node_ids:
-                    if node_id in res_node_lev:
-                        res_node_lev.pop(node_id, None)
-                        n_to_order.append(node_id)
-                gnord = self.compute_node_order(n_to_order, level_type, context)
-                node_group_orders.update(gnord)
-
-                # remove this group and recompute size of the remaining groups
-                g_sizes.pop(include_group, None)
-                for i_group in g_sizes: # consider the remaining groups
-                    group = groups[i_group]
-                    # the residual node level will account for removed nodes
-                    g_lev_map = self.create_level_node_map(res_node_lev,
-                                                           node_indices=group)
-                    g_sizes[i_group] = sum([len(g_lev_map[l]) for l in g_lev_map])
-                    g_widths[i_group] = max([len(g_lev_map[l]) for l in g_lev_map])
-
-                # offset should be the size of the removed group plus old offset
-                nord = { n : (gnord[n] + curr_offset) for n in gnord}
-                curr_offset += g_widths[include_group]
-                node_orders.update(nord)
-
-            # TODO: maybe update later
-            for node_id in node_orders:
-                node = context[node_id]
-                ord_attr = "{}_order".format(level_type)
-                grp_ord_attr = "group_{}_order".format(level_type)
-                setattr(node, ord_attr, node_orders[node_id])
-                setattr(node, grp_ord_attr, node_group_orders[node_id])
-            # for node_id in node_orders:
-            #     print("{}\tlevel:{}\torder:{}".format(node_id,
-            #           context[node_id].depth, context[node_id].depth_order))
-        return focus_nodes
 
     def compute_group_width(self, node_levels):
         level_map = self.create_level_node_map(node_levels)
@@ -864,14 +759,19 @@ class OrderedContext():
         level_breaks = [np.inf] * n_levels
         focus_level_counts = [0] * n_levels
         start_indices= [0] * n_levels
+        # iterate through the focus nodes according to the cids in ascending order
+
         for node_i in focus_node_ids:
             level = getattr(cntx[node_i], "flex")
             node_weight = cntx[node_i].weight
             focus_level_counts[level] += 1
             # level_breaks[level] = min(level_breaks[level], node_weight)
-            if node_weight < level_breaks[level]:
-                level_breaks[level] = node_weight
+            if start_indices[level] <= cntx[node_i].cid:
                 start_indices[level] = cntx[node_i].cid
+                level_breaks[level] = node_weight
+            # if node_weight < level_breaks[level]:
+            #     level_breaks[level] = node_weight
+            #     start_indices[level] = cntx[node_i].cid
         assert np.any(np.array(focus_level_counts) > 0), "empty layer error"
 
         level_breaks[-1] = self.sorted_nodes[-1].weight
@@ -2477,8 +2377,6 @@ class GODAGraph(DAGraph):
         context_map = {} # node id : Node in OrderedContext()
         for nid, cid in ordered_context.sorted_index_map.items():
             context_map[nid] = ordered_context.sorted_nodes[cid]
-        # OLD:
-        # cnode_set = set(self.context_graph.sorted_index_map.keys())
         # parameters
         foc_sel_params = {
             "rule" : rule,

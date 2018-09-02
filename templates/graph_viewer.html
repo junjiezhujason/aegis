@@ -2,45 +2,55 @@
 <div id="graph_dialog"
      title="Graph Viewer"
      style="display: none;">
-  <div id="view_of_focus_context">
+  <!-- <div id="view_of_focus_context"> -->
+  <div id="div_view_foc_con">
     <div class="download-canvas">
       <div id ="new_full_canvas_viewer" class="full-canvas">
         <div id ="mirror_canvas_viewer">
-          <svg class="full-mirror-display" id="full_mirror_viewer"></svg>
+          <svg class="full-mirror-display" id="viewer_foc_con_png"></svg>
         </div>
       </div>
     </div>
-    <div id="buttons_save_focus_context">
-      <button class="btn btn-primary btn-sm export_as_png">
-        Export PNG
+    <div>
+      <label>Export Focus-and-Context Graphs as:</label>
+      <button class="btn btn-sm btn-expand export_as_png">
+        PNG
       </button>
-      <button class="btn btn-primary btn-sm export_as_svg">
-        Export SVG
+      <button class="btn btn-sm btn-expand export_as_svg">
+        SVG
       </button>
     </div>
   </div>
-  <div id="view_of_binder">
+  <div id="div_view_ssm">
     <div class="download-canvas">
       <div class="binder-plot">
         <div class="canvas plot-sim-canvas">
-          <svg class="ssm-svg" id="full_binder_plot"></svg>
+          <svg class="ssm-svg" id="viewer_ssm_png"></svg>
         </div>
       </div>
     </div>
-    <div id="buttons_save_binder">
-      <button class="btn btn-primary btn-sm export_as_png">
-        Export PNG
+    <div>
+      <label>Export Binder Plot as:</label>
+      <button class="btn btn-sm btn-expand export_as_png">
+        PNG
       </button>
-      <button class="btn btn-primary btn-sm export_as_svg">
-        Export SVG
+      <button class="btn btn-sm btn-expand export_as_svg">
+        SVG
       </button>
+    </div>
+  </div>
+  <div id="saver" style="display: none;">
+    <!-- hidden div used for saving svgs -->
+    <div class="full-canvas">
+      <svg class="full-mirror-display" id="viewer_foc_con_svg"></svg>
+    </div>
+    <div class="canvas ssm-svg-saver">
+      <svg class="ssm-svg" id="viewer_ssm_svg"></svg>
     </div>
   </div>
 </div>
 
-<script type="text/javascript" src="{{ url_for('static', filename='lib/bootstrap-filestyle/bootstrap-filestyle.min.js') }}" ></script>
-<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/d3-save-svg.min.js') }}" ></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/FileSaver.min.js') }}" ></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/canvas-toBlob.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/d3-save-svg.min.js') }}" ></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/d3_save_utils.js') }}"></script>
-

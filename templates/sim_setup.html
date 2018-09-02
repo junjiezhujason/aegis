@@ -204,8 +204,9 @@
   </div>
 </div>
 
-<div class="hidden-textbox" style="display: show">
+<div class="hidden-textbox" style="display: none">
   <textarea id="hidden_copy_text"></textarea>
 </div>
+{% include "graph_viewer.html" %}
 <script type="text/javascript" src="{{ url_for('static', filename='js/sim_setup.js') }}"></script>
 {% endblock %}

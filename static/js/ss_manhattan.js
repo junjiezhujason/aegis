@@ -26,9 +26,9 @@ function get_ssm_parts(conf) {
   return(all_parts);
 }
 
-function initialize_ssm_canvas(container, conf) {
+function initialize_ssm_canvas(svg_id, conf) {
 
-  let main_svg = d3.select(container).select(".ssm-svg");
+  let main_svg = d3.select(svg_id);
   // create the svg sub-components
   main_svg.append("text")
     .attr("class", "error-message")
@@ -347,13 +347,14 @@ function data_sel_states(d3_data_sel, element) {
 }
 
 
-function draw_background_border(container,
+function draw_background_border(d3_sel,
+                                container,
                                 conf,
                                 scales,
                                 svg_dim,
                                 dat_len,
                                 col_anns=[]) {
-  let d3_sel = d3.select(".ssm-svg").select(container);
+  // let d3_sel = d3.select(".ssm-svg").select(container);
   let padding = conf.manhattan_plot.padding
   let xAxis;
   if (container == "#focus-graph-heatmap" |
@@ -408,8 +409,8 @@ function draw_background_border(container,
 
 
 
-function draw_heatmap(container, in_data, conf) {
-  let d3_sel = d3.select(".ssm-svg").select(container);
+function draw_heatmap(d3_sel, container, in_data, conf) {
+  // let d3_sel = d3.select(".ssm-svg").select(container);
 
   // background data setup
   let group_data = in_data.group;
@@ -434,7 +435,7 @@ function draw_heatmap(container, in_data, conf) {
   // axes setup
   let scales = in_data.manhattan_scales;
   let svg_dim = get_svg_dim(conf, "heatmap-plot");
-  draw_background_border(container, conf, scales, svg_dim,
+  draw_background_border(d3_sel, container, conf, scales, svg_dim,
                          in_data.row_ann.length,
                          col_ann=in_data.col_ann);
 
@@ -487,8 +488,8 @@ function draw_heatmap(container, in_data, conf) {
   }
 }
 
-function draw_manhattan(container, in_data, conf, mode="heavy") {
-  let d3_sel = d3.select(".ssm-svg").select(container);
+function draw_manhattan(d3_sel, container, in_data, conf, mode="heavy") {
+  // let d3_sel = d3.select(".ssm-svg").select(container);
 
   // background data setup
   let group_data = in_data.group;
@@ -516,7 +517,7 @@ function draw_manhattan(container, in_data, conf, mode="heavy") {
   let scales = in_data.manhattan_scales;
   let svg_dim = get_svg_dim(conf, "manhattan-plot");
   let dat_len = node_data.length;
-  draw_background_border(container, conf, scales, svg_dim, dat_len);
+  draw_background_border(d3_sel, container, conf, scales, svg_dim, dat_len);
 
   // Rendering
   let data_sel = {
@@ -587,8 +588,8 @@ function parse_node_domain_from_group(data_g) {
   }
 }
 
-function draw_bridge(container, c_data, f_data, conf) {
-  let d3_sel = d3.select(".ssm-svg").select(container);
+function draw_bridge(d3_sel, c_data, f_data, conf) {
+  // let d3_sel = d3.select(".ssm-svg").select(container);
   let f_data_g = f_data.group;
   let c_data_g = c_data.group;
   let f_scale = f_data.manhattan_scales;
@@ -626,8 +627,8 @@ function get_rev_cid_map(node_list) {
   }
   return map;
 }
-function draw_textaxis(container, f_data, f_nodes, conf, name_type) {
-  let d3_sel = d3.select(".ssm-svg").select(container);
+function draw_textaxis(d3_sel, f_data, f_nodes, conf, name_type) {
+  // let d3_sel = d3.select(".ssm-svg").select(container);
   // need to reorder the focus nodes according to the
   // the ordering in the grouped and organized f_data
   let fn_map = get_rev_cid_map(f_nodes);
@@ -698,8 +699,8 @@ function draw_textaxis(container, f_data, f_nodes, conf, name_type) {
   }
 }
 
-function draw_arcgraph(container, f_data, f_nodes, conf) {
-  let d3_sel = d3.select(".ssm-svg").select(container);
+function draw_arcgraph(d3_sel, f_data, f_nodes, conf) {
+  // let d3_sel = d3.select(".ssm-svg").select(container);
   let fn_map = get_rev_cid_map(f_nodes); // unranked by has children info
   let dat_map = get_rev_cid_map(f_data.node); // ranked
   let scales = f_data.manhattan_scales;
@@ -895,7 +896,7 @@ function add_scale_attribute(in_data, conf, plot_id) {
   return out_data;
 }
 
-function update_ssm_plot(container,
+function update_ssm_plot(svg_id,
                         node_values,
                         focus_nodes,
                         f_group_ordering,
@@ -915,7 +916,7 @@ function update_ssm_plot(container,
   // ------------------------
   // svg dimension setup
   // ------------------------
-  let main_svg = d3.select(container).select(".ssm-svg");
+  let main_svg = d3.select(svg_id);
   // do not display graph if it is too large
   if (focus_nodes.length > conf.max_node_display) {
     let message_w = 400;
@@ -960,11 +961,9 @@ function update_ssm_plot(container,
   main_svg.attr("width", width_offset)
           .attr("height", grp_dim.height) // this is shared, so we're fine
           ;
-
   // ------------------------
   // data preparation
   // ------------------------
-  // let main_svg = d3.select(container).select(".ssm-svg");
   let f_data = prepare_group_info(f_group_ordering);
   if (conf.main_plot_type == "matrix") {
     f_data = prepare_matrix_data(f_data, f_group_ordering, node_values);
@@ -974,36 +973,40 @@ function update_ssm_plot(container,
     f_data = prepare_vector_data(f_data, f_group_ordering, node_values);
     f_data = add_scale_attribute(f_data, conf, "#focus-graph-plot");
   }
-  console.log(f_data);
+  // console.log(f_data);
 
   // draw text bridge and the arc plot
-  draw_textaxis("#go-id-table", f_data, focus_nodes, conf, "name");
-  draw_textaxis("#go-name-table", f_data, focus_nodes, conf, "full_name");
-  draw_arcgraph("#arc-graph-plot", f_data, focus_nodes, conf);
+  draw_textaxis(main_svg.select("#go-id-table"), f_data, focus_nodes, conf, "name");
+  draw_textaxis(main_svg.select("#go-name-table"), f_data, focus_nodes, conf, "full_name");
+  draw_arcgraph(main_svg.select("#arc-graph-plot"), f_data, focus_nodes, conf);
 
   if (conf.graph_only) { return; }
   // otherwise, start drawing the focus vector or matrix data
   if (conf.main_plot_type == "matrix") { // draw heatmap
-    draw_heatmap("#focus-graph-heatmap", f_data, conf);
+    let container = "#focus-graph-heatmap";
+    draw_heatmap(main_svg.select(container), container, f_data, conf);
   }
   if (conf.main_plot_type == "vector") {  // draw manhattan plots
-    draw_manhattan("#focus-graph-plot", f_data, conf, "heavy");
+    let container = "#focus-graph-plot";
+    draw_manhattan(main_svg.select(container), container, f_data, conf, "heavy");
   }
 
   if (!conf.show_context) { return; }
   // otherwise, start drawing the context vector or matrix data
   let c_data = prepare_group_info(c_group_ordering, mode);
   if (conf.main_plot_type == "matrix") {
+    let container = "#context-graph-heatmap";
     c_data = prepare_matrix_data(c_data, c_group_ordering, node_values);
-    c_data = add_scale_attribute(c_data, conf, "#context-graph-heatmap");
-    draw_heatmap("#context-graph-heatmap", c_data, conf);
+    c_data = add_scale_attribute(c_data, conf, container);
+    draw_heatmap(main_svg.select(container), container, c_data, conf);
   }
   if (conf.main_plot_type == "vector") {
+    let container = "context-graph-plot"
     c_data = prepare_vector_data(c_data, c_group_ordering, node_values, mode);
-    c_data = add_scale_attribute(c_data, conf, "#context-graph-plot");
-    draw_manhattan("#context-graph-plot", c_data, conf, mode);
+    c_data = add_scale_attribute(c_data, conf, container);
+    draw_manhattan(main_svg.select(container), container, c_data, conf, mode);
   }
-  draw_bridge("#multi-polygons", c_data, f_data, conf);
+  draw_bridge(main_svg.select("#multi-polygons"), c_data, f_data, conf);
 
 
 }

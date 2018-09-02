@@ -175,7 +175,9 @@
     </span>
   </div>
   <div id ="new_full_canvas" class="full-canvas view-block">
-    <div id ="mirror_canvas"></div>
+    <div id ="mirror_canvas">
+      <svg class="full-mirror-display" id="full_mirror_display"></svg>
+    </div>
   </div>
 
   <!-- focus anchor search line -->
@@ -281,7 +283,40 @@
      <span class="glyphicon glyphicon-refresh"></span>
     </button>
   </div>
+  <div  class="info-line focus-block">
+    <div class="options-block">
+      <div class="label-block">
+        <label>Download Options</label>
+        <a data-toggle="tooltip"
+           data-placement="right"
+           title="">
+          <span class="glyphicon glyphicon-question-sign"></span>
+        </a>
+      </div>
+      <span>&#124;</span>
+      <div class="general-options">
+        <div class="widget open-viewer-block"
+             id="view-foc-anc-block">
+          &nbsp;
+          <button id="open_graph_viewer">
+            <span class="glyphicon glyphicon-download-alt"> </span>
+          </button>
+          paired focus and context graphs
+        </div>
+        <div class="widget open-viewer-block"
+             id="view-ssm-block"
+             style="display: none">
+          &nbsp;
+          <button id="expand_binder_summary">
+            <span class="glyphicon glyphicon-download-alt"> </span>
+          </button>
+          binder plot for focus graph
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
 <div class="modal" id="go_ajax_modal"></div>
 
 
