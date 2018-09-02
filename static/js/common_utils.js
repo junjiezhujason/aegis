@@ -166,9 +166,11 @@ function initialize_gene_tagit() {
       copy_text += "\n"
     }
     /* Copy the text inside the text field */
+    $(".hidden-textbox").show();
     $("#hidden_copy_text").val(copy_text);
     $("#hidden_copy_text").select();
     document.execCommand("copy");
+    $(".hidden-textbox").hide();
     /* Alert the copied text */
     alert("Copied the selected genes to clipboard");
   });
@@ -179,7 +181,7 @@ function initialize_gene_tagit() {
       $("#go_select_tag_it").tagit("createTag", curr_focus_anchors[i]);
     }
   });
-  $(".hidden-textbox").hide();
+  // $(".hidden-textbox").hide();
 }
 
 function setup_simulation_highlight_options() {
@@ -604,10 +606,14 @@ function setup_graph_updates(graph_data, confg) {
   $("#go_gene_tag_it").tagit({
     afterTagRemoved: gene_tagit_remove_update,
   })
+  $("#go_selection_reset_button").off().on('click', function() {
+    $("#go_select_tag_it").tagit("removeAll");
+  });
   if (confg.main_mode == "lite") {
     $("#gene_reset_button").off().on('click', function() {
       $("#go_gene_tag_it").tagit("removeAll");
     });
+
     $("#add_random_num_genes").off().on('click', function() {
       append_random_genes("num_genes")
     });

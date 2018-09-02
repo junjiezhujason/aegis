@@ -63,7 +63,7 @@ function request_ground_truth_data() {
       // console.log(ground_truth_info)
       full_data.ground_truth_info = ground_truth_info;
       // request_ground_truth_data(genes_requested);
-      update_all_graphs("#full_mirror_display", graph_data, confg);
+      update_all_graphs("#full_mirror_display", full_data.graph_data, config);
 
     },
     failure: function() {
