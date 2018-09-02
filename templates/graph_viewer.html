@@ -3,54 +3,44 @@
      title="Graph Viewer"
      style="display: none;">
   <!-- <div id="view_of_focus_context"> -->
-  <div class="download-canvas">
-    <div id ="new_full_canvas_viewer" class="full-canvas">
-      <div id ="mirror_canvas_viewer">
-        <svg class="full-mirror-display" id="viewer_foc_con_png"></svg>
+  <div id="div_view_foc_con">
+    <div class="download-canvas">
+      <div id ="new_full_canvas_viewer" class="full-canvas">
+        <div id ="mirror_canvas_viewer">
+          <svg class="full-mirror-display" id="viewer_foc_con_png"></svg>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div id="btns_save_foc_con">
-    Export Focus-and-Context Graphs
-    <button class="btn btn-primary btn-sm viewer">
-      View
-    </button>
-    :
-    <button class="btn btn-primary btn-sm export_as_png">
-      PNG
-    </button>
-    <button class="btn btn-primary btn-sm export_as_svg">
-      SVG
-    </button>
-  </div>
-
-  <div class="download-canvas">
-    <div class="binder-plot">
-      <div class="canvas plot-sim-canvas">
-        <svg class="ssm-svg" id="viewer_ssm_png"></svg>
-      </div>
+    <div>
+      <label>Export Focus-and-Context Graphs as:</label>
+      <button class="btn btn-sm btn-expand export_as_png">
+        PNG
+      </button>
+      <button class="btn btn-sm btn-expand export_as_svg">
+        SVG
+      </button>
     </div>
   </div>
-
-  <div id="btns_save_ssm">
-    Export Binder Plots
-    <button class="btn btn-primary btn-sm viewer">
-      View
-    </button>
-    :
-    <button class="btn btn-primary btn-sm export_as_png">
-      PNG
-    </button>
-    <button class="btn btn-primary btn-sm export_as_svg">
-      SVG
-    </button>
+  <div id="div_view_ssm">
+    <div class="download-canvas">
+      <div class="binder-plot">
+        <div class="canvas plot-sim-canvas">
+          <svg class="ssm-svg" id="viewer_ssm_png"></svg>
+        </div>
+      </div>
+    </div>
+    <div>
+      <label>Export Binder Plot as:</label>
+      <button class="btn btn-sm btn-expand export_as_png">
+        PNG
+      </button>
+      <button class="btn btn-sm btn-expand export_as_svg">
+        SVG
+      </button>
+    </div>
   </div>
-
-</div>
-<div id="saver" style="display: block;">
-  <div>
-    <!-- used for saving svgs -->
+  <div id="saver" style="display: none;">
+    <!-- hidden div used for saving svgs -->
     <div class="full-canvas">
       <svg class="full-mirror-display" id="viewer_foc_con_svg"></svg>
     </div>
@@ -59,7 +49,6 @@
     </div>
   </div>
 </div>
-
 
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/FileSaver.min.js') }}" ></script>
 <script type="text/javascript" src="{{ url_for('static', filename='lib/d3-save-svg/canvas-toBlob.js') }}" ></script>

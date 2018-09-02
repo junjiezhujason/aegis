@@ -56,8 +56,11 @@ let all_color_mapping = {
 };
 
 function get_full_canvas_config(x_size, y_size, fixed=false) {
-  // debugger;
   // default for fixed view
+  let padding = { "top": 40,
+                  "bottom": 25,
+                  "left": 0,
+                  "right": 30};
   let back_height = 600;
   let back_width = 800;
   let mid_ann = 10;
@@ -76,18 +79,26 @@ function get_full_canvas_config(x_size, y_size, fixed=false) {
     bar_width = back_width / 2 - right_ann;
     left_ann = back_width / 2 - graph_width;
   } else { // adaptive according to the graph
-    let x_lim = 7; // minimum number of nodes in each layer for scaling
     let y_lim = 25;
-    let col_width = 20;  // graph width per node
-    if (x_size < x_lim) {
-      graph_width = x_lim * col_width;
-    } else {
-      graph_width = x_size * col_width;
+    let min_tot_width = 600;
+    let col_width = 30;  // graph width per node
+    // let x_lim = Math.round((min_tot_width/2 - left_ann) / col_width);
+    let x_lim = 10;
+    if (x_size < x_lim) { // minimum number of nodes in each layer for scaling
+      col_width = 32;
+      // graph_width = x_size * col_width;
+    } else { // many many nodes
+      col_width = 20;
+      // graph_width = x_size * col_width;
     }
-    height = (y_size + 1) * 38;
+    graph_width = x_size * col_width + padding.right;
+
+    left_ann += Math.max(min_tot_width/2, graph_width) - graph_width;
+    height = (y_size + 1) * 30 + padding.top + padding.bottom;
     back_height = height;
     bar_width = graph_width + mid_ann + left_ann - right_ann;
-    back_width = bar_width + graph_width + left_ann + right_ann;
+    back_width = Math.max(min_tot_width,
+                          bar_width + graph_width + left_ann + right_ann);
   }
 
   let hspace =  {
@@ -110,130 +121,110 @@ function get_full_canvas_config(x_size, y_size, fixed=false) {
     },
     "split": hspace,
     "legend" : {
-      "rel_x": 0.72,
+      "rel_x": 0.65,
       "rel_y": 0.05,
     },
+    "padding": padding,
   };
-
-
-  // if (max_lev < 10) {
-  //   height = (max_lev+1) * 60;
-  // }
-  // let x_lim = 20;
-  // let y_lim = 25;
-  // if (x_size > x_lim) {
-  //   dim.svg.width = x_size * (dim.svg.width / x_lim);
-  // }
-  // if (y_size > y_lim) {
-  //   dim.svg.height = y_size * (dim.svg.height / y_lim);
-  // }
-  // let res = dim.svg.width - hspace.left_ann - hspace.mid_ann - hspace.right_ann;
-  // hspace.graph =  0.45 * res;
-  // hspace.bar =  0.55 * res;
-  // if (x_size > x_lim) {
-  //   hspace.graph = 0.5 * res;
-  //   hspace.bar =  0.5 * res;
-  // }
-  // dim.split = hspace;
-
   return(dim);
 }
 
+function get_foc_config() {
+  let total_graph = get_full_canvas_config(10, 10);
+  let mirror_graph_config = {
+    "transition": {
+      "delay": {
+        "select": 200,
+      },
+      "start_x_pos": 0,
+    },
+    "padding": {
+      "top": total_graph.padding.top,
+      "bottom": total_graph.padding.bottom,
+      "left": total_graph.padding.left,
+      "right": total_graph.padding.right,
+    },
+    "node":  {
+      "radius": 7,
+      "border_size": 3,
+    },
+    "link": {
+      "width": "2px",
 
-let bar_graph_share = {
-  "padding": {
-    "top": 40,
-    "bottom": 25,
-  }
-};
+    },
+    "opacity": {
+      "background_link": 0.8,
+      "hidden": 0.2,
+    },
+    "simulation": null,
+    "max_range": {
+      "depth": {
+        "x": null,
+        "y": null,
+      },
+      "height": {
+        "x": null,
+        "y": null,
+      },
+      "flex": {
+        "x": null,
+        "y": null,
+      }
+    },
+  };
+  return mirror_graph_config;
+}
 
-let mirror_graph_config = {
-  "transition": {
-    "delay": {
-      "select": 200,
+function get_con_config() {
+  let total_graph = get_full_canvas_config(10, 10);
+  let mirror_bar_config = {
+    "n_y_ticks": 5,
+    "padding": {
+      "top": total_graph.padding.top,
+      "bottom": total_graph.padding.bottom,
+      "left": 0,
+      "right":70,
     },
-    "start_x_pos": 0,
-  },
-  "padding": {
-    "top": bar_graph_share.padding.top,
-    "bottom": bar_graph_share.padding.bottom,
-    "left": 0,
-    "right": 30,
-  },
-  "node":  {
-    "radius": 7,
-    "border_size": 3,
-  },
-  "link": {
-    "width": "2px",
-
-  },
-  "opacity": {
-    "background_link": 0.8,
-    "hidden": 0.2,
-  },
-  "simulation": null,
-  "max_range": {
-    "depth": {
-      "x": null,
-      "y": null,
+    "left_tick_padding": 8,
+    "legend": {
+      "top_shift": 15,
+      "sym_text_gap": 10,
+      "marker_size": 12,
+      "height": 40,
+      "text_size": 12,
+      "location": 0.50,
+      "padding": 4,
     },
-    "height": {
-      "x": null,
-      "y": null,
+    "text_dist": 10,
+    "tri_size": 11,
+    "max_range": {
+      "depth": {
+        "x": null,
+        "y": null,
+      },
+      "height": {
+        "x": null,
+        "y": null,
+      },
+      "flex": {
+        "x": null,
+        "y": null,
+      }
     },
-    "flex": {
-      "x": null,
-      "y": null,
-    }
-  },
-};
-
-let mirror_bar_config = {
-  "n_y_ticks": 5,
-  "padding": {
-    "top": bar_graph_share.padding.top,
-    "bottom": bar_graph_share.padding.bottom,
-    "left": 0,
-    "right":70,
-  },
-  "left_tick_padding": 8,
-  "legend": {
-    "top_shift": 15,
-    "sym_text_gap": 10,
-    "marker_size": 12,
-    "height": 40,
-    "text_size": 12,
-    "location": 0.50,
-    "padding": 4,
-  },
-  "text_dist": 10,
-  "tri_size": 11,
-  "max_range": {
-    "depth": {
-      "x": null,
-      "y": null,
+    "width_prop": 0.3,
+    "width_wide_prop": 0.7,
+    "hide_triangle": {
+      "none": null,
+      "fcus_ancs": null,
+      "prolif_set": null,
+      "fcus_outer": null,
     },
-    "height": {
-      "x": null,
-      "y": null,
-    },
-    "flex": {
-      "x": null,
-      "y": null,
-    }
-  },
-  "width_prop": 0.3,
-  "width_wide_prop": 0.7,
-  "hide_triangle": {
-    "none": null,
-    "fcus_ancs": null,
-    "prolif_set": null,
-    "fcus_outer": null,
-  },
-};
+  };
+  return mirror_bar_config;
+}
 
 let general_config = {
+  "download_font_size": 17,
   "access_dag": "",
   "requests": {
     "ontology": {
@@ -277,8 +268,8 @@ let general_config = {
   "bar_graph_width": 400,
   "left_padding": 10,
   "colors": all_color_mapping,
-  "bar": mirror_bar_config,
-  "graph": mirror_graph_config,
+  "bar": get_con_config(),
+  "graph": get_foc_config(),
   "context_highlights": {
     "self_nonnull": "",
     "comp_nonnull": "",

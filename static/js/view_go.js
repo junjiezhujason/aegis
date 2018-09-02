@@ -72,6 +72,7 @@ function read_uploaded_list(input_id, form_id, icon_id) {
 
 $(function() {
   // update the query type to be "Upload" if file is selected
+  $("#view-ssm-block").css("display", "inline-block");
   query_change_detected();
   $("#general_options_for_upload").hide();
   $("#highlight_node_select").append($('<option>', {

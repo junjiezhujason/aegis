@@ -27,17 +27,8 @@ function request_simulation_details() {
       full_data.general_data.simulation["matrix"] = out_data["matrix"];
       // full_data.general_data.simulation["statistics"] = out_data["statistics"];
       plotly_boxplot(config, "update", out_data.statistics);
-      update_binder_plot("#viewer_ssm_png", full_data, ss_manhattan_config);
-      update_binder_plot("#viewer_ssm_svg", full_data, ss_manhattan_config);
-      enable_graph_all_saving();
       $("#expand_binder_summary").off().on("click", function() {
-        // always switch to buoyant view
-        // $("#view_select").val("flex");
-        // config.curr_state.View = $("#view_select").val();
-        // update the interactive panel
-        // update_all_graphs("#full_mirror_display", full_data.graph_data, config);
-        // open the context focus image to display the binder plots
-        open_context_focus_image();
+        open_context_focus_image("ssm");
       });
     },
     failure: function() {

@@ -6,3 +6,8 @@
   /*height: 460px;*/
   width: 100%;
 }
+
+.open-viewer-block {
+  display: inline-block;
+  width: 60%;
+}

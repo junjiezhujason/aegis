@@ -143,10 +143,12 @@ function request_focus_data(request) {
                                                  context_data,
                                                  general_data);
       setup_graph_updates(full_data.graph_data, config);
+      $("#open_graph_viewer").off().on("click", function() {
+        open_context_focus_image("foc_con");
+      });
       if (config.main_mode == "visualizer") {
-        update_binder_plot("#graph_saver", full_data, ss_manhattan_config);
-        $("#open_graph_viewer").off().on("click", function() {
-          open_context_focus_image();
+        $("#expand_binder_summary").off().on("click", function() {
+          open_context_focus_image("ssm");
         });
       }
       if (config.main_mode == "simulation_result") {
