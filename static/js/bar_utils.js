@@ -166,6 +166,7 @@ function update_context_display(svg_id, bar_data, main_config, fixed_dim=false){
     ;
 
   let curr_highlight = main_config.curr_state.Highlight;
+  // let secondary_svg_g = [".group-triang", ".group-triang-text", ".legend-box"];
   let secondary_svg_g = [".group-triang", ".group-triang-text", ".legend-box"];
   // let bar_width_prop = main_config.bar.width_prop;
   let bar_width_prop = main_config.bar.width_wide_prop;
@@ -348,18 +349,28 @@ function update_context_display(svg_id, bar_data, main_config, fixed_dim=false){
           tspan1 = text_node.select(".btspan_primary");
           tspan2 = text_node.select(".btspan_secondary");
         }
-        tspan1.text(d => d.high_val)
-          ;
-        tspan2.style("fill", main_config.colors.highlights[curr_highlight])
-          .text(d => {
-            let num_nodes = bar_data.curr_lev_nodes[d.level].length;
-            if ((curr_highlight in main_config.context_highlights) &
-                (num_nodes > 0))
-            {
-              return " [" + num_nodes + "]";
+        tspan1.text(d => {
+            if (d.grp_id == (bar_names.length-1)) {
+              return d.high_val;
             } else {
               return "";
             }
+          });
+        tspan2.style("fill", main_config.colors.highlights[curr_highlight])
+          .text(d => {
+            let num_nodes = bar_data.curr_lev_nodes[d.level].length;
+            if (d.grp_id == (bar_names.length-1)) {
+              if ((curr_highlight in main_config.context_highlights) &
+                  (num_nodes > 0))
+              {
+                return " [" + num_nodes + "]";
+              } else {
+                return "";
+              }
+            } else {
+              return "";
+            }
+
           });
       }
       if (group == "tri_data") {
