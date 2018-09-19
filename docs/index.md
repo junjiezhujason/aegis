@@ -77,6 +77,8 @@ the analysis above. Finally, open your local browser with
 
     http://localhost:5000/
 
+### Tutorials
 
+[![Audi R8](http://img.youtube.com/vi/KOxbO0EI4MA/0.jpg)](https://www.youtube.com/watch?v=KOxbO0EI4MA "Audi R8")
 
 
