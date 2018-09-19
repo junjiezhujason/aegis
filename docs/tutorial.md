@@ -1,9 +1,9 @@
 
-## Introduction to Focus and Context Graphs
+## Focus and Context Graphs
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/zhPY9Pu_Q8M?showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-## Overview of the Graph Layout
+## Overview of Graph Layouts
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/PdcHJXCrHkY?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
