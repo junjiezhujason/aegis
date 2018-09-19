@@ -57,29 +57,33 @@
             
     <li class="toctree-l2"><a href="#welcome">Welcome!</a></li>
     
-        <ul>
-        
-            <li><a class="toctree-l3" href="#instructions-to-run-the-full-version">Instructions to Run the Full Version</a></li>
-        
-        </ul>
-    
 
     </ul>
 	    </li>
           
             <li class="toctree-l1">
 		
-    <a class="" href="install/">Installation</a>
+    <a class="" href="install/">Installation Instructions</a>
 	    </li>
           
             <li class="toctree-l1">
 		
-    <a class="" href="tutorial/">Tutorials</a>
+    <a class="" href="manual/">Basic Manual</a>
 	    </li>
           
             <li class="toctree-l1">
 		
-    <span class="caption-text">Notebooks</span>
+    <a class="" href="tutorial/">Video Tutorials</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="api.md">API Documentation</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Jupyter Notebooks</span>
     <ul class="subnav">
                 <li class="">
                     
@@ -87,11 +91,11 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="notebooks/aegis_benchmark_part1.html">DAG-based Testing Benchmark: Part 1</a>
+    <a class="" href="notebooks/aegis_benchmark_part1.html">Benchmark for Testing: Part 1</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="notebooks/aegis_benchmark_part2.html">DAG-based Testing Benchmark: Part 2</a>
+    <a class="" href="notebooks/aegis_benchmark_part2.html">Benchmark for Testing: Part 2</a>
                 </li>
     </ul>
 	    </li>
@@ -131,58 +135,6 @@
                 <h1 id="welcome">Welcome!</h1>
 <p>This is the documentation webpage for AEGIS. AEGIS is an open-source software with an interactive information-retrieval framework that enables an investigator to navigate through the entire Gene Ontology (GO) graph (with tens of thousands of nodes) and focus on fine-grained details without losing the context. It features interpretable visualization of GO terms reported from studies, flexible exploratory analysis of the GO DAG, as well as principled power analysis that is biologically relevant.</p>
 <p><img src="../static/img/aegis_painting.jpg" width="200px"/></p>
-<h2 id="instructions-to-run-the-full-version">Instructions to Run the Full Version</h2>
-<p>AEGIS is an open-source software, and the back-end and front-end implementations in Python and Javscript are available under the MIT License.</p>
-<h3 id="install-dependencies">Install dependencies</h3>
-<p><em>Prerequisites</em>: <a href="http://docs.python-guide.org/en/latest/">Python3</a> (required),
-<a href="https://virtualenv.pypa.io/en/stable/">virtualenv</a> or other package managements (recommended).</p>
-<p>Installing of dependencies only requires one line:</p>
-<pre><code>pip3 install -r requirements.txt
-</code></pre>
-<p>AEGIS also requires specification of a folder: <code>${LOCALPATH}</code> to store the
-cached files. This is mainly for version control and speed performance.
-For most of the analyses (excluding simulation outputs), the files will typically
-require no more than 250M of disk space.</p>
-<p><em>Note</em>: If this is the first time that you are running AEGIS locally, Internet connection
-will be required to download data (or our cached files below) from the online databases.</p>
-<h3 id="download-cached-files-optional">Download Cached Files (Optional)</h3>
-<p>You can manually pre-propagate some local files in <code>${LOCALPATH}</code> to reduce setup time.
-Once the cache is stored, most features of AEGIS can be performed locally
-without Internet connection for ontology or data download.</p>
-<p>Simply download the light cache files of (version-controlled)
-species/ontologies <a href="http://stanford.edu/~jjzhu/fileshare/aegis">here</a>
-and unpack to the directory <code>${LOCALPATH}</code>, e.g., <code>local_${VERSION}.tar.gz</code>
-Make sure to expand the files in the <code>${LOCALPATH}</code> so that the folder includes
-them in the following format: <code>${LOCALPATH}/local/godag_*.pkl</code></p>
-<p>Here is an example of the command line workflow:</p>
-<pre><code>cd ${LOCALPATH}
-wget http://stanford.edu/~jjzhu/fileshare/aegis/local_20180710.tar.gz
-tar -xvzf local_20180710.tar.gz
-</code></pre>
-<p><em>Note</em>: If you skip this step, the latest version of the GO and annotation files will be downloaded,
-and the total setup time will take longer.</p>
-<h3 id="launch-the-local-server">Launch the Local Server</h3>
-<p>To launch the server, run:</p>
-<pre><code>python3 main.py --port 5000 --folder ${LOCALPATH}
-</code></pre>
-<p><em>Note</em>: both the port number and the local path options are required.</p>
-<p>If this is your first time running AEGIS and you did not download our cached
-files, AEGIS will automatically download the latest gene and go annotations.
-This may take a while, and the following files will be automatically generated
-inside the local directory:</p>
-<pre><code>${LOCALPATH}/local/gene2go
-${LOCALPATH}/local/go-basic.obo
-${LOCALPATH}/local/geneid2sym_human.json
-${LOCALPATH}/local/geneid2sym_mouse.json
-</code></pre>
-<p>and later, the program will also generate the cached files</p>
-<pre><code>${LOCALPATH}/local/godag_*.pkl
-</code></pre>
-<p>By default, AEGIS  will continue this version if the same ${LOCALPATH} is
-specified. To update the version, simply create a new local path to repeat
-the analysis above. Finally, open your local browser with</p>
-<pre><code>http://localhost:5000/
-</code></pre>
               
             </div>
           </div>
@@ -190,7 +142,7 @@ the analysis above. Finally, open your local browser with</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="install/" class="btn btn-neutral float-right" title="Installation">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="install/" class="btn btn-neutral float-right" title="Installation Instructions">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
     </div>
@@ -231,5 +183,5 @@ the analysis above. Finally, open your local browser with</p>
 
 <!--
 MkDocs version : 1.0
-Build Date UTC : 2018-09-19 17:16:29
+Build Date UTC : 2018-09-19 17:23:14
 -->
