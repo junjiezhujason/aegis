@@ -1,7 +1,18 @@
-site_name: AEGIS Documentation 
+site_name: AEGIS Documentation
 nav:
 - Home: 'index.md'
-- Notebooks:
+- Installation: 'install.md'
+- Basic Manual: 'manual.md'
+- Video Tutorials: 'tutorial.md'
+- API Documentation: 'api.md'
+- Jupyter Notebooks:
     - 'Single Cell RNA-seq Application' : 'notebooks/aegis_single_cell_example.html'
-    - 'Benchmark for DAG-based Testing: Part I' : 'notebooks/aegis_benchmark_part1.html'
-    - 'Benchmark for DAG-based Testing: Part II' : 'notebooks/aegis_benchmark_part2.html'
+    - 'Benchmark for Testing: Part 1' : 'notebooks/aegis_benchmark_part1.html'
+    - 'Benchmark for Testing: Part 2' : 'notebooks/aegis_benchmark_part2.html'
+
+theme:
+    name: readthedocs
+    highlightjs: true
+    hljs_languages:
+        - yaml
+        - rust
