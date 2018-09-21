@@ -872,60 +872,6 @@ function update_tear_color(tear_add_sel, sym_color) {
     ;
 }
 
-function shared_y_scale_setup(main_config, fixed_dim=false) {
-  let layer_type = main_config.curr_state.View;
-  let padding = main_config.graph.padding;
-  let max_lev =  main_config.graph.max_range[layer_type].y;
-  let fm = get_data_dependent_dim(main_config, fixed_dim=fixed_dim);
-  let height = fm.svg.height;
-
-  // if (max_lev < 10) {
-  //   height = (max_lev+1) * 60;
-  // }
-  // scaling for each node
-  if (layer_type == "height") { // revserse scale from bottom to top
-    y_range = [height-padding.bottom, padding.top];
-  } else { // depth, flex
-    y_range = [padding.top, height-padding.bottom];
-  }
-  let y_domain = [0, max_lev + 0.5];
-
-  return(d3.scaleLinear().domain(y_domain).range(y_range));
-}
-
-function graph_scale_setup(main_config, fixed_dim=false) {
-  let layer_type = main_config.curr_state.View;
-  let fm = get_data_dependent_dim(main_config, fixed_dim=fixed_dim);
-  let width = fm.split.graph;
-  let offset = fm.split.left_ann;
-
-  let padding = main_config.graph.padding;
-  let x_range = [width-padding.right + offset, padding.left + offset];
-  let x_domain = [0, main_config.graph.max_range[layer_type].x];
-
-  return({
-          "x": d3.scaleLinear().domain(x_domain).range(x_range),
-          "y": shared_y_scale_setup(main_config, fixed_dim=fixed_dim),
-        });
-}
-
-function bar_scale_setup(main_config, fixed_dim=false) {
-  let layer_type = main_config.curr_state.View;
-  let fm = get_data_dependent_dim(main_config, fixed_dim=fixed_dim);
-  let width = fm.split.bar;
-  let offset = fm.split.graph + fm.split.left_ann + fm.split.mid_ann ;
-
-  let padding = main_config.bar.padding;
-    // scaling for each node
-  let x_range = [padding.left + offset, width-padding.right + offset];
-  let x_domain = [0, main_config.bar.max_range[layer_type].x];
-
-  return({
-          "x": d3.scaleLinear().domain(x_domain).range(x_range),
-          "y": shared_y_scale_setup(main_config, fixed_dim=fixed_dim),
-        });
-}
-
 
 
 

@@ -30,7 +30,7 @@ function create_links(main_nodes) {
 }
 
 function update_node_features(graph_data, confg, fixed_dim=false) {
-  let node_data = graph_data.focus_info.graph;
+  let node_data = [];
   let node_meta = graph_data.focus_info.meta;
   // for positional information
   let curr_view = confg.curr_state.View;
@@ -50,21 +50,26 @@ function update_node_features(graph_data, confg, fixed_dim=false) {
     // only let the outer nodes be the highlighted anchors
     highlight_anchors = node_meta.outers;
   }
-  // debugger;
-  node_data.forEach(function(d) {
-    d.lev_x = d.pos_info[curr_view].x;
-    d.lev_y = d.pos_info[curr_view].y;
+  graph_data.focus_info.graph.forEach(function(v) {
+    let d = {};
+    d.children = v.children;
+    d.parents = v.parents;
+    d.queried = v.queried;
+    d.cid = v.cid;
+    d.id = v.id;
+    d.name = v.name
+    d.lev_x = v.pos_info[curr_view].x;
+    d.lev_y = v.pos_info[curr_view].y;
     d.cx = x_scale(d.lev_x);
     d.cy = y_scale(d.lev_y);
     d.x = d.cx;
     d.y = d.cy;
     d.fx = null;
     d.fy = null;
-    d.anchor = d.name in highlight_anchors;
-    d.prolif = d.name in node_meta.prolifs;
-    d.r = node_rad_wid_col(d, confg)[0];
+    d.anchor = v.name in highlight_anchors;
+    d.prolif = v.name in node_meta.prolifs;
+    d.r = node_rad_wid_col(v, confg)[0];
     d.col = confg.colors.node_base; // this is the base color of each node
-
     let target_data;
     switch(highlight_mode) {
       case "fcus_ancs":
@@ -112,7 +117,7 @@ function update_node_features(graph_data, confg, fixed_dim=false) {
         }
       }
     }
-
+    node_data.push(d);
   });
   return node_data;
 }
@@ -131,18 +136,18 @@ function default_node_appearance(d3_select_all, confg) {
 function update_focus_display(svg_id, graph_data, confg, fixed_dim=false) {
   let focus_info = graph_data.focus_info;
   let go_info = graph_data.context_info.graph.go_info;
-  focus_info.links = create_links(focus_info.graph);
-  focus_info.graph = update_node_features(graph_data, confg, fixed_dim=fixed_dim);
-  render_node_link_pos(svg_id, focus_info, confg);
-  render_node_link_interaction(svg_id, focus_info, go_info, confg);
+  let nodes = update_node_features(graph_data, confg, fixed_dim=fixed_dim);
+  let links = create_links(nodes);
+  focus_info.meta.simulation.stop();
+  render_node_link_pos(svg_id, nodes, links, confg);
+  render_node_link_interaction(svg_id, nodes, links, go_info, confg);
 }
 
 function render_node_link_interaction(container,
-                                      focus_info,
+                                      nodes,
+                                      links,
                                       go_info,
                                       confg) {
-  let nodes = focus_info.graph;
-  let links = focus_info.links;
   // console.log("Graph data for update")
   // console.log(graph_data)
   let svg = d3.select(container);
@@ -157,15 +162,17 @@ function render_node_link_interaction(container,
         .on("end", dragended))
     ;
   // TODO: make this tooltip update work with new svg framework
-  function tooltip_update(d, tip_text, mode) {
-    let tooltip = d3.select(container).select(".node-tip");
+  function tooltip_update(d, mode) {
+    let txt = go_info[d.name].ann + " ("  + go_info[d.name].ngenes + " genes)";
+    let tooltip = d3.select(".gotooltip")
+      .style('left',  (d3.event.clientX + 20) + 'px') // TODO: fix later
+      .style('top', (d3.event.clientY +100) + 'px')
+      ;
+    d3.select(".gotooltip").select(".gotooltiptext")
+      .text(txt)
+      ;
     if (mode == "show") {
-      // tool tip
-      // tooltip.select('.node-tip-text').html(tip_text);
-      tooltip.html(tip_text);
-      tooltip.style('display', 'inline-block');
-      tooltip.style('left',  (d.x + 20) + 'px') // TODO: fix later
-             .style('top', (d.y -10) + 'px');
+      tooltip.style('display', 'block');
     } else {
       tooltip.style('display', 'none');
     }
@@ -174,7 +181,7 @@ function render_node_link_interaction(container,
   function dragstarted(d) {
     d.fx = null;
     d.fy = null;
-    tooltip_update(d, go_info[d.name].ann, "show");
+    tooltip_update(d, "hide");
     // transition effects
     d3.select(this).style('fill', "black");
     // similar to mouse over effects
@@ -189,20 +196,19 @@ function render_node_link_interaction(container,
   function dragged(d) {
     d.x = d3.event.x;
     d.y = d3.event.y;
-    tooltip_update(d, go_info[d.name].ann, "show");
     ticked(container);
   }
   function dragended(d) {
-    // if (!d3.event.active) simulation.alphaTarget(0);
     d.fx = d3.event.x;
     d.fy = d3.event.y;
-    default_link_update()
+    default_link_update();
+    tooltip_update(d, "hide");
     let node_select = default_node_update()
     node_select
       .on('mouseover', mouseOverFunction)
       .on('mouseout', mouseOutFunction)
       ;
-    ticked(container);
+    // ticked(container);
   }
 
   function get_all_relatives(d) {
@@ -216,7 +222,8 @@ function render_node_link_interaction(container,
 
   function mouseOverFunction(d) {
     let relatives = get_all_relatives(d);
-    tooltip_update(d, go_info[d.name].ann, "show");
+
+    tooltip_update(d, "show");
     select_node_update(d, relatives);
     select_link_update(d, relatives);
     // d3.select(this).attr('r', confg.graph.node.radius); // circle update
@@ -227,10 +234,11 @@ function render_node_link_interaction(container,
     d3.select("#output_div").select("#gene_output")
       .text("("  + go_info[d.name].ngenes + " genes)")
       ;
+
   };
 
   function mouseOutFunction(d) {
-    tooltip_update(null, null, "hide")
+    tooltip_update(d, "hide")
     default_node_update();
     default_link_update();
     // d3.select(this).attr('r', confg.graph.node.radius);
@@ -463,7 +471,8 @@ function compare_diff_lev_map(use_map, ref_map) {
 }
 // -----------------------------
 function render_node_link_pos(container,
-                              focus_info,
+                              nodes,
+                              links,
                               confg,
                               animation=true) {
   // data binding: https://stackoverflow.com/questions/24175624/d3-key-function
@@ -479,12 +488,10 @@ function render_node_link_pos(container,
   // gridlines in y axis function
 
   // force-simulation (disabled now) update
-  let nodes = focus_info.graph;
-  let links = focus_info.links;
-  let simulation = focus_info.meta.simulation;
-  simulation.stop();
-  simulation.nodes(nodes).on("tick", ticked, container)
-  simulation.force("link").links(links);
+  // let nodes = focus_info.graph;
+  // let links = focus_info.links;
+  // simulation.nodes(nodes).on("tick", ticked, container)
+  // simulation.force("link").links(links);
   // bind the new data with d3 enter(), exit(), etc.
   let node_circles = d3.select(container).select(".nodes").selectAll("circle")
     .data(nodes, d => d.name); // the binded circles are keyed by node name
@@ -522,7 +529,11 @@ function render_node_link_pos(container,
   let enter_map = compare_diff_lev_map(node_lev_map, prev_node_lev_map);
   let enter_lev_cnts = compute_lev_cnts(enter_map, n_layers);
   // let enter_t = compute_layer_duration(enter_time, min_time, enter_lev_cnts);
-  let enter_t = compute_layer_duration_simple(trans_confg.enter_layer_time,
+  let layer_time = trans_confg.enter_layer_time;
+  if (n_layers > 20) {
+    layer_time = layer_time / n_layers * 5;
+  }
+  let enter_t = compute_layer_duration_simple(layer_time,
                                               trans_confg.min_time,
                                               enter_lev_cnts);
 
@@ -530,7 +541,7 @@ function render_node_link_pos(container,
   let exit_map = compare_diff_lev_map(prev_node_lev_map, node_lev_map);
   let exit_lev_cnts = compute_lev_cnts(exit_map, prev_n_layers);
   // let exit_t = compute_layer_duration(exit_time, min_time, exit_lev_cnts);
-  let exit_t = compute_layer_duration_simple(trans_confg.exit_layer_time,
+  let exit_t = compute_layer_duration_simple(trans_confg.enter_layer_time,
                                              trans_confg.min_time,
                                              exit_lev_cnts);
 
@@ -674,6 +685,7 @@ function render_node_link_pos(container,
   //book keeping
   trans_confg.prev_nlayers = n_layers;// remember how many layers are used
   trans_confg.prev_node_lev_map = node_lev_map;
+
   // timer delay
   if (tag_update_queue.length > 0) {
     // let curr_list = tag_update_queue.shift();
@@ -691,44 +703,19 @@ function render_node_link_pos(container,
 }
 
 function ticked(container) {
-  // links the nodes and edges to change together
-  let main_div = d3.select(container);
-  main_div.select(".links")
-    .selectAll("line")
-    // .attr("y1", function(d) { return d.source.y; })
-    .attr("x1", function(d) { return d.source.x; })
-    // .attr("y2", function(d) { return d.target.y; })
-    .attr("x2", function(d) { return d.target.x; });
-
-  main_div.select(".nodes")
+  d3.select(container).select(".nodes")
     .selectAll("circle")
     // .attr("cy", function(d) { return d.y; })
-    .attr("cx", function(d) { return d.x; })
+    .attr("cx", d => d.x)
     // .attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); });
-}
-
-
-// TODO: remove
-function node_color(node, graph_data, confg) {
-  if (confg.curr_state.Context == "full_context") {
-    if (node.name in graph_data.precomp.input_test_context.name_id_map) {
-      return confg.colors.node_stat;
-    } else {
-      return confg.colors.node_background;
-    }
-  } else { // test_context
-    let htype = confg.curr_state.Htype;
-    let ground_truth = precomp_data.input_test_context.ground_truth_info[htype];
-    let name_id_map = precomp_data.input_test_context.name_id_map;
-    if (!ground_truth) {
-      return confg.colors.test_null;
-    }
-    if (ground_truth.includes(name_id_map[node.name])) {
-      return confg.colors.test_nonnull;
-    } else {
-      return confg.colors.test_null;
-    }
-  }
+  ;
+  d3.select(container).select(".links")
+    .selectAll("line")
+    // .attr("y1", function(d) { return d.source.y; })
+    .attr("x1", d => d.source.x)
+    // .attr("y2", function(d) { return d.target.y; })
+    .attr("x2", d => d.target.x)
+    ;
 }
 
 function node_rad_wid_col(node, confg) {

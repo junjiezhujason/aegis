@@ -7,7 +7,42 @@
   width: 100%;
 }
 
+.full-canvas #mirror_canvas {
+  /*position: relative;*/
+}
+
+#mirror_canvas_viewer #viewer_foc_con_png {
+  border-width: 1px;
+  border-style: solid;
+}
+
 .open-viewer-block {
   display: inline-block;
   width: 60%;
+}
+
+.gotooltip {
+  background-color: #DCE3FF;
+  /*float: left;*/
+  position: absolute; /*newly added*/
+  left: 5px; /*newly added*/
+  top: 5px;/*newly added*/
+  display: none;
+  border: 1px solid grey; /* If you want dots under the hoverable text */
+  padding-top: 1px;
+  padding-bottom: 2px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-radius: 5px;
+  max-width: 400px;
+  /*opacity: 0.9;*/
+  z-index: 2;
+}
+
+.gotooltip .gotooltiptext {
+  color: black;
+  font-size: 12px;
+  /*word-wrap: break-word;*/
+  /*line-height: 0.2;*/
+  opacity: 1.0;
 }
