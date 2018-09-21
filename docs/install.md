@@ -1,7 +1,7 @@
 
 AEGIS is an open-source software, and the back-end and front-end implementations in Python and Javscript are available under the MIT License. The following instructions are used to install the full version of AEGIs, which includes all of its functionalities including power calculation.
 
-## Install dependencies
+## Install Dependencies
 
 *Prerequisites*: [Python3](http://docs.python-guide.org/en/latest/) (required),
 [virtualenv](https://virtualenv.pypa.io/en/stable/) or other package managements (recommended).
