@@ -664,7 +664,3 @@ Inline help tip
   white-space: nowrap;
 }
 
-#mirror_canvas_viewer #viewer_foc_con_png {
-  border-width: 1px;
-  border-style: solid;
-}

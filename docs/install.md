@@ -6,6 +6,11 @@ AEGIS is an open-source software, and the back-end and front-end implementations
 *Prerequisites*: [Python3](http://docs.python-guide.org/en/latest/) (required),
 [virtualenv](https://virtualenv.pypa.io/en/stable/) or other package managements (recommended).
 
+
+The code is available on github, so you can directly clone the repository to your local:
+
+    git clone git@github.com:junjiezhujason/aegis.git
+
 Installing of dependencies only requires one line:
 
     pip3 install -r requirements.txt
