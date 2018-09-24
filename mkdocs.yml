@@ -5,10 +5,10 @@ nav:
 - Basic Manual: 'manual.md'
 - Video Tutorials: 'tutorial.md'
 - API Documentation: 'api.md'
-- Jupyter Notebooks:
-    - 'Single Cell RNA-seq Application' : 'notebooks/aegis_single_cell_example.html'
-    - 'Benchmark for Testing: Part 1' : 'notebooks/aegis_benchmark_part1.html'
-    - 'Benchmark for Testing: Part 2' : 'notebooks/aegis_benchmark_part2.html'
+- Jupyter Notebooks: 'notebooks.md'
+    # - 'Single Cell RNA-seq Application' : 'notebooks/aegis_single_cell_example.html'
+    # - 'Benchmark for Testing: Part 1' : 'notebooks/aegis_benchmark_part1.html'
+    # - 'Benchmark for Testing: Part 2' : 'notebooks/aegis_benchmark_part2.html'
 
 theme:
     name: readthedocs
