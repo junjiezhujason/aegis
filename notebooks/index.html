@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>API Documentation - AEGIS Documentation</title>
+  <title>Jupyter Notebooks - AEGIS Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "API Documentation";
-    var mkdocs_page_input_path = "api.md";
+    var mkdocs_page_name = "Jupyter Notebooks";
+    var mkdocs_page_input_path = "notebooks.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -70,23 +70,29 @@
     <a class="" href="../tutorial/">Video Tutorials</a>
 	    </li>
           
+            <li class="toctree-l1">
+		
+    <a class="" href="../api/">API Documentation</a>
+	    </li>
+          
             <li class="toctree-l1 current">
 		
-    <a class="current" href="./">API Documentation</a>
+    <a class="current" href="./">Jupyter Notebooks</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#python-documentation">Python Documentation</a></li>
+    <li class="toctree-l2"><a href="#focus-and-context-graphs">Focus and Context Graphs</a></li>
     
 
-    <li class="toctree-l2"><a href="#javascript-documentation">Javascript Documentation</a></li>
+    <li class="toctree-l2"><a href="#overview-of-graph-layouts">Overview of Graph Layouts</a></li>
+    
+
+    <li class="toctree-l2"><a href="#interactions-to-explore-the-go">Interactions to Explore the GO</a></li>
+    
+
+    <li class="toctree-l2"><a href="#power-analysis-workflow">Power Analysis Workflow</a></li>
     
 
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../notebooks/">Jupyter Notebooks</a>
 	    </li>
           
         </ul>
@@ -111,7 +117,7 @@
     
       
     
-    <li>API Documentation</li>
+    <li>Jupyter Notebooks</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -121,10 +127,25 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="python-documentation">Python Documentation</h1>
-<p>Under construction.</p>
-<h1 id="javascript-documentation">Javascript Documentation</h1>
-<p>Under construction.</p>
+                <h2 id="focus-and-context-graphs">Focus and Context Graphs</h2>
+<p>This tutorial introduces the concept of focus and context graphs, and how they can render results from existing GO analysis pipelines. It also offers as simple demonstration of how to switch highlighting functions and the focus graph. The data example is based on significant GO terms (within the biological process ontology) identified from a GWAS study.</p>
+<p>The demonstration is performed within the AEGIS LITE interface, which is available <a href="http://aegis-viz.appspot.com">here</a>.</p>
+<iframe width="690" height="388" src="https://www.youtube-nocookie.com/embed/zhPY9Pu_Q8M?showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<h2 id="overview-of-graph-layouts">Overview of Graph Layouts</h2>
+<p>This tutorial gives an overview of the graph layouts, and some of the interactions on the focus graphs implemented in AEGIS. In particular, the buoyant layout is featured and compared with two other layouts: the root-bound and the leaf-bound layouts. The data example is based on enriched GO terms (within the cellular component ontology) from a ChIP-seq study.</p>
+<p>The demonstration is performed within the AEGIS LITE interface, which is available <a href="http://aegis-viz.appspot.com">here</a>.</p>
+<iframe width="690" height="388" src="https://www.youtube-nocookie.com/embed/PdcHJXCrHkY?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<h2 id="interactions-to-explore-the-go">Interactions to Explore the GO</h2>
+<p>This tutorial demonstrates how to explore the GO without any data inputs. It also demonstrates how to use the search auto-complete, customize some of the visualizations, and select functionally related gene sets (used for a single-cell analysis simulation, for example).</p>
+<p>The demonstration is performed within the AEGIS LITE interface, which is available <a href="http://aegis-viz.appspot.com">here</a>.</p>
+<iframe width="690" height="388" src="https://www.youtube-nocookie.com/embed/UjrwXgUBdd8?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<h2 id="power-analysis-workflow">Power Analysis Workflow</h2>
+<p>This tutorial illustrates the interactive workflow to setup the power analysis with AEGIS. It demonstrates how to customize the context graph to determine the terms to be tested. It also demonstrates how to highlight non-null GO terms based on the signal gene set selection within the interface.</p>
+<p>The demonstration is performed within the full AEGIS interface, which requires local installation.</p>
+<iframe width="690" height="388" src="https://www.youtube-nocookie.com/embed/4fRWRodu5XM?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
               
             </div>
           </div>
@@ -132,10 +153,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../notebooks/" class="btn btn-neutral float-right" title="Jupyter Notebooks">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-      
-        <a href="../tutorial/" class="btn btn-neutral" title="Video Tutorials"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../api/" class="btn btn-neutral" title="API Documentation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -161,10 +180,8 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../tutorial/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../api/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../notebooks/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
