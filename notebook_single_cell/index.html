@@ -4,14 +4,14 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Project documentation for AEGIS">
+        
         <meta name="author" content="Junjie (Jason) Zhu">
-        <link rel="canonical" href="http://aegis.stanford.edu/">
-        <link rel="shortcut icon" href="img/favicon.ico">
-        <title>AEGIS Documentation</title>
-        <link href="css/bootstrap-custom.min.css" rel="stylesheet">
-        <link href="css/font-awesome.min.css" rel="stylesheet">
-        <link href="css/base.css" rel="stylesheet">
+        <link rel="canonical" href="http://aegis.stanford.edu/notebook_single_cell/">
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Single Cell RNA-seq Application - AEGIS Documentation</title>
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -19,15 +19,15 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-        <script src="js/jquery-1.10.2.min.js" defer></script>
-        <script src="js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/django.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script> 
     </head>
 
-    <body class="homepage">
+    <body>
 
         <div class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container">
@@ -41,51 +41,51 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href=".">AEGIS Documentation</a>
+                    <a class="navbar-brand" href="..">AEGIS Documentation</a>
                 </div>
 
                 <!-- Expanded navigation -->
                 <div class="navbar-collapse collapse">
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
-                            <li class="active">
-                                <a href=".">Home</a>
+                            <li >
+                                <a href="..">Home</a>
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li >
-    <a href="install/">Installation</a>
+    <a href="../install/">Installation</a>
 </li>
                                     
 <li >
-    <a href="manual/">Basic Manual</a>
+    <a href="../manual/">Basic Manual</a>
 </li>
                                     
 <li >
-    <a href="tutorial/">Video Tutorials</a>
+    <a href="../tutorial/">Video Tutorials</a>
 </li>
                                     
 <li >
-    <a href="api/">API Documentation</a>
+    <a href="../api/">API Documentation</a>
 </li>
                                 </ul>
                             </li>
-                            <li class="dropdown">
+                            <li class="dropdown active">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Jupyter Notebooks <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
-<li >
-    <a href="notebook_single_cell/">Single Cell RNA-seq Application</a>
+<li class="active">
+    <a href="./">Single Cell RNA-seq Application</a>
 </li>
                                     
 <li >
-    <a href="notebooks/aegis_benchmark_part1.html">Benchmark for Testing: Part 1</a>
+    <a href="../notebooks/aegis_benchmark_part1.html">Benchmark for Testing: Part 1</a>
 </li>
                                     
 <li >
-    <a href="notebooks/aegis_benchmark_part2.html">Benchmark for Testing: Part 2</a>
+    <a href="../notebooks/aegis_benchmark_part2.html">Benchmark for Testing: Part 2</a>
 </li>
                                 </ul>
                             </li>
@@ -97,13 +97,13 @@
                                 <i class="fa fa-search"></i> Search
                             </a>
                         </li>
-                            <li class="disabled">
-                                <a rel="next" >
+                            <li >
+                                <a rel="next" href="../api/">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li >
-                                <a rel="prev" href="install/">
+                                <a rel="prev" href="../notebooks/aegis_benchmark_part1.html">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -115,17 +115,13 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#welcome">Welcome!</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="welcome">Welcome!</h1>
-<p>This is the documentation webpage for AEGIS. AEGIS is an open-source software with an interactive information-retrieval framework that enables an investigator to navigate through the entire Gene Ontology (GO) graph (with tens of thousands of nodes) and focus on fine-grained details without losing the context. It features interpretable visualization of GO terms reported from studies, flexible exploratory analysis of the GO DAG, as well as principled power analysis that is biologically relevant.</p>
-<p>A light weight version of AEGIS, which includes main interactive features with some examples,
-is available as a web interface <a href="https://aegis-viz.appspot.com/">here</a>.
-The full version, which includes data upload and power analysis functions, is open source with installation instructions <a href="http://jasonjunjiezhu.com/aegis/">here</a>.</p>
-<p><img src="img/aegis_painting.jpg" width="500px"/></p></div>
+<iframe width="690" height="388"
+src="notebooks/aegis_single_cell_example.html">
+</iframe></div>
         </div>
 
         <footer class="col-md-12">
@@ -133,11 +129,11 @@ The full version, which includes data upload and power analysis functions, is op
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script>
-            var base_url = ".",
+            var base_url = "..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="js/base.js" defer></script>
-        <script src="search/main.js" defer></script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
     <div class="modal-dialog">
@@ -205,8 +201,3 @@ The full version, which includes data upload and power analysis functions, is op
 
     </body>
 </html>
-
-<!--
-MkDocs version : 1.0
-Build Date UTC : 2018-09-24 18:28:16
--->
