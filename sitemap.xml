@@ -26,7 +26,17 @@
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>http://aegis.stanford.edu/notebooks/</loc>
+     <loc>http://aegis.stanford.edu/notebooks/aegis_single_cell_example.html</loc>
+     <lastmod>2018-09-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>http://aegis.stanford.edu/notebooks/aegis_benchmark_part1.html</loc>
+     <lastmod>2018-09-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>http://aegis.stanford.edu/notebooks/aegis_benchmark_part2.html</loc>
      <lastmod>2018-09-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
