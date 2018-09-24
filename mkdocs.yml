@@ -1,18 +1,24 @@
 site_name: AEGIS Documentation
-nav:
-- Home: 'index.md'
-- Installation: 'install.md'
-- Basic Manual: 'manual.md'
-- Video Tutorials: 'tutorial.md'
-- API Documentation: 'api.md'
-- Jupyter Notebooks: 'notebooks.md'
-    # - 'Single Cell RNA-seq Application' : 'notebooks/aegis_single_cell_example.html'
-    # - 'Benchmark for Testing: Part 1' : 'notebooks/aegis_benchmark_part1.html'
-    # - 'Benchmark for Testing: Part 2' : 'notebooks/aegis_benchmark_part2.html'
+site_url: http://aegis.stanford.edu
+site_description: Project documentation for AEGIS
+site_author: Junjie (Jason) Zhu
 
 theme:
-    name: readthedocs
+    name: mkdocs
     highlightjs: true
     hljs_languages:
         - yaml
-        - rust
+        - django
+
+nav:
+    - Home: 'index.md'
+    - User Guide:
+        - 'Installation': 'install.md'
+        - 'Basic Manual': 'manual.md'
+        - 'Video Tutorials': 'tutorial.md'
+        - 'API Documentation': 'api.md'
+    - Jupyter Notebooks: # 'notebooks.md'
+        - 'Single Cell RNA-seq Application': 'notebooks/aegis_single_cell_example.html'
+        - 'Benchmark for Testing: Part 1': 'notebooks/aegis_benchmark_part1.html'
+        - 'Benchmark for Testing: Part 2': 'notebooks/aegis_benchmark_part2.html'
+

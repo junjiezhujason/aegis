@@ -7,4 +7,6 @@ A light weight version of AEGIS, which includes main interactive features with s
 is available as a web interface [here](https://aegis-viz.appspot.com/).
 The full version, which includes data upload and power analysis functions, is open source with installation instructions [here](http://jasonjunjiezhu.com/aegis/).
 
-<img src="img/aegis_painting.jpg" width="700px"/>
+<img src="img/aegis_painting.jpg" width="500px"/>
+
+
