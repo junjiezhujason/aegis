@@ -1,12 +1,11 @@
 .story-block {
     background-color: lightblue;
-    border-style: solid;
-    border-color: red;
+    text-align: center;
 }
 
-.center {
+.img-frame {
+    border-style: solid;
+    border-color: red;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
+    margin: 0 auto;
 }
