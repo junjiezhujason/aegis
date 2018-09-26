@@ -5,7 +5,7 @@ Under construction
 
 ## GO Term Data Input (Optional)
 
-## Main Panel and Navigation Features
+## Main Navigation Features
 
 ## Visualization Customization
 

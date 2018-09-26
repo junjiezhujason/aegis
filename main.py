@@ -654,9 +654,10 @@ def start_from_terminal(app):
     cache_dir = os.path.join(MAIN_FOLDER, "local")
     if not os.path.exists(cache_dir):
         os.makedirs(cache_dir)
-    sim_dir = os.path.join(MAIN_FOLDER, "sim")
-    if not os.path.exists(sim_dir):
-        os.makedirs(sim_dir)
+    for subdir in ["sim", "tmp"]:
+        sim_dir = os.path.join(MAIN_FOLDER, subdir)
+        if not os.path.exists(sim_dir):
+            os.makedirs(sim_dir)
 
     if opts.lite:
         create_lite_dag_dict()

@@ -1,5 +1,5 @@
 
-AEGIS is an open-source software, and the back-end and front-end implementations in Python and Javscript are available under the MIT License. The following instructions are used to install the full version of AEGIs, which includes all of its functionalities including power calculation.
+AEGIS is an open-source software, and the back-end and front-end implementations in Python and Javscript are available under the MIT License. The following instructions are used to install the *full* version of AEGIs, which includes all of its functionalities including power calculation.
 
 ## Install Dependencies
 
@@ -23,7 +23,7 @@ require no more than 250M of disk space.
 *Note*: If this is the first time that you are running AEGIS locally, Internet connection
 will be required to download data (or our cached files below) from the online databases.
 
-## Download Cached Files (Optional)
+## Download Caches (Optional)
 
 You can manually pre-propagate some local files in `${LOCALPATH}` to reduce setup time.
 Once the cache is stored, most features of AEGIS can be performed locally
@@ -41,9 +41,21 @@ Here is an example of the command line workflow:
     wget http://stanford.edu/~jjzhu/fileshare/aegis/local_20180710.tar.gz
     tar -xvzf local_20180710.tar.gz
 
+The local directory should have the following structure, for example:
+
+    ${LOCALPATH}/local/godag-biological_process-human-20180719.pkl
+    ${LOCALPATH}/local/godag-biological_process-mouse-20180719.pkl
+    ${LOCALPATH}/local/godag-cellular_component-human-20180719.pkl
+    ${LOCALPATH}/local/godag-cellular_component-mouse-20180719.pkl
+    ${LOCALPATH}/local/godag-molecular_function-human-20180719.pkl
+    ${LOCALPATH}/local/godag-molecular_function-mouse-20180719.pkl
+
+Here `20180719` represents the version number of the ontology paired with the annotation.
+It is highly useful for reproducing any results from the GO as well as AEGIS.
 
 *Note*: If you skip this step, the latest version of the GO and annotation files will be downloaded,
 and the total setup time will take longer.
+
 
 ## Launch the Local Server
 
@@ -55,7 +67,7 @@ To launch the server, run:
 
 If this is your first time running AEGIS and you did not download our cached
 files, AEGIS will automatically download the latest gene and go annotations.
-This may take a while, and the following files will be automatically generated
+This may take a while, and the following *extra* files will be automatically generated
 inside the local directory:
 
     ${LOCALPATH}/local/gene2go
@@ -65,7 +77,9 @@ inside the local directory:
 
 and later, the program will also generate the cached files
 
-    ${LOCALPATH}/local/godag_*.pkl
+    ${LOCALPATH}/local/godag-*-*-*.pkl
+
+The version number will be based on the date the files are downloaded and when the`.pkl` file is created.
 
 By default, AEGIS  will continue this version if the same ${LOCALPATH} is
 specified. To update the version, simply create a new local path to repeat

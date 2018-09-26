@@ -1,0 +1,19 @@
+.story-block {
+    /*background-color: lightblue;*/
+    text-align: center;
+    width: 550px;
+    display: block;
+    margin: 0 auto;
+}
+
+.go-block {
+    width: 450px;
+    display: block;
+    margin: 0 auto;
+    border-width: 0;
+}
+/*.img-frame {
+    border-style: solid;
+    border-color: red;
+}
+*/

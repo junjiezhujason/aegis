@@ -10,6 +10,9 @@ theme:
         - yaml
         - django
 
+extra_css:
+    - css/extra.css
+
 nav:
     - Home: 'index.md'
     - User Guide:
