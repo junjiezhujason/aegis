@@ -354,14 +354,6 @@ class OrderedContext():
         # retrieve the maximum number of levels
         self.fixed_level_nodes = None
 
-    def populate(self, cntx_d):
-        # index all the nodes in a given context cntx_d.
-        # cntx_id is a dictionary mapping full context node id to the node
-        # in the ordered context, the nodes are
-        # first sorted by their weight in desdending order
-        # then they ties can be further ordered by ascending depth
-
-
     def boundary_histogram_search(self, level_breaks):
         &quot;&quot;&quot;
         For each level, determine the starting index in that level
@@ -404,15 +396,6 @@ class GOStat():
     def get_test_attr_as_dict(self):
 
     def reverse_list_to_dict(self, in_list, do_sort = True):
-
-    def populate(self,
-                 context_params,
-                 ordered_context,
-                 go_gene_map, # includes only terms tested
-                 gene_go_map, # may include more go terms
-                 conv_map,
-                 go_anns=None):
-
 
     def setup_simulation_oneway(self, params):
 
