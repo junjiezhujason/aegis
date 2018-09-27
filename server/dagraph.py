@@ -1273,8 +1273,8 @@ class GODAGraph(DAGraph):
         # context and focus graph attributes
         self.context_graph = OrderedContext()
         self.context_params = {}
-        self.focus_graph = None
-        self.focus_params = {}
+        # self.focus_graph = None
+        # self.focus_params = {}
         # testing attributes
         self.gohelper = None
         self.main_statistician = GOStat()
@@ -1700,6 +1700,7 @@ class GODAGraph(DAGraph):
 
         return all_full_summary
 
+    # TODO: check if the following are still being used
     def load_regime_test_summary(self, data_dir):
         mstat = self.main_statistician
         simulator = self.main_statistician.simulator
@@ -2758,93 +2759,6 @@ class GODAGraph(DAGraph):
         height_dict = self.relation_search(self.leaves, 'parents')
         for node_index in height_dict:
             self.nodes[node_index].height = height_dict[node_index]
-
-
-    def generate_random_pvalues(self):
-        n_pvals = len(self.context_map["test_context"])
-        return np.random.rand(n_pvals).tolist()
-
-
-    def get_example_gene_set(self, example_i):
-        random_gene_mito = ["Snx9", "Iqgap3", "Bin3", "Pds5a",
-                     "Kif14", "Nae1", "Zwilch", "Kif2c",
-                     "Tubgcp5", "Wnt9a", "Ints3", "Blm",
-                     "Chek2", "Golga2", "Arhgef10",
-                     "Pml", "Ush1c", "Nek11", "Eps8", "Ndel1",
-                     "Aurkc", "Fanci", "Rab11a", "Rb1", "Cdc23"]
-        all_mito_checkpoint = ["Blm", "Brca1", "Ccng1", "Cdk1", "Hus1",
-                     "Ier3", "Mbd4", "Mre11a", "Rad17", "Nbn",
-                     "Foxo4", "Donson", "Zfp830", "Mrnip", "Nop53",
-                     "Syf2", "D7Ertd443e", "Mus81", "Oraov1", "Ticrr",
-                     "Cdk5rap3", "Fanci", "Hus1b", "Nae1", "Topbp1", "Clspn",
-                     "Taok3"]
-        ground_truths = [random_gene_mito,
-                         all_mito_checkpoint,
-                         random_gene_mito[1:3]]
-        return ground_truths[example_i]
-
-    def get_example_params(self):
-        params = {"n_regimes": 10,
-                  "n_reps" : 10,
-                  "n_controls" : 20,
-                  "n_cases": 20,
-                  "max_eff_size": 5.0,
-                 }
-        return params
-
-    def example_simulation(self, fixed_size=True, use_cache=False):
-
-        output_pfx = "mitotic_example"
-        params = self.get_example_params()
-
-        self.setup_stat_test_framework(root="GO:0022402")
-        mstat = self.main_statistician
-        n_examples = 3
-        output_results = [{} for g in range(n_examples)]
-        for i in range(n_examples):
-            signal_genes = self.get_example_gene_set(i)
-            dirname = "mitotic_example_{}_{}_terms".format(i, len(mstat.go_gene_map))
-            result_dir = os.path.join(self.cache_dir, dirname)
-            if not os.path.exists(result_dir):
-                os.makedirs(result_dir)
-                logger.info("Created folder: {}".format(result_dir))
-            # self.output_non_null_go_terms(signal_genes)
-            g_list = mstat.convert_gene_from_to("sym", "id", signal_genes)
-            mstat.determine_non_null(g_list)
-            mstat.setup_simulation_oneway(params)
-            # save the simulation information to file
-            store_params ={}
-            for key in mstat.simulator.__dict__:
-                if key in ["trial_params", "trial_summary"]:
-                    continue
-                store_params[key] = mstat.simulator.__dict__[key]
-            fname = "simulation_parameters"
-            result_dict = {"nonnull_nodes": mstat.nonnull_nodes.copy(),
-                           "nonnull_genes": mstat.nonnull_genes.copy()}
-            if use_cache:
-                result_types = [
-                        "node_meta",
-                        "trial_node_pvalues",
-                        "trial_node_rejects",
-                        "trial_sum_stat"]
-                for result in result_types:
-                    fname = os.path.join(result_dir, result+".pkl")
-                    result_dict[result] = pickle.load(open(fname, "rb"))
-                    logger.info("Loaded: {}".format(fname))
-            else:
-                result_data = mstat.run_simulation_pipeline(fixed_size=fixed_size)
-                # maybe use h5 in the future for the data?
-                for key in result_data:
-                    # store node_pvalues
-                    # store rejections
-                    # store summary statistics
-                    result_dict[key] = result_data[key]
-                    fname = os.path.join(result_dir, key+".pkl")
-                    pickle.dump(result_dict, open(fname, "wb"))
-                    logger.info("Saved data to file: {}".format(fname))
-
-            output_results[i] = result_dict
-        return output_results
 
     def plot_full_result(self, data_dir):
         full_res = self.load_full_test_summary(data_dir)

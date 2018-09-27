@@ -1,5 +1,5 @@
 
-# Exploratory Gene Ontology Analysis with Interactive Visualization
+# AEGIS
 
 ## Installation
 
