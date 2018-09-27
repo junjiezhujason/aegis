@@ -118,6 +118,7 @@
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#python-documentation">Python Documentation</a></li>
             <li><a href="#serverdagraphpy">server/dagraph.py</a></li>
+            <li><a href="#serveralgorithmspy">server/algorithms.py</a></li>
         <li class="main "><a href="#javascript-documentation">Javascript Documentation</a></li>
     </ul>
 </div></div>
@@ -348,11 +349,11 @@ class OrderedContext():
 
         # index all the nodes in a given context cntx_d.
         # cntx_id is a dictionary mapping full context node id to the node
-        self.sorted_nodes = None
-        self.sorted_index_map = None
+        sorted_nodes = None
+        sorted_index_map = None
         # fixed_groups: nodes organized in a particular fixed grouping
         # retrieve the maximum number of levels
-        self.fixed_level_nodes = None
+        fixed_level_nodes = None
 
     def boundary_histogram_search(self, level_breaks):
         &quot;&quot;&quot;
@@ -430,143 +431,51 @@ class GOStat():
     def output_ground_truth_info(self, output_graph=False):
 
 class GODAGraph(DAGraph):
+    &quot;&quot;&quot; Data structure for the DAG for GO analysis
 
-    def __init__(self,
-                 cache_dir,
-                 name=None,
-                 sim_dir=None):
-        DAGraph.__init__(self)
-        # book-keeping attributes
-        self.cache_dir = cache_dir
-        self.sim_dir = sim_dir
-        self.name = name
-        self.go_fname =  None
-        # ontology-specific attributes
-        self.ontology = None
-        self.species = None
-        self.version = None
-        self.root = None
-        # gene-related attributes
-        self.go_gene_map = {}
-        self.gene_conversion_map = {}
-        self.go_annotation = {}
-        self.gene_go_map = {}
-        # context and focus graph attributes
-        self.context_graph = OrderedContext()
-        self.context_params = {}
-        self.focus_graph = None
-        self.focus_params = {}
-        # testing attributes
-        self.gohelper = None
-        self.main_statistician = GOStat()
+    Attributes:
+        cache_dir: directory to store cache files
+        sim_dir: directory to store simulation outputs
+        name: name of the dag
+        go_fname: directory to store the .pkl file for the object
+        ontology: &quot;biological_process&quot;,&quot;cellular_component&quot; or &quot;molecular_function&quot;
+        species: &quot;human&quot; or &quot;mouse&quot;
+        version: time stamp for version control
+        root: the root of the entire ontolgy
+        go_gene_map: map from GO id to a list of entrez gene ids
+        gene_conversion_map: map from entrez gene id to gene symbol
+        go_annotation: map from GO:id to the full GO name
+        gene_go_map: map from entrez gene id to a list of GO ids
+        context_graph: OrderedContext() object
+        context_params: a data structure of context parameters
+        main_statistician: GOStat() object used for statistical testing
+        gohelper: GOHelper() object used for downloading and parsing the GO
 
-    def restore_testing_configuration(self, job_id):
+    &quot;&quot;&quot;
 
-    def load_node_power_matrix(self, output_dir, test, multitest, nonnull_only=False):
 
-    def output_node_power_matrix(self, job_id, test, multitest):
+    def setup_full_dag(self,
+                       ontology,
+                       species,
+                       version,
+                       use_cache=True):
+        &quot;&quot;&quot; Integrates annotation information to the GO DAG
+            This steps includes reading the annotation files for a particular
+            root DAG and a particular species, and creating the core structure
+            for context and focus selection. It also reads and writes the .pkl
+            files used to load to populate the Object
 
-    def output_summary_stats(self, job_id, test_method, adjust_method):
+        Args:
+            ontology: &quot;biological_process&quot;,&quot;cellular_component&quot; or &quot;molecular_function&quot;
+            species: &quot;human&quot; or &quot;mouse&quot;
+            version: time stamp for version control
+            use_cache : whether or not to store/use a cached version of the DAG
 
-    def generate_node_power_matrix(self,
-                                   output_dir,
-                                   test,
-                                   multitest):
-
-    def summarize_trial_result(self, dat_dir, reg_i, rep_i):
-        # create summary date frame with fields including fields:
-        # 1. testing_method
-        # 2. adjustment_method
-        # 3. nonnull_type
-        # 3. emperical_fdr
-        # 4. emperical_power
-        # 5. num_rejections
-        # ----------------------
-        # 6. regime_id
-        # 7. repetition_id
-        # 8. trial_id
-        # ----------------------
-
-    def summarize_simulation_results(self, dat_dir):
-
-    def generate_summary_files(self, data_dir):
-
-    def launch_simulation_pipeline(self, job_id, cleanup=False):
-
-    def generate_trial_node_stats(self,
-                                  data_dir,
-                                  trial_id):
-
-    def generate_trial_gene_stats(self,
-                                  data_dir,
-                                  trial_id,
-                                  simulation=True,
-                                  save_xy=True):
-
-    def load_full_test_summary(self, data_dir):
-
-    def load_regime_test_summary(self, data_dir):
-
-    def load_gene_pvals(self, data_dir, reg_i, rep_i):
-
-    def load_test_result(self,
-                         data_dir,
-                         reg_i,
-                         rep_i,
-                         test,
-                         eval_rej=True):
-
-    def get_node_test_file_info(self,
-                                rtype,
-                                tmeth,
-                                mode=&quot;Default&quot;,
-                                mmeth=None,
-                                alpha=None):
-
-    def get_file_info(self, fd, mode=&quot;Default&quot;):
-
-    def get_file_groups(self, key):
-
-    def store_test_meta_data(self, data_dir, simulation=True):
-
-    def output_initialization_data(self):
-
-    def output_context_summary(self, slow_reachability=False):
-
-    def output_non_null_go_terms(self, gene_symb_list):
-
-    def save_result(self, data, fname):
-
-    def load_result(self, fname):
-
-    def sample_genes(self, n_genes, go_term, exclude=False, seedn=0):
-        &quot;&quot;&quot;
-            Sample gene sets based on GO term
-
-            Sample genes that are inclusive or exclusive to a go term.
-
-            Parameters
-            ----------
-            n_genes : int
-                Number of genes to sample
-            go_term : str
-                The GO term to focus on
-            exclude: bool, optional
-                To exclude genes from this go-term (default: False: &quot;include&quot;)
-            seedn: int, optional
-                The random seed to sample the genes (default: 0)
-
-            Returns
-            -------
+        Returns
+        -------
             None
 
         &quot;&quot;&quot;
-    # maps supplied by gohelper
-    def update_with_gene_annotations(self,
-                                     propagate_to_parents=True,
-                                     background_gene_set=None):
-
-    def update_context_indices(self, context):
 
     def setup_context_graph(self,
                             rule,
@@ -575,45 +484,22 @@ class GODAGraph(DAGraph):
                             max_w=30000,
                             refine_graph=False,
                             store_context=True):
-        &quot;&quot;&quot;
-        Create a context graph based on target nodes and rules
+        &quot;&quot;&quot; Create a context graph based on anchor nodes and rules
 
-        Parameters
-        ----------
-        rule : obj: `str`
-            Rule to build the context: &quot;waypoint&quot;, &quot;root&quot; or &quot;leaf&quot;
-        target_node_list: obj: `list`
-            A list of node names (GO:..) that will be the target by the rule.
-        min_w: obj: `int`
-            The minimum number of genes that each node should have
-        max_w: obj: `int`
-            The maximum number of genes that each node should have
-        refine_graph: obj: `bool`
-            Whether or not to remove redundent GO terms
+        Args:
+            rule (str): rule to build the context: &quot;waypoint&quot;, &quot;root&quot; or &quot;leaf&quot;
+            target_node_list (list):  a list of node names (GO:..) anchors
+            min_w (int): the minimum number of genes that each node should have
+            max_w (int):: the maximum number of genes that each node should have
+            refine_graph (bool): whether or not to remove redundent GO terms
 
         Returns
         -------
-        set
-            dict of node indices mapped to their measure
+            OrderedContext: the Object representing the context
+            dict: the parameters needed to specify the context
 
         &quot;&quot;&quot;
 
-    def select_focus_nodes(self,
-                           query_set,
-                           context_map,
-                           params):
-
-    def create_node_group_order(self,
-                                focus_node_level,
-                                groups,
-                                level_type,
-                                context_map):
-
-    def create_focus_layout(self,
-                            query_set,
-                            fnode_set,
-                            context_map,
-                            params):
 
     def setup_focus_graph(self,
                           query_go_ids,
@@ -624,62 +510,73 @@ class GODAGraph(DAGraph):
                           gap_break=5000,
                           grouped=True,
                           ):
+        &quot;&quot;&quot; Create a focus graph based on anchor nodes and rules
 
+        Args:
+            query_go_ids: a list of GO ids
+            ordered_context: the context graph OrderedContext()
+            rule: rule to build the context: &quot;waypoint&quot;, &quot;root&quot; or &quot;leaf&quot;
+            max_descendents: threshold for a node to be prolific
+            force_all_descendents: whether or not to include all descendants
+            gap_break: break parameter for the buoyant layout
+            grouped: whether or not to segregate the terms into groups
 
-    def get_focus_graph_max_range(self, indexed_focus_nodes):
-
-    def setup_full_dag(self,
-                       ontology,
-                       species,
-                       version,
-                       use_cache=True):
-        &quot;&quot;&quot;
-        Integrates annotaiton information to the GO DAG
-
-        This steps includes reading the annotation files for a particular
-        root DAG and a particular species, and creating the core structure
-        for context and focus selection, as well as statistical testing.
-        The parameters (root, species and etc.) were determined when the
-        GODAGraph object is created.
-
-        Parameters
-        ----------
-        use_cache : :obj:`bool`
-            Whether or not to store/use a cached version of the DAG
-
-        Returns
-        -------
-        dict
-            a dictionary mapping from node indices to context Node objects
+        Returns:
+            dict: the data structure of the graph needed for front-send display
 
         &quot;&quot;&quot;
+
+    def restore_testing_configuration(self, job_id):
+        &quot;&quot;&quot; Restores the testing configuration for the main_statistician,
+            It also modifies the OrderedContext() based on the meta parameters
+
+        Args:
+            job_id: the id of the simulation job
+
+        Returns:
+            dict: all the parameters formatted for front-end rendering *
+
+        &quot;&quot;&quot;
+
+    def output_node_power_matrix(self, job_id, test, multitest):
+        &quot;&quot;&quot; Output a matrix of node vs regime with node rejection rate
+
+        Args:
+            job_id: the id of the simulation job
+            test: the method to generate node p-values
+            multitest: the multiple correction method
+
+        Returns:
+            dict: a json-like matrix format
+
+        &quot;&quot;&quot;
+
+    def output_summary_stats(self, job_id, test_method, adjust_method):
+        &quot;&quot;&quot; Output the summary statistics used for plotting
+
+        Args:
+            job_id: the id of the simulation job
+            test_method: the method to generate node p-values
+            adjust_method: the multiple correction method
+
+        Returns:
+            dict: a json-like matrix format for plotting
+
+        &quot;&quot;&quot;
+
+    def launch_simulation_pipeline(self, job_id, cleanup=False):
+
+    def output_non_null_go_terms(self, gene_symb_list):
 
     def output_general_info(self):
 
     def output_context_info(self, c_graph):
 
-    def prepare_focus_graph_output(self,
-                                   query_set,
-                                   node_set,
-                                   index_map,
-                                   context = None):
-
-    def create_graph_from_root(self, is_a_only=False):
-
-    def generate_random_pvalues(self):
-
-    def get_example_gene_set(self, example_i):
-
-    def get_example_params(self):
-
-    def example_simulation(self, fixed_size=True, use_cache=False):
-
     def plot_full_result(self, data_dir):
 
 </code></pre>
 
-<h2>server/algorithms.py</h2>
-
+<h3 id="serveralgorithmspy">server/algorithms.py</h3>
 <pre><code class="python">
 def count_inverions(A):
 
