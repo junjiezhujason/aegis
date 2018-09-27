@@ -117,17 +117,16 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#python-documentation">Python Documentation</a></li>
+            <li><a href="#serverdagraphpy">server/dagraph.py</a></li>
         <li class="main "><a href="#javascript-documentation">Javascript Documentation</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
 <h1 id="python-documentation">Python Documentation</h1>
-<h2 id="dagger.py">server/dagraph.py</h2>
-
-<pre><code class="python">
-class BaseNode(object):
-    &quot;&quot;&quot;Data structure associated with a basic node
+<h3 id="serverdagraphpy">server/dagraph.py</h3>
+<pre><code class="python">class BaseNode(object):
+    &quot;&quot;&quot; Data structure associated with a basic node
 
     Attributes:
         id (int): the global node id
@@ -144,7 +143,7 @@ class BaseNode(object):
     &quot;&quot;&quot;
 
 class Node(BaseNode):
-    &quot;&quot;&quot;Graph layout node which inherits the BaseNode object.
+    &quot;&quot;&quot; Graph layout node which inherits the BaseNode object.
 
     Attributes:
         name (str): the name annotation of the node, such as &quot;GO:....&quot;
@@ -160,7 +159,7 @@ class Node(BaseNode):
 
     &quot;&quot;&quot;
     def get_position_info(self):
-        &quot;&quot;&quot;Create a dictionary of depth, height and flex x,y coordinates
+        &quot;&quot;&quot; Create a dictionary of depth, height and flex x,y coordinates
 
         Args:
             None
@@ -171,7 +170,7 @@ class Node(BaseNode):
         &quot;&quot;&quot;
 
 class Link(object):
-    &quot;&quot;&quot;Data structure for a link
+    &quot;&quot;&quot; Data structure for a link
 
     Attributes:
         source (:obj:Node): the parent node
@@ -180,94 +179,104 @@ class Link(object):
     &quot;&quot;&quot;
 
 class DAGraph(object):
-    &quot;&quot;&quot;Data structure for a directed cyclic graph
+    &quot;&quot;&quot; Data structure for a directed cyclic graph
 
     Attributes:
         nodes: a list of Node objects
         links: a list of Link objects
         roots: a list of node ids
         leaves: a list of leaf ids
-        name_index_map: a dictionary from the node name to its index in the `nodes` list
+        name_index_map: a map from a node name to its index in the `nodes` list
     &quot;&quot;&quot;
-     # general utilities to retreive information
-    def get_node_by_name(self, name):
-        &quot;&quot;&quot; Get the node object by name
-        &quot;&quot;&quot;
-
-    def trim_dag_by_weight(self, min_w = 1, max_w = 30000):
-        # returns a set of node indices in a dag
-        # note that the trim set should not require rewiring of edges
-        # if the weights have hiearchical ordering
-
 
     def filter_redundant_nodes(self, node_map=None, roots=None):
-        # node map maps node id (a subset of nodes in the original indices)
+        &quot;&quot;&quot; Apply graph refinement to remove redundant nodes
 
+        Args:
+            node_map: a map of node ids to Node objects (optional)
+            roots: a list of node ids to be the roots (optional)
+
+        Returns:
+            a map of node ids to Node objects keeping only non-redundant nodes
+
+        &quot;&quot;&quot;
 
     def create_map_to_context_nodes(self, node_context):
-        &quot;&quot;&quot;
-        Create a dictionary for the context nodes given a set of nodes
+        &quot;&quot;&quot; Create a dictionary for the context nodes given a set of nodes
+            Node objects that can encode the information of the updated
+            height, depth, parents and children in the particular context
+            defined by the nodes under selection. Relationships between nodes
+            are inferred from the original DAG.
 
-        This function takes a set of node indices as inputs and outputs a
-        dictionary mapping from node indices in the orignal graph to light
-        weight Node objects that can encode the information of the updated
-        height, depth, parents and children in the particular contexted
-        defined by the nodes under selection. Relationships between nodes are
-        inferred from the original DAG
+        Args:
+            note_context: a dict of node ids mapping to anything
 
-        Parameters
-        ----------
-        nodes : :obj:`dict` of :obj:`int` mapped to :obj:`Node`
-            The node indices in the total graph that defines a context
-
-        Returns
-        -------
-        dict
-            a dictionary mapping from node indices to context Node objects
+        Returns:
+            dict : a map from node ids to new Node objects in the new context
+            list: a list of root nodes in the new context
 
         &quot;&quot;&quot;
-
 
     def update_intrinsic_levels(self, metric, node_map=None):
-        # node map maps node id (a subset of nodes in the original indices)
+        &quot;&quot;&quot; Update the hight or depth attributes based on the optional context
+
+        Args:
+            metric: either &quot;height&quot; or &quot;depth&quot;
+            node_map: a map from node ids to Node objects (optional)
+
+        Returns:
+            dict: a map from node ids to Node objects with updated attributes
+
+        &quot;&quot;&quot;
 
     def find_nodes_in_context(self, node_type, node_context, node_map=None):
+        &quot;&quot;&quot; Find either roots or leaves in a node context
 
+        Args:
+            node_type: either &quot;root&quot; of &quot;leaf&quot;
+            node_context: a dict or set of node ids
+            node_map: a map from node ids to Node Objects (optional)
+
+        Returns:
+            list: node ids of the roots or the leaves
+
+        &quot;&quot;&quot;
 
     def find_neighbors(self,
                        node_index,
                        relation,
                        node_map = None,
                        restrict_set= None):
+        &quot;&quot;&quot; Find the neighbors of a node within a context or restricted set
 
+        Args:
+            node_index: the node id
+            relation: either &quot;parents&quot; or &quot;children&quot;
+            node_map: a map from node ids to Node Objects (optional)
+            restrict_set: a dict or set of node ids to restrict search
 
-    # core search via a queue (superior to recursion)
+        Returns:
+            a list of (restricted) neighboring node ids
+
+        &quot;&quot;&quot;
+
     def relation_search(self,
                         node_indices,
                         relation,
                         measure = &quot;level&quot;,
                         node_map = None,
                         restrict_set = None):
-        &quot;&quot;&quot;
-        Perform hierarcical search with restrictions
+        &quot;&quot;&quot; Perform restricted hierarchical search with a queue
 
-        Parameters
-        ----------
-        node indices : obj:`list` of :obj:`int`
-            The nodes to find descendents for
-        relation: str
-            The relationship attribute in Node to use (parents or children)
-        measure: obj
-            The value that is measured for each node in the output dict
-        node_map: obj: `list` of obj:`Node` or `dict` of index to Nodes
-            The list of Node objects that encode the search information
-        restrict_set : obj:`list` or obj:`dict` of :obj:`int` (key)
-            The context under which to search
+        Args:
+            node_indices : list of node ids as the anchor for the search
+            relation: either &quot;parents&quot; or &quot;children&quot;
+            measure: only &quot;level&quot; for now
+            node_map: a map from node ids to Node Objects (optional)
+            restrict_set: a dict or set of node ids to restrict search
 
-        Returns
-        -------
-        set
-            dict of node indices mapped to their measure
+        Returns:
+            dict: related nodes ids (including the anchors) mapped to measure
 
         &quot;&quot;&quot;
 
@@ -278,10 +287,19 @@ class DAGraph(object):
                              node_list,
                              context_map,
                              restrict_set=None):
-        &quot;&quot;&quot; Given a list of node indices, group their descendents and
-            ancestors into indepdendent subgraphs for better layout.
+        &quot;&quot;&quot; Given a list of node ids, group their descendants and
+            ancestors into independent subgraphs for better layout.
             There are always some nodes that are in more than one groups
             so we want to partition the nodes optimally or greedily
+
+        Args:
+            node_list: list of node_ids
+            context_map:  a map from node ids to Node Objects (optional)
+            restrict_set: a dict or set of node ids to restrict search
+
+        Returns:
+            list: list of set of node ids indicating grouping
+
         &quot;&quot;&quot;
 
     def compute_focus_flex_level(self,
@@ -289,29 +307,45 @@ class DAGraph(object):
                                  context_map,
                                  gap_break = 5000,
                                  block_merge = False):
-        # Note it is better if context is in test_context
-        # because we elimnate parent-&gt;children with same nodes
-        # TODO: handle case where we can do this in full_context
-        # TODO: in the future maybe it will be better for the user to
-        # determine the focus level resolution
-        # heuristic: larger gap_break when there are fewer nodes, smaller when larger
-        # block merge creates more nodes in a shared layer (may be better for layout)
+        &quot;&quot;&quot; Compute the level of each node using the bubble float algorithm
+            heuristic: larger gap_break yields fewer nodes per level
 
-    def compute_group_width(self, node_levels):
+        Args:
+            focus_nodes: a set (or list or dict) of node ids
+            context_map: a map from node ids to Node Objects
+            gap_break: the maximum node weight difference between two layers
+            block_merge: (default as False for now)
+
+        Returns:
+            None (only updates the Node objects in the context map)
+
+        &quot;&quot;&quot;
 
     def create_level_node_map(self, node_levels, node_indices=None):
-        # node_levels: a dictionary of node_index to levels (like a context)
-        # node_list: a list of nodes to compute the level map for
-        # return map: (level) -&gt; [nidx_1, nidx_2, ...] (ordered list)
+        &quot;&quot;&quot; Create a map from level number to the node ids
+
+        Args:
+            node_levels: a dictionary of node_index to levels (like a context)
+            node_list: a list of nodes to compute the level map for
+
+        Returns:
+            dict: (level) -&gt; [nidx_1, nidx_2, ...] (ordered list)
+
+        &quot;&quot;&quot;
 
     def compute_node_order(self, node_indices, level_type, context_map):
+        &quot;&quot;&quot; Given node ids and level type, compute its level specific position
+            Uses the the hierarchical ordering heuristic
 
-    def hierarchical_reordering(self,
-                                node_order,
-                                node_levels,
-                                relation = &quot;parents&quot;,
-                                level_type = &quot;depth&quot;,
-                                reverse = False):
+        Args:
+            node_indices: a list/dict/set of node ids
+            level_type: &quot;height&quot;, &quot;depth&quot; or &quot;flex&quot;
+            context_map: a map from node ids to Node Objects with specified attr
+
+        Returns:
+            dict: a map from node ids to their order in the level
+
+        &quot;&quot;&quot;
 
 class OrderedContext():
 
