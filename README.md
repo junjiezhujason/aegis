@@ -3,7 +3,7 @@
 
 ## Installation
 
-See the project site: http://jasonjunjiezhu.com/aegis for instructions.
+See the project site: http://aegis.stanford.edu for instructions.
 
 ## Launching the local server
 
@@ -33,7 +33,7 @@ and `$runmode` could be either `debug` or `deploy`.
 
 ## Deploying the Documentation
 
-To create the documenation at http://jasonjunjiezhu.com/aegis/ for AEGIS, run
+To create the documenation with [MkDocs](https://www.mkdocs.org/) for AEGIS, run
 
     mkdocs gh-deploy
 
