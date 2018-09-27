@@ -127,6 +127,11 @@ def flag_complete(data_dir, action, sufx=None):
     if action == "check":
         return os.path.exists(filename)
 
+# def jaccard_similarity(x, y):
+#     intersection_len = len(set.intersection(*[set(x), set(y)]))
+#     union_len = len(set.union(*[set(x), set(y)]))
+#     return intersection_len/float(union_len)
+
 class BaseNode(object): # typically context-specific
     def __init__(self, id):
         self.id = id
@@ -139,45 +144,27 @@ class BaseNode(object): # typically context-specific
         self.n_descendents = None
         self.root = False
         self.leaf = False
-        # the full graph determines the depth/height
-        self.depth = None # TODO: remove later
-        self.height = None # TODO: remove later
+        self.depth = None
+        self.height = None
 
 class Node(BaseNode):
     def __init__(self, id, name=None):
         BaseNode.__init__(self, id)
         # primary attributes
-        # self.id = id
         self.name = name
         self.weight = None
-        self.queried = False
-        # self.stat_info = {}
 
         # secondary attributes (used in context graphs)
-        # self.root = False
-        # self.leaf = False
-        # self.children = []
-        # self.parents = []
-        # self.n_parents = None
-        # self.n_children = None
-        # self.n_ancestors = None
-        # self.n_descendents = None
         self.root_distance = None
         # self.depth = None # TODO: remove later
         # self.height = None # TODO: remove later
 
         # group-specific information (used in focus graphs)
-        self.group = None # TODO: remove later
-        self.group_depth_order = None # TODO: remove later
-        self.group_height_order = None
-        self.group_flex_order = None
         self.depth_order = None
         self.height_order = None
         self.flex = 0
         self.flex_order = 0
-        # self.level = None
-        # self.level_order = None
-        # self.group_level_order = None # TODO: remove later
+        self.queried = False
 
     def get_position_info(self):
         info =  {
@@ -196,8 +183,8 @@ class Node(BaseNode):
         }
         return info
 
-    def print_secondary_attributes(self):
-        logger.debug(self.__dict__)
+    # def print_secondary_attributes(self):
+    #     logger.debug(self.__dict__)
 
 class Link:
     def __init__(self, source, target):
@@ -214,18 +201,17 @@ class DAGraph(object):
         self.name_index_map = {}
 
     # general utilities to retreive information
-    def get_node_by_name(self, name):
-        """ Get the node object by name
-        """
-        return self.nodes[self.name_index_map[name]]
-
-    def trim_dag_by_weight(self, min_w = 1, max_w = 30000):
-        # returns a set of node indices in a dag
-        # note that the trim set should not require rewiring of edges
-        # if the weights have hiearchical ordering
-        trim = set([n.id for n in self.nodes if min_w <= n.weight <= max_w])
-        logger.info("Trimmed {} nodes to {}".format(len(self.nodes),len(trim)))
-        return trim
+    # def get_node_by_name(self, name):
+    #     """ Get the node object by name
+    #     """
+    #     return self.nodes[self.name_index_map[name]]
+    # def trim_dag_by_weight(self, min_w = 1, max_w = 30000):
+    #     # returns a set of node indices in a dag
+    #     # note that the trim set should not require rewiring of edges
+    #     # if the weights have hiearchical ordering
+    #     trim = set([n.id for n in self.nodes if min_w <= n.weight <= max_w])
+    #     logger.info("Trimmed {} nodes to {}".format(len(self.nodes),len(trim)))
+    #     return trim
 
     def filter_redundant_nodes(self, node_map=None, roots=None):
         # node map maps node id (a subset of nodes in the original indices)
@@ -297,27 +283,6 @@ class DAGraph(object):
         return node_map
 
     def create_map_to_context_nodes(self, node_context):
-        """
-        Create a dictionary for the context nodes given a set of nodes
-
-        This function takes a set of node indices as inputs and outputs a
-        dictionary mapping from node indices in the orignal graph to light
-        weight Node objects that can encode the information of the updated
-        height, depth, parents and children in the particular contexted
-        defined by the nodes under selection. Relationships between nodes are
-        inferred from the original DAG
-
-        Parameters
-        ----------
-        nodes : :obj:`dict` of :obj:`int` mapped to :obj:`Node`
-            The node indices in the total graph that defines a context
-
-        Returns
-        -------
-        dict
-            a dictionary mapping from node indices to context Node objects
-
-        """
         cntx = set(node_context)
         logger.debug("Updating levels of {} context nodes".format(len(cntx)))
         roots = self.find_nodes_in_context("root", cntx)
@@ -409,28 +374,6 @@ class DAGraph(object):
                         measure = "level",
                         node_map = None,
                         restrict_set = None):
-        """
-        Perform hierarcical search with restrictions
-
-        Parameters
-        ----------
-        node indices : obj:`list` of :obj:`int`
-            The nodes to find descendents for
-        relation: str
-            The relationship attribute in Node to use (parents or children)
-        measure: obj
-            The value that is measured for each node in the output dict
-        node_map: obj: `list` of obj:`Node` or `dict` of index to Nodes
-            The list of Node objects that encode the search information
-        restrict_set : obj:`list` or obj:`dict` of :obj:`int` (key)
-            The context under which to search
-
-        Returns
-        -------
-        set
-            dict of node indices mapped to their measure
-
-        """
 
         # the node indices and the node contexts are both w.r.t.
         # the node list (which is all available nodes by default)
@@ -465,21 +408,10 @@ class DAGraph(object):
         # logger.debug("Total number of levels searched: {}".format(curr_level))
         return node_index_dict
 
-    # older code:
-    def get_neighbors(self, node, relation):
-        # nodes =  [self.nodes[node_idx] for node_idx in getattr(node, relation)]
-        return set([node_idx for node_idx in getattr(node, relation)])
-
-
     def create_node_grouping(self,
                              node_list,
                              context_map,
                              restrict_set=None):
-        """ Given a list of node indices, group their descendents and
-            ancestors into indepdendent subgraphs for better layout.
-            There are always some nodes that are in more than one groups
-            so we want to partition the nodes optimally or greedily
-        """
         # TODO: optimize the divide-and-merge in the future
         # partition nodes into node groups
         node_groups = []
@@ -556,7 +488,6 @@ class DAGraph(object):
         level_map = self.create_level_node_map(node_levels)
         return max( [len(level_map[l]) for l in level_map] )
 
-
     def create_level_node_map(self, node_levels, node_indices=None):
         # node_levels: a dictionary of node_index to levels (like a context)
         # node_list: a list of nodes to compute the level map for
@@ -631,12 +562,6 @@ class DAGraph(object):
             sorted_node_id = sorted(score, key=score.get)
             for rank, node_id in enumerate(sorted_node_id):
                 node_order[node_id] = rank
-
-
-def jaccard_similarity(x, y):
-    intersection_len = len(set.intersection(*[set(x), set(y)]))
-    union_len = len(set.union(*[set(x), set(y)]))
-    return intersection_len/float(union_len)
 
 
 class OrderedContext():
@@ -1002,7 +927,6 @@ class GOStat():
                 else:
                     node_meta[nonnull_type].append(0)
         return node_meta
-
 
     def evaluate_rejections(self, rej_list, nonnull_type):
         nonnull_set = set(self.nonnull_nodes[nonnull_type + "_nonnull"])
@@ -2503,60 +2427,6 @@ class GODAGraph(DAGraph):
 
         return max_range
 
-    # def setup_stat_test_framework(self,
-    #                               root="",
-    #                               min_w = 1,
-    #                               max_w = 30000):
-
-    #     # the hypotheses to be tested needs to be reasonable
-    #     # e.g. it should have at least one gene, and one may exclude
-    #     # hypotheses that are too general with too many genes here
-
-    #     # trim = self.trim_dag_by_weight(min_w = min_w, max_w = max_w)
-
-    #     if root:
-    #         root_idx = self.name_index_map[root]
-    #         subg = set(self.relation_search([root_idx], "children"))
-    #         logger.info("Using subgraph rooted at {}: {} out of {} kept) "
-    #             .format(root, len(subg), len(self.nodes)))
-    #     else:
-    #         subg = range(len(self.nodes))
-    #     # self.contexts["stat_test"] = len(trim)
-
-    #     trim = set([i for i in subg if min_w <= self.nodes[i].weight <= max_w])
-    #     logger.info("Kept {} out of {} go terms in range [{}, {}]) "
-    #         .format(len(trim), len(subg), min_w, max_w))
-
-    #     # map from orig_i -> new Node (updated depths, heights, parents, children)
-    #     # in this map, Node relation holds strongly (no )
-    #     new_map, new_roots = self.create_map_to_context_nodes(trim)
-    #     # process the map for further node removal / updates here
-    #     new_map = self.filter_redundant_nodes(node_map=new_map, roots=new_roots)
-    #     logger.info("# of nodes after filtering: {}".format(len(new_map)))
-    #     new_map = self.update_intrinsic_levels("depth", node_map = new_map)
-    #     new_map = self.update_intrinsic_levels("height", node_map = new_map)
-    #     logger.info("Updated intrinsic levels: {}".format(len(new_map)))
-    #     self.context_map["full_context"] = {i: n for i, n in enumerate(self.nodes)}
-    #     self.context_map["test_context"] = new_map
-    #     self.update_context_indices(new_map)
-
-    #     # update the context specific parameters
-    #     self.main_test_context = OrderedContext()
-    #     self.main_test_context.populate(new_map)
-    #     self.main_statistician = GOStat()
-    #     self.main_statistician.populate(
-    #         {"root": root, "min_w": min_w, "max_w": max_w},
-    #         self.main_test_context,
-    #         self.go_gene_map,
-    #         self.gene_go_map,
-    #         self.gene_conversion_map,
-    #         self.go_annotation)
-
-    #     # TODO: remove in the future
-    #     self.stat_test_context_nodes = new_map
-
-    # def store_gene_conversion_map(self, gene_conversion_map):
-    #     self.gene_conversion_map = gene_conversion_map
     def setup_full_dag(self,
                        ontology,
                        species,
