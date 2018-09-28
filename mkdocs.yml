@@ -17,8 +17,8 @@ nav:
     - Home: 'index.md'
     - User Guide:
         - 'Installation': 'install.md'
-        - 'Basic Manual': 'manual.md'
         - 'Video Tutorials': 'tutorial.md'
+        - 'Web Interface Manual': 'manual.md'
         - 'API Documentation': 'api.md'
     - Jupyter Notebooks: # 'notebooks.md'
         - 'Single Cell RNA-seq Application': 'notebooks/aegis_single_cell_example.html'

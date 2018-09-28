@@ -1,15 +1,14 @@
 
 # Welcome!
 
-This is the documentation webpage for AEGIS ((Augmented Exploration of the GO with Interactive Simulations). AEGIS is an open-source software with an interactive information-retrieval framework that enables an investigator to navigate through the entire Gene Ontology (GO) graph (with tens of thousands of nodes) and focus on fine-grained details without losing the context. It features interpretable visualization of GO terms reported from studies, flexible exploratory analysis of the GO DAG, as well as principled power analysis that is biologically relevant.
+This is the documentation webpage for AEGIS (Augmented Exploration of the GO with Interactive Simulations). AEGIS is an open-source software with an interactive information-retrieval framework that enables an investigator to navigate through the entire Gene Ontology (GO) graph (with tens of thousands of nodes) and focus on fine-grained details without losing the context. It features interpretable visualization of GO terms reported from studies, flexible exploratory analysis of the GO DAG, as well as principled power analysis that is biologically grounded.
 
 ---
 
 ## Getting Started
 
-Accompanied with our
-[user manual](./manual) and
-[video tutorials](./tutorial),
+Accompanied by our
+[tutorials](./tutorial),
 there are two options to explore the visualization by AEGIS:
 the lite version and the full version.
 
@@ -45,9 +44,7 @@ knowledgeable, or benevolent source. By combining visualization with the rich kn
 
 ## The Gene Ontology
 
-The Gene Ontology (GO) is one of the most popular biological databases. It consists of two continuously evolving elements: (1) a collection of controlled biological terms with semantic hierarchical relationships and (2) annotations that link genes and gene products to specific terms.
-
-The GO can be represented as a graph where each node represents a GO term, and each directed link pointing from a parent to a child represents the semantic relationship with two terms. The child term can be related to the parent term via an “is a”, “part of” or “regulates” relation. There are three root nodes: “biological process”, “molecular function” and “cellular component”, and each of their descendants are connected with directed edges in an acyclic fashion. Genes can be simultaneously annotated to different terms, and their annotations propagate upwards in the hierarchy, resulting in the gene sets in the nodes.
+The GO is one of the most popular biological knowledge bases. It consists of two continuously evolving elements: (1) a collection of controlled biological terms with semantic hierarchical relationships and (2) annotations that link genes and gene products to specific terms. The GO can be represented as a graph where each node represents a GO term, and each directed link pointing from a parent to a child represents the semantic relationship with two terms. The child term can be related to the parent term via an “is a”, “part of” or “regulates” relation. There are three root nodes: “biological process”, “molecular function” and “cellular component”, and each of their descendants are connected with directed edges in an acyclic fashion. Genes can be simultaneously annotated to different terms, and their annotations propagate upwards in the hierarchy, resulting in the gene sets in the nodes.
 
 For more detailed information about the GO, please visit
 [the GO Consortium](http://geneontology.org/page/introduction-go-resource)

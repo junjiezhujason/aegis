@@ -472,3 +472,15 @@ def bubble_float_algo(nodes,
 
 # Javascript Documentation
 
+### static/js/all_configs.js
+
+### static/js/go_interaction.js
+
+### static/js/common_utils.js
+
+### static/js/graph_utils.js
+
+### static/js/bar_utils.js
+
+### static/js/ss_manhattan.js
+

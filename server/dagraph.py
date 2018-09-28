@@ -2506,48 +2506,6 @@ class GODAGraph(DAGraph):
         self.name = name
         self.cache_dir = cache_dir
 
-    # def generate_level_cnt_maps(self):
-
-    #     levelcnt_map = {}
-    #     # append the test_in_full mode
-    #     tf_cnxt = "test_in_full"
-    #     levelcnt_map[tf_cnxt] = {}
-    #     for lev_t in ["depth", "height"]:
-    #         levelcnt_map[tf_cnxt][lev_t] = {}
-    #     # the test and full modes
-    #     for cxt_t in self.context_map:
-    #         levelcnt_map[cxt_t] = {}
-    #         for lev_t in ["depth", "height"]:
-    #             levelcnt_map[cxt_t][lev_t] = {}
-    #     for go in self.go_gene_map:
-    #         node_i = self.name_index_map[go]
-    #         for cxt_t in self.context_map:
-    #             if node_i in self.context_map[cxt_t]: # within context
-    #                 cnode = self.context_map[cxt_t][node_i]
-    #                 for lev_t in ["depth", "height"]:
-    #                     level = getattr(cnode, lev_t)
-    #                     if level in levelcnt_map[cxt_t][lev_t]:
-    #                         levelcnt_map[cxt_t][lev_t][level] += 1
-    #                     else:
-    #                         levelcnt_map[cxt_t][lev_t][level] = 1
-    #                     if (cxt_t == "full_context"):
-    #                         if node_i in self.context_map["test_context"]:
-    #                             if level in levelcnt_map[tf_cnxt][lev_t]:
-    #                                 levelcnt_map[tf_cnxt][lev_t][level] += 1
-    #                             else:
-    #                                 levelcnt_map[tf_cnxt][lev_t][level] = 1
-    #     # make the level maps into lists of values
-    #     for cxt_t in (list(self.context_map.keys()) + ["test_in_full"]):
-    #         for lev_t in ["depth", "height"]:
-    #             old_dict = levelcnt_map[cxt_t][lev_t]
-    #             n_lev = max(old_dict) + 1 # maximum level + 1
-    #             new_list = [0] * n_lev
-    #             for i_lev in range(n_lev):
-    #                 if i_lev in old_dict:
-    #                     new_list[i_lev] = levelcnt_map[cxt_t][lev_t][i_lev]
-    #             levelcnt_map[cxt_t][lev_t] = new_list
-    #     return levelcnt_map
-
     def output_general_info(self):
         """
         Function to output general data (pre-context) for front-end
@@ -2615,33 +2573,6 @@ class GODAGraph(DAGraph):
             "max_level": max_level
         }
         return output_data
-
-    # def output_excluded_info(self, verbose = False):
-    #     full_cntx = self.context_map["full_context"]
-    #     test_cntx = self.context_map["test_context"]
-    #     go_gene_map = self.go_gene_map
-    #     go_annotation = self.go_annotation
-    #     out_info = []
-    #     for node_i in full_cntx:
-    #         if node_i not in test_cntx:
-    #             term = full_cntx[node_i].name
-    #             if verbose:
-    #                 gene_info = list(go_gene_map[term])
-    #             else:
-    #                 gene_info = len(go_gene_map[term])
-    #             out_info.append([term,
-    #                              go_annotation[term],
-    #                              gene_info])
-    #     logger.info("Excluded: {} terms".format(len(out_info)))
-    #     return out_info
-
-    # def prepare_index_mapping(self, small_set, large_set):
-    #     assert isinstance(small_set, set), "Type-error of node_set"
-    #     assert isinstance(large_set, set), "Type-error of node_set"
-    #     # reserve mapping in the small set first and then the remains of largest
-    #     ordering = list(small_set) + list(large_set - small_set)
-    #     rev_map = {orig_i : i for i, orig_i in enumerate(ordering)}
-    #     return rev_map
 
     def prepare_focus_graph_output(self,
                                    query_set,
