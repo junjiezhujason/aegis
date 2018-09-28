@@ -223,7 +223,7 @@ function render_node_link_interaction(container,
   function mouseOverFunction(d) {
     let relatives = get_all_relatives(d);
 
-    tooltip_update(d, "show");
+    tooltip_update(d, "hide");
     select_node_update(d, relatives);
     select_link_update(d, relatives);
     // d3.select(this).attr('r', confg.graph.node.radius); // circle update

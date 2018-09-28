@@ -929,6 +929,10 @@ function update_ssm_plot(svg_id,
       ;
     main_svg.attr("width", message_w).attr("height", message_h);
     return
+  } else {
+    main_svg.select(".error-message")
+      .text("")
+      ;
   }
 
   let all_parts = get_ssm_parts(conf);

@@ -3,6 +3,9 @@ site_url: http://aegis.stanford.edu
 site_description: Project documentation for AEGIS
 site_author: Junjie (Jason) Zhu
 
+repo_url: https://github.com/junjiezhujason/aegis 
+edit_uri: ""
+
 theme:
     name: mkdocs
     highlightjs: true
