@@ -11,6 +11,7 @@
     display: block;
     margin: 0 auto;
     border-width: 0;
+    text-align: center;
 }
 
 .go-block {

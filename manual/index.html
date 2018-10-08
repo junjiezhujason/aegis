@@ -123,14 +123,11 @@
             <li><a href="#focus-and-context-graphs">Focus and Context Graphs</a></li>
             <li><a href="#different-graph-layouts">Different Graph Layouts</a></li>
         <li class="main "><a href="#visualization-panel-and-options">Visualization Panel and Options</a></li>
+            <li><a href="#full-and-lite-versions">Full and Lite Versions</a></li>
+            <li><a href="#common-interface">Common Interface</a></li>
             <li><a href="#terminology-and-concepts">Terminology and Concepts</a></li>
+            <li><a href="#navigation-features">Navigation Features</a></li>
         <li class="main "><a href="#go-term-data-input-optional">GO Term Data Input (Optional)</a></li>
-        <li class="main "><a href="#main-navigation-features">Main Navigation Features</a></li>
-            <li><a href="#select-ontology">Select Ontology</a></li>
-            <li><a href="#select-context-and-focus-anchors">Select Context and Focus Anchors</a></li>
-            <li><a href="#context-graph-options">Context Graph Options</a></li>
-            <li><a href="#layout-options">Layout Options</a></li>
-            <li><a href="#interaction-on-the-focus-graph">Interaction on the Focus Graph</a></li>
         <li class="main "><a href="#gene-set-selection-optional">Gene Set Selection (Optional)</a></li>
         <li class="main "><a href="#power-analysis-and-simulation">Power Analysis and Simulation</a></li>
     </ul>
@@ -167,6 +164,21 @@ The focus graph is represented as a bone fide graph with detailed links and node
 <p>The buoyant layout preserves not only the topological constraint, but also factors in the gene annotations, such that a node with fewer annotated genes is placed no higher than that with more genes. The buoyant layout is powered by our bubble-float algorithm. The leaf bound layout places each node at levels based on their longest distance to any of the leaves.</p>
 <hr />
 <h2 id="visualization-panel-and-options">Visualization Panel and Options</h2>
+<h3 id="full-and-lite-versions">Full and Lite Versions</h3>
+<p>There are two options to explore the visualization by AEGIS:
+the lite version and the full version.</p>
+<h4 id="the-full-version">The full version</h4>
+<p>The full version includes all features, including data upload and power analysis functions.</p>
+<div class="img-block">
+    <img src="../img/header_core.png" width="100%"/>
+</div>
+
+<h4 id="the-lite-version">The lite version</h4>
+<p>A light weight version includes the minimal interactive features with some examples for simple demonstrations.
+<div class="img-block">
+    <img src="../img/header_lite.png" width="100%"/>
+</div></p>
+<h3 id="common-interface">Common Interface</h3>
 <p>The following is the common graphical interface used in AEGIS. It consists
 several panels that can allow a user to customize the GO DAG.</p>
 <div class="img-block">
@@ -182,23 +194,22 @@ A prolific node is highlighted in orange border. Double click a prolific node to
 <h4 id="outer-focus-anchor">Outer focus anchor</h4>
 <p>A focus anchor is not an outer focus anchor if removing it does not change the current focus graph.
 For example, only nodes that are circled in aqua are outer focus anchors in the figure below.</p>
-<h2 id="go-term-data-input-optional">GO Term Data Input (Optional)</h2>
-<h2 id="main-navigation-features">Main Navigation Features</h2>
+<h3 id="navigation-features">Navigation Features</h3>
 <p>A user can specify the focus and context graph to visualize within the “focus-and-context navigation” tab. He/she can set parameters to modify the graph display (see “further visualization adjustment”), and interactively explore the GO DAG.</p>
-<h3 id="select-ontology">Select Ontology</h3>
+<h4 id="select-ontology">Select Ontology</h4>
 <p>Select ontology in drop-down menus in “General Options” tab. AEGIS currently incorporates human and mouse ontology of biological process, cellular components, and molecular function. All relationships (e.g., “is a”, “part of”, “has part”, or “regulates”) for the GO terms were used for the cellular component ontology, but only “is a” relationships were kept for the biological process ontology.</p>
-<h3 id="select-context-and-focus-anchors">Select Context and Focus Anchors</h3>
+<h4 id="select-context-and-focus-anchors">Select Context and Focus Anchors</h4>
 <p>To add a context anchor, type the GO term name (e.g. biological_process) or GO ID (e.g. GO: 0008150) into the search box next to “Context Anchors” tab. GO term names can be autocompleted. After selecting context anchors and context options, click refresh button to update context graph.</p>
 <p>There are three ways to add focus anchors in AEGIS: (1) type in GO term name or GO ID into the search box next to “Focus Anchors” tab (2) Double click a node in focus graph (3) Double click leveled “+” sign next to context graph.</p>
-<h3 id="context-graph-options">Context Graph Options</h3>
+<h4 id="context-graph-options">Context Graph Options</h4>
 <p>The context anchors can be either waypoint anchors or root anchors. If the context anchors are waypoint anchors, the context graph includes all their descendents and ancestors. If they are root anchors, the context graph will include only their descendents (see “visualization concept”). Select context anchor types in “anchor type” drop down menu.</p>
 <p>The context graph can be filtered to include only GO terms whose node sizes fall in a particular range. Specify a range of node sizes in the “node size” tab, click refresh button, the context graph will only include GO terms that are within this range.</p>
 <p>The context graph can be refined by clicking the refine button. If the user selects the refined context graph, all nodes that shares the same gene sets as their children will be removed, their edges will be redirected to nodes that inherits their gene sets.</p>
 <p>The focus anchors can be either waypoint anchors or leaf anchors. If the focus anchors are waypoint anchors, the focus graph includes all their descendents and ancestors. If they are leaf anchors, the focus graph will include only their parents. (see “visualization concept”, “context graph options”). Select anchor type in corresponding drop-down menu.</p>
 <p>Set “Maximum anchor” to adjust maximum number of focus anchors that can be included in the focus graph. If current number of focus anchors is 4 and maximum anchor is set to be 4, adding another focus anchor will force the first focus anchor to be removed.</p>
-<h3 id="layout-options">Layout Options</h3>
+<h4 id="layout-options">Layout Options</h4>
 <p>After selecting anchors, the user can choose graphical layout for the focus graph in the layout option drop-down menu. (see “visualization concept: buoyant layout”)</p>
-<h3 id="interaction-on-the-focus-graph">Interaction on the Focus Graph</h3>
+<h4 id="interaction-on-the-focus-graph">Interaction on the Focus Graph</h4>
 <p>Figure above shows the initial graph display from AEGIS. On the left is the focus graph, nodes are placed at levels according to specified layout option (see “layout option”). Focus anchors are circled in aqua. Level node counts are shown at left the of focus graph. On the right is the context graph which is a bar chart of level node counts in the context graph.</p>
 <p>Hover mouse over a node to view the GO term information in the information board above.
 It also highlights relatives of the node, parents and children in dark red and others in red.</p>
@@ -206,6 +217,12 @@ It also highlights relatives of the node, parents and children in dark red and o
 <p>Double click a node to add it to focus anchors.
 If the node is a prolific node [visualization concept], double clicking will also display its children.</p>
 <p>Double click leveled “+” sign next to the context graph draws a random node in the context graph to be focus anchor.</p>
+<h2 id="go-term-data-input-optional">GO Term Data Input (Optional)</h2>
+<p>A user can upload GO terms as focus or context anchors in the “Data upload” section. The user can upload either focus or context anchors or both. When only focus anchors are specified, the context anchors will be initialized as the ontology roots. When only context anchors are specified, the focus anchors will be randomly initialized. When both are specified, only valid focus anchors within the specified context graph will be used.</p>
+<p>To upload a GO term file, click “Data Upload” to expand data upload box.</p>
+<p>Click “Choose File” button to upload GO terms. The required format is a .txt or .csv file, with one GO ID (e.g., GO: 0008150) per line. An example file that can be found at “aegis/data/great_srf_example.txt”, which is uploaded as context anchors here. After file selection, click on refresh button, a green arrow appears if GO term file has been uploaded successfully.</p>
+<p>After uploading GO terms, the user need to choose the ontology and species in in “General Options” panel. For this example, “human cellular component” ontology is selected. Click refresh button after selecting desired ontology, a green arrow should appear if ontology is specified correctly. All the uploaded GO terms will appear in the box below. Otherwise, error message “None of the context anchors were identified in the current ontology. Perhaps the wrong ontology was selected” will appear.</p>
+<p>Click “Continue Navigation” button to expand focus and context graphs.  If no data is uploaded, click “focus-and-context anchor navigation” to start GO exploration.</p>
 <h2 id="gene-set-selection-optional">Gene Set Selection (Optional)</h2>
 <h2 id="power-analysis-and-simulation">Power Analysis and Simulation</h2></div>
         </div>
