@@ -119,11 +119,11 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#visualization-strategy">Visualization Strategy</a></li>
-            <li><a href="#main-visualization-panel">Main Visualization Panel</a></li>
+        <li class="main active"><a href="#visualization-principles">Visualization Principles</a></li>
             <li><a href="#focus-and-context-graphs">Focus and Context Graphs</a></li>
-            <li><a href="#root-bound-leaf-bound-and-buoyant-layouts">Root-bound, Leaf-bound and Buoyant Layouts</a></li>
-            <li><a href="#other-concepts">Other Concepts</a></li>
+            <li><a href="#different-graph-layouts">Different Graph Layouts</a></li>
+        <li class="main "><a href="#visualization-panel-and-options">Visualization Panel and Options</a></li>
+            <li><a href="#terminology-and-concepts">Terminology and Concepts</a></li>
         <li class="main "><a href="#go-term-data-input-optional">GO Term Data Input (Optional)</a></li>
         <li class="main "><a href="#main-navigation-features">Main Navigation Features</a></li>
             <li><a href="#select-ontology">Select Ontology</a></li>
@@ -131,24 +131,21 @@
             <li><a href="#context-graph-options">Context Graph Options</a></li>
             <li><a href="#layout-options">Layout Options</a></li>
             <li><a href="#interaction-on-the-focus-graph">Interaction on the Focus Graph</a></li>
-        <li class="main "><a href="#visualization-customization">Visualization Customization</a></li>
         <li class="main "><a href="#gene-set-selection-optional">Gene Set Selection (Optional)</a></li>
         <li class="main "><a href="#power-analysis-and-simulation">Power Analysis and Simulation</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h2 id="visualization-strategy">Visualization Strategy</h2>
-<h3 id="main-visualization-panel">Main Visualization Panel</h3>
-<p>The following is the common graphical interface used in AEGIS. It consists
-several panels that can allow a user to customize the GO directed acyclic
-graph (DAG).</p>
-<p><img src="../img/fig_panel.png" width="100%"/></p>
+<h2 id="visualization-principles">Visualization Principles</h2>
 <h3 id="focus-and-context-graphs">Focus and Context Graphs</h3>
 <p>AEGIS visualizes the GO graph based on the idea of a context and a focus graph.
 The following figure illustrates this concept, you can also find detailed explanation
 in our <a href="../tutorial">video demos</a>.</p>
-<p><img src="../img/suppfig_allfocuscontext.png" width="90%"/></p>
+<div class="img-block">
+    <img src="../img/suppfig_allfocuscontext.png" width="90%"/>
+</div>
+
 <p>In a GO DAG, each node represents a GO term and each link represents a parent child relationship.
 The context graph (highlighted with red nodes above) is sub-DAG of the full DAG,
 based on context anchors (with pink borders).
@@ -161,11 +158,22 @@ if an anchor is a leaf anchor, only its parents will be included.
 For our visualization (on the right), the context graph is represented via a silhouette view,
 only indicating the number of nodes in each level.
 The focus graph is represented as a bone fide graph with detailed links and nodes.</p>
-<h3 id="root-bound-leaf-bound-and-buoyant-layouts">Root-bound, Leaf-bound and Buoyant Layouts</h3>
-<p><img src="../img/fig_buoyant.png" width="90%"/></p>
-<p>The root-bound layout places each node at levels based on their longest distance to the root; the leaf-bound layout places them based on their longest distance to the leaves. Both of these options preserving a topological constraint where each parent node is higher than its children, and minimizes the number of levels in the DAG.</p>
+<h3 id="different-graph-layouts">Different Graph Layouts</h3>
+<div class="img-block">
+    <img src="../img/fig_buoyant.png" width="90%"/>
+</div>
+
+<p>The root-bound layout places each node at levels based on their longest distance to the root; the leaf-bound layout places them based on their longest distance to the leaves. Both of these options preserve a topological constraint where each parent node is higher than its children, and minimizes the number of levels in the DAG.</p>
 <p>The buoyant layout preserves not only the topological constraint, but also factors in the gene annotations, such that a node with fewer annotated genes is placed no higher than that with more genes. The buoyant layout is powered by our bubble-float algorithm. The leaf bound layout places each node at levels based on their longest distance to any of the leaves.</p>
-<h3 id="other-concepts">Other Concepts</h3>
+<hr />
+<h2 id="visualization-panel-and-options">Visualization Panel and Options</h2>
+<p>The following is the common graphical interface used in AEGIS. It consists
+several panels that can allow a user to customize the GO DAG.</p>
+<div class="img-block">
+    <img src="../img/fig_panel.png" width="100%"/>
+</div>
+
+<h3 id="terminology-and-concepts">Terminology and Concepts</h3>
 <p>AEGIS also introduces other concepts to enhance display and facilitate interpretation.
 You can select these options in the “display” panel.</p>
 <h4 id="prolific-node">Prolific node</h4>
@@ -198,7 +206,6 @@ It also highlights relatives of the node, parents and children in dark red and o
 <p>Double click a node to add it to focus anchors.
 If the node is a prolific node [visualization concept], double clicking will also display its children.</p>
 <p>Double click leveled “+” sign next to the context graph draws a random node in the context graph to be focus anchor.</p>
-<h2 id="visualization-customization">Visualization Customization</h2>
 <h2 id="gene-set-selection-optional">Gene Set Selection (Optional)</h2>
 <h2 id="power-analysis-and-simulation">Power Analysis and Simulation</h2></div>
         </div>

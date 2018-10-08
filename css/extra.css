@@ -6,6 +6,13 @@
     margin: 0 auto;
 }
 
+.img-block {
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    border-width: 0;
+}
+
 .go-block {
     width: 450px;
     display: block;
