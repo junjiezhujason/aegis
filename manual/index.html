@@ -147,18 +147,23 @@ in our <a href="../tutorial">video demos</a>.</p>
 </div>
 
 <p>In a GO DAG, each node represents a GO term and each link represents a parent child relationship.
-The context graph (highlighted with red nodes above) is sub-DAG of the full DAG, based on context anchors (with pink borders).
+The context graph (highlighted with red nodes above) is sub-DAG of the full DAG,
+based on context anchors (with pink borders).
 The focus graph (highlighted with blue nodes above) is a sub-DAG of the context graph.
 It is similarly selected based on focus anchors (with aqua borders).
 The context and focus anchors can be of three types: waypoint, root or leaf.
 If an anchor is a waypoint anchor, all of its ancestors and descendants will be included;
 if an anchor is a root anchor, only its descendants will be included;
-if an anchor is a leaf anchor, only its parents will be included.</p>
-<p>For our visualization (on the right), the context graph is represented via a silhouette view,
+if an anchor is a leaf anchor, only its parents will be included.
+For our visualization (on the right), the context graph is represented via a silhouette view,
 only indicating the number of nodes in each level.
 The focus graph is represented as a bone fide graph with detailed links and nodes.</p>
 <h3 id="buoyant-layout-vs-root-bound-layout-for-the-focus-graph">Buoyant Layout vs. Root-bound Layout for the Focus Graph</h3>
 <p>The root-bound layout places each node at levels based on their longest distance to the root, preserving a topological constraint where each parent node is higher than its children. The buoyant layout preserves not only the topological constraint, but also factors in the gene annotations, such that a node with fewer annotated genes is placed no higher than that with more genes. The buoyant layout is powered by our bubble-float algorithm. The leaf bound layout places each node at levels based on their longest distance to any of the leaves.</p>
+<div class="story-block">
+    <img src="../img/fig_bouyant.pdf" width="100%"/>
+</div>
+
 <h3 id="other-concepts">Other Concepts</h3>
 <p>AEGIS also introduces other concepts to enhance display and facilitate interpretation.
 You can select these options in the “display” panel.</p>
