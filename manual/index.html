@@ -124,7 +124,7 @@
             <li><a href="#different-graph-layouts">Different Graph Layouts</a></li>
         <li class="main "><a href="#visualization-panel-and-options">Visualization Panel and Options</a></li>
             <li><a href="#full-and-lite-versions">Full and Lite Versions</a></li>
-            <li><a href="#main-interface">Main Interface</a></li>
+            <li><a href="#main-graphical-interface">Main Graphical Interface</a></li>
             <li><a href="#terminology-and-concepts">Terminology and Concepts</a></li>
             <li><a href="#navigation-features">Navigation Features</a></li>
         <li class="main "><a href="#go-term-data-input-optional">GO Term Data Input (Optional)</a></li>
@@ -178,7 +178,7 @@ the lite version and the full version.</p>
 <div class="img-block">
     <img src="../img/header_lite.png" width="100%"/>
 </div></p>
-<h3 id="main-interface">Main Interface</h3>
+<h3 id="main-graphical-interface">Main Graphical Interface</h3>
 <p>The following is the common graphical interface used in AEGIS. It consists
 several panels.</p>
 <div class="img-block">
@@ -190,14 +190,28 @@ options can vary based on which application of AEGIS a user chooses.</p>
 <p>Next, we will elaborate on what some of the terminologies mean and how to update
 the focus and context graphs using our options.</p>
 <h3 id="terminology-and-concepts">Terminology and Concepts</h3>
-<p>AEGIS also introduces other concepts to enhance display and facilitate interpretation.
-You can select these options in the “display” panel.</p>
-<h4 id="prolific-node">Prolific node</h4>
-<p>A GO term is in the prolific set if only its immediate children are displayed because it has too many descendants.
-A prolific node is highlighted in orange border. Double click a prolific node to set it as a focus anchor, then all its descendants will be displayed.</p>
-<h4 id="outer-focus-anchor">Outer focus anchor</h4>
-<p>A focus anchor is not an outer focus anchor if removing it does not change the current focus graph.
-For example, only nodes that are circled in aqua are outer focus anchors in the figure below.</p>
+<p>AEGIS also introduces some new concepts to facilitate interpretation and interactions.</p>
+<h4 id="focus-graph-context-graphs-and-their-anchors">focus graph, context graphs and their anchors</h4>
+<p>The focus and context graphs and their anchors are described <a href="#focus-and-context-graphs">here</a>.</p>
+<h4 id="refinement-of-context">refinement of context</h4>
+<p>If the "refine" option is selected for the context graph, then our internal
+algorithm will filter out nodes that have at least one child that shares the
+exact gene annotations. One advantage of this approach is to reduce the number
+of repetitive hypotheses during hypotheses testing and multiplicity correction.</p>
+<h4 id="prolific-node-and-focus-descendant-threshold">prolific node and focus descendant threshold</h4>
+<p>A GO term is a prolific node if the number of its children exceeds a threshold.
+We refer to the threshold as the "focus descendant threshold". For all the non-anchor
+nodes in the focus graph, we hide all the children (and possible descendants) if they
+are classified as prolific nodes. This feature aims to limit the display from being overcrowded.
+Note that the focus descendant threshold is adjustable.</p>
+<h4 id="outer-focus-anchors">outer focus anchors</h4>
+<p>The outer focus anchors are the least redundant concepts among the selected
+focus anchors. In other words, if a focus anchor is not an outer focus anchor,
+then it must have at least one descendant that is a focus anchor -
+removing this node typically does not change the focus graph display.</p>
+<h4 id="clustered-anchors">clustered anchors</h4>
+<h4 id="gap-break">gap break</h4>
+<h4 id="binder-plot-for-focus-graph">binder plot for focus graph</h4>
 <h3 id="navigation-features">Navigation Features</h3>
 <p>A user can specify the focus and context graph to visualize within the “focus-and-context navigation” tab. He/she can set parameters to modify the graph display (see “further visualization adjustment”), and interactively explore the GO DAG.</p>
 <h4 id="select-ontology">Select Ontology</h4>
