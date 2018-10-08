@@ -119,13 +119,11 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#visualization-principles">Visualization Principles</a></li>
-            <li><a href="#focus-and-context-graphs">Focus and Context Graphs</a></li>
-            <li><a href="#different-graph-layouts">Different Graph Layouts</a></li>
-        <li class="main "><a href="#visualization-panel-and-options">Visualization Panel and Options</a></li>
+        <li class="main active"><a href="#visualization-panel-and-options">Visualization Panel and Options</a></li>
             <li><a href="#full-and-lite-versions">Full and Lite Versions</a></li>
             <li><a href="#main-graphical-interface">Main Graphical Interface</a></li>
             <li><a href="#terminology-and-concepts">Terminology and Concepts</a></li>
+            <li><a href="#root-bound-leaf-bound-and-buoyant-layouts">root-bound, leaf-bound and buoyant layouts</a></li>
             <li><a href="#navigation-features">Navigation Features</a></li>
         <li class="main "><a href="#go-term-data-input-optional">GO Term Data Input (Optional)</a></li>
         <li class="main "><a href="#gene-set-selection-optional">Gene Set Selection (Optional)</a></li>
@@ -134,35 +132,6 @@
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h2 id="visualization-principles">Visualization Principles</h2>
-<h3 id="focus-and-context-graphs">Focus and Context Graphs</h3>
-<p>AEGIS visualizes the GO graph based on the idea of a context and a focus graph.
-The following figure illustrates this concept, you can also find detailed explanation
-in our <a href="../tutorial">video demos</a>.</p>
-<div class="img-block">
-    <img src="../img/suppfig_allfocuscontext.png" width="80%"/>
-</div>
-
-<p>In a GO DAG, each node represents a GO term and each link represents a parent child relationship.
-The context graph (highlighted with red nodes above) is sub-DAG of the full DAG,
-based on context anchors (with pink borders).
-The focus graph (highlighted with blue nodes above) is a sub-DAG of the context graph.
-It is similarly selected based on focus anchors (with aqua borders).</p>
-<p>The context and focus anchors can be of three types: waypoint, root or leaf.
-If an anchor is a waypoint anchor, all of its ancestors and descendants will be included;
-if an anchor is a root anchor, only its descendants will be included;
-if an anchor is a leaf anchor, only its parents will be included.
-For our visualization (on the right), the context graph is represented via a silhouette view,
-only indicating the number of nodes in each level.
-The focus graph is represented as a bone fide graph with detailed links and nodes.</p>
-<h3 id="different-graph-layouts">Different Graph Layouts</h3>
-<div class="img-block">
-    <img src="../img/fig_buoyant.png" width="80%"/>
-</div>
-
-<p>The root-bound layout places each node at levels based on their longest distance to the root; the leaf-bound layout places them based on their longest distance to the leaves. Both of these options preserve a topological constraint where each parent node is higher than its children, and minimizes the number of levels in the DAG.</p>
-<p>The buoyant layout preserves not only the topological constraint, but also factors in the gene annotations, such that a node with fewer annotated genes is placed no higher than that with more genes. The buoyant layout is powered by our bubble-float algorithm. The leaf bound layout places each node at levels based on their longest distance to any of the leaves.</p>
-<hr />
 <h2 id="visualization-panel-and-options">Visualization Panel and Options</h2>
 <h3 id="full-and-lite-versions">Full and Lite Versions</h3>
 <p>There are two options to explore the visualization by AEGIS:
@@ -192,7 +161,32 @@ the focus and context graphs using our options.</p>
 <h3 id="terminology-and-concepts">Terminology and Concepts</h3>
 <p>AEGIS also introduces some new concepts to facilitate interpretation and interactions.</p>
 <h4 id="focus-graph-context-graphs-and-their-anchors">focus graph, context graphs and their anchors</h4>
-<p>The focus and context graphs and their anchors are described <a href="#focus-and-context-graphs">here</a>.</p>
+<p>AEGIS visualizes the GO graph based on the idea of a context and a focus graph.
+The following figure illustrates this concept, you can also find detailed explanation
+in our <a href="../tutorial">video demos</a>.</p>
+<div class="img-block">
+    <img src="../img/suppfig_allfocuscontext.png" width="80%"/>
+</div>
+
+<p>In a GO DAG, each node represents a GO term and each link represents a parent child relationship.
+The context graph (highlighted with red nodes above) is sub-DAG of the full DAG,
+based on context anchors (with pink borders).
+The focus graph (highlighted with blue nodes above) is a sub-DAG of the context graph.
+It is similarly selected based on focus anchors (with aqua borders).</p>
+<p>The context and focus anchors can be of three types: waypoint, root or leaf.
+If an anchor is a waypoint anchor, all of its ancestors and descendants will be included;
+if an anchor is a root anchor, only its descendants will be included;
+if an anchor is a leaf anchor, only its parents will be included.
+For our visualization (on the right), the context graph is represented via a silhouette view,
+only indicating the number of nodes in each level.
+The focus graph is represented as a bone fide graph with detailed links and nodes.</p>
+<h3 id="root-bound-leaf-bound-and-buoyant-layouts">root-bound, leaf-bound and buoyant layouts</h3>
+<div class="img-block">
+    <img src="../img/fig_buoyant.png" width="80%"/>
+</div>
+
+<p>The root-bound layout places each node at levels based on their longest distance to the root; the leaf-bound layout places them based on their longest distance to the leaves. Both of these options preserve a topological constraint where each parent node is higher than its children, and minimizes the number of levels in the DAG.</p>
+<p>The buoyant layout preserves not only the topological constraint, but also factors in the gene annotations, such that a node with fewer annotated genes is placed no higher than that with more genes. The buoyant layout is powered by our bubble-float algorithm. The leaf bound layout places each node at levels based on their longest distance to any of the leaves.</p>
 <h4 id="refinement-of-context">refinement of context</h4>
 <p>If the "refine" option is selected for the context graph, then our internal
 algorithm will filter out nodes that have at least one child that shares the
