@@ -5,23 +5,6 @@ This is the documentation webpage for AEGIS (Augmented Exploration of the GO wit
 
 ---
 
-## Getting Started
-
-Accompanied by our
-[tutorials](./tutorial),
-there are two options to explore the visualization by AEGIS:
-the lite version and the full version.
-
-### The lite version
-
-A light weight version of AEGIS is available as a web interface [here](https://aegis-viz.appspot.com/). It includes the minimal interactive features with some examples for simple demonstrations. The lite version does not require installation and serves as an introduction to our visualization concepts.
-
-### The full version
-
-The full version includes all features, including data upload and power analysis functions. This version is meant to be [installed](./install) locally and include more customization and computationally intensive processes. The code is [open source]() with [api documentation](./api) so advanced pipelines can customize it to their needs.
-
----
-
 ## Behind the Name
 
 According to [Greek Mythology](http://greekmythology.wikia.com/wiki/Aegis), Perseus used Athena’s shield to look at Medusa's reflection without being petrified.
@@ -39,6 +22,25 @@ knowledgeable, or benevolent source. By combining visualization with the rich kn
       by Houasse René Antoine
       (<a href="https://en.muzeo.com/art-print/minerve-remettant-a-persee-son-bouclier-avec-lequel-il-doit-combattre-la-meduse/houasse">Image Source</a>)
 </div>
+
+
+---
+
+## Getting Started
+
+Accompanied by our
+[tutorials](./tutorial),
+there are two options to explore the visualization by AEGIS:
+the lite version and the full version.
+
+### The lite version
+
+A light weight version of AEGIS is available as a web interface [here](https://aegis-viz.appspot.com/). It includes the minimal interactive features with some examples for simple demonstrations. The lite version does not require installation and serves as an introduction to our visualization concepts.
+
+### The full version
+
+The full version includes all features, including data upload and power analysis functions. This version is meant to be [installed](./install) locally and include more customization and computationally intensive processes. The code is [open source]() with [api documentation](./api) so advanced pipelines can customize it to their needs.
+
 
 ---
 
