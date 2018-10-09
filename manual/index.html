@@ -123,7 +123,7 @@
             <li><a href="#full-and-lite-versions">Full and Lite Versions</a></li>
             <li><a href="#main-graphical-interface">Main Graphical Interface</a></li>
             <li><a href="#terminology-and-concepts">Terminology and Concepts</a></li>
-            <li><a href="#root-bound-leaf-bound-and-buoyant-layouts">root-bound, leaf-bound and buoyant layouts</a></li>
+            <li><a href="#root-bound-leaf-bound-and-buoyant-layouts">Root-bound, leaf-bound and buoyant layouts</a></li>
             <li><a href="#navigation-features">Navigation Features</a></li>
         <li class="main "><a href="#go-term-data-input-optional">GO Term Data Input (Optional)</a></li>
         <li class="main "><a href="#gene-set-selection-optional">Gene Set Selection (Optional)</a></li>
@@ -136,13 +136,11 @@
 <h3 id="full-and-lite-versions">Full and Lite Versions</h3>
 <p>There are two options to explore the visualization by AEGIS:
 the lite version and the full version.</p>
-<h4 id="the-full-version">The full version</h4>
 <p>The full version includes all features, including data upload and power analysis functions.</p>
 <div class="img-block">
     <img src="../img/header_core.png" width="100%"/>
 </div>
 
-<h4 id="the-lite-version">The lite version</h4>
 <p>A light weight version includes the minimal interactive features with some examples for simple demonstrations.
 <div class="img-block">
     <img src="../img/header_lite.png" width="100%"/>
@@ -159,8 +157,8 @@ options can vary based on which application of AEGIS a user chooses.</p>
 <p>Next, we will elaborate on what some of the terminologies mean and how to update
 the focus and context graphs using our options.</p>
 <h3 id="terminology-and-concepts">Terminology and Concepts</h3>
-<p>AEGIS also introduces some new concepts to facilitate interpretation and interactions.</p>
-<h4 id="focus-graph-context-graphs-and-their-anchors">focus graph, context graphs and their anchors</h4>
+<p>AEGIS also introduces some new concepts that facilitate interpretation and interactions.</p>
+<h4 id="focus-graph-context-graphs-and-their-anchors">Focus graph, context graphs and their anchors</h4>
 <p>AEGIS visualizes the GO graph based on the idea of a context and a focus graph.
 The following figure illustrates this concept, you can also find detailed explanation
 in our <a href="../tutorial">video demos</a>.</p>
@@ -180,32 +178,49 @@ if an anchor is a leaf anchor, only its parents will be included.
 For our visualization (on the right), the context graph is represented via a silhouette view,
 only indicating the number of nodes in each level.
 The focus graph is represented as a bone fide graph with detailed links and nodes.</p>
-<h3 id="root-bound-leaf-bound-and-buoyant-layouts">root-bound, leaf-bound and buoyant layouts</h3>
+<h3 id="root-bound-leaf-bound-and-buoyant-layouts">Root-bound, leaf-bound and buoyant layouts</h3>
 <div class="img-block">
     <img src="../img/fig_buoyant.png" width="80%"/>
 </div>
 
 <p>The root-bound layout places each node at levels based on their longest distance to the root; the leaf-bound layout places them based on their longest distance to the leaves. Both of these options preserve a topological constraint where each parent node is higher than its children, and minimizes the number of levels in the DAG.</p>
 <p>The buoyant layout preserves not only the topological constraint, but also factors in the gene annotations, such that a node with fewer annotated genes is placed no higher than that with more genes. The buoyant layout is powered by our bubble-float algorithm. The leaf bound layout places each node at levels based on their longest distance to any of the leaves.</p>
-<h4 id="refinement-of-context">refinement of context</h4>
+<h4 id="refinement-of-context">Refinement of context</h4>
 <p>If the "refine" option is selected for the context graph, then our internal
 algorithm will filter out nodes that have at least one child that shares the
 exact gene annotations. One advantage of this approach is to reduce the number
 of repetitive hypotheses during hypotheses testing and multiplicity correction.</p>
-<h4 id="prolific-node-and-focus-descendant-threshold">prolific node and focus descendant threshold</h4>
+<h4 id="prolific-node-and-focus-descendant-threshold">Prolific node and focus descendant threshold</h4>
 <p>A GO term is a prolific node if the number of its children exceeds a threshold.
 We refer to the threshold as the "focus descendant threshold". For all the non-anchor
 nodes in the focus graph, we hide all the children (and possible descendants) if they
 are classified as prolific nodes. This feature aims to limit the display from being overcrowded.
 Note that the focus descendant threshold is adjustable.</p>
-<h4 id="outer-focus-anchors">outer focus anchors</h4>
+<h4 id="outer-focus-anchors">Outer focus anchors</h4>
 <p>The outer focus anchors are the least redundant concepts among the selected
 focus anchors. In other words, if a focus anchor is not an outer focus anchor,
 then it must have at least one descendant that is a focus anchor -
 removing this node typically does not change the focus graph display.</p>
-<h4 id="clustered-anchors">clustered anchors</h4>
-<h4 id="gap-break">gap break</h4>
-<h4 id="binder-plot-for-focus-graph">binder plot for focus graph</h4>
+<h4 id="clustered-anchors">Clustered anchors</h4>
+<p>For the focus graph, you have the option to group nodes based on the focus
+anchors such that it is easier to see the grouping structure among the nodes.
+The grouping is based on our customized topological sorting algorithm.</p>
+<div class="img-block">
+    <img src="../img/cluster_nodes.png" width="100%"/>
+</div>
+
+<h4 id="gap-break">Gap break</h4>
+<p>For the buoyant layout specifically, the gap break is the maximum tolerance for
+the number of annotations between two consecutive nodes in the same level.
+It is recommended to use a larger gap break when there are fewer nodes,
+and smaller when there are more nodes.</p>
+<h4 id="binder-plot-for-focus-graph">Binder plot for focus graph</h4>
+<p>For the buoyant layout specifically, the binder plot constructs a linear representation
+of the nodes for the focus graph. The edges follow the Sugiyama-style graph drawing rules.</p>
+<div class="img-block">
+    <img src="../img/example_binder.png" width="100%"/>
+</div>
+
 <h3 id="navigation-features">Navigation Features</h3>
 <p>A user can specify the focus and context graph to visualize within the “focus-and-context navigation” tab. He/she can set parameters to modify the graph display (see “further visualization adjustment”), and interactively explore the GO DAG.</p>
 <h4 id="select-ontology">Select Ontology</h4>
