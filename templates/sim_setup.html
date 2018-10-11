@@ -178,9 +178,33 @@
           </div>
           {% endfor %}
         </form>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="colpsible-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+          Launch Simulation
+        </a>
+      </h4>
+    </div>
+    <div id="collapseFour" class="panel-collapse collapse">
+      <div class="panel-body">
         <div>
-          <button onclick="submitSim()" class="btn btn-primary">
-            Launch Simulation
+          <button onclick="generateJobID()" class="btn btn-primary">
+            Generate Job ID
+          </button>
+          <input style="width: 200px"
+                      type="text"
+                      class="form-control job-id-input"
+                      id="job_id_input"
+                      readonly>
+          <button onclick="submitSim()"
+                  disabled
+                  class="btn btn-success"
+                  id="submit_btn">
+            Launch
           </button>
         </div>
       </div>

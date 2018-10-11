@@ -430,22 +430,34 @@ def dag_setup_focus():
     )
     return response
 
+
 # -----------------------------
 # simulation-specific functions
 # -----------------------------
+@app.route('/generate_job_id', methods=['GET'])
+def generate_job_id():
+    job_id = get_job_id()
+    # retrieve relevant annotations
+    out_data = {"job_id": job_id,
+                "path": os.path.join(MAIN_FOLDER, "sim", job_id)}
+    response = app.response_class(
+        response=flask.json.dumps(out_data),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
 @app.route('/simulation_launch', methods=['POST'])
 def simulation_launch():
     form_data = flask.request.get_json()
     param_dict = {}
     for entry in form_data:
-        key = entry["name"].split("option_")[1]
-        val = entry["value"]
-        param_dict[key] = val
-    print(param_dict)
+        if entry.startswith("option_"):
+            key = entry.split("option_")[1]
+            param_dict[key] = form_data[entry]
     # TODO: save param_dict appropriately
     sim_params = get_default_params("sim_params_sweep_sample")
     test_params = get_default_params("test_params")
-
     # update the form data
     for key in param_dict:
         if key in sim_params:
@@ -467,8 +479,7 @@ def simulation_launch():
     stat = dag.main_statistician
     stat.set_test_attr_from_dict(test_params)
     stat.setup_simulation_oneway(sim_params)
-
-    job_id = get_job_id()
+    job_id = form_data["job_id"]
     dag.launch_simulation_pipeline(job_id, cleanup=True)
 
     # retrieve relevant annotations
