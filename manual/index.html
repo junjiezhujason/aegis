@@ -1,137 +1,917 @@
+
+
+
+
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
-        <meta name="author" content="Junjie (Jason) Zhu">
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="Project documentation for AEGIS">
+      
+      
         <link rel="canonical" href="http://aegis.stanford.edu/manual/">
-        <link rel="shortcut icon" href="../img/favicon.ico">
+      
+      
+        <meta name="author" content="Junjie (Jason) Zhu">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0, mkdocs-material-3.0.4">
+    
+    
+      
         <title>Web Interface Manual - AEGIS Documentation</title>
-        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
-        <link href="../css/font-awesome.min.css" rel="stylesheet">
-        <link href="../css/base.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
-        <link href="../css/extra.css" rel="stylesheet">
-        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-        <script src="../js/jquery-1.10.2.min.js" defer></script>
-        <script src="../js/bootstrap-3.0.3.min.js" defer></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/django.min.js"></script>
-        <script>hljs.initHighlightingOnLoad();</script> 
-    </head>
-
-    <body>
-
-        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-            <div class="container">
-
-                <!-- Collapsed navigation -->
-                <div class="navbar-header">
-                    <!-- Expander button -->
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="..">AEGIS Documentation</a>
-                </div>
-
-                <!-- Expanded navigation -->
-                <div class="navbar-collapse collapse">
-                        <!-- Main navigation -->
-                        <ul class="nav navbar-nav">
-                            <li >
-                                <a href="..">Home</a>
-                            </li>
-                            <li class="dropdown active">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Guide <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    
-<li >
-    <a href="../install/">Installation</a>
-</li>
-                                    
-<li >
-    <a href="../tutorial/">Video Tutorials</a>
-</li>
-                                    
-<li class="active">
-    <a href="./">Web Interface Manual</a>
-</li>
-                                    
-<li >
-    <a href="../api/">API Documentation</a>
-</li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Jupyter Notebooks <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    
-<li >
-    <a href="../notebooks/aegis_single_cell_example.html">Single Cell RNA-seq Application</a>
-</li>
-                                    
-<li >
-    <a href="../notebooks/aegis_benchmark_part1.html">Benchmark for Testing: Part 1</a>
-</li>
-                                    
-<li >
-    <a href="../notebooks/aegis_benchmark_part2.html">Benchmark for Testing: Part 2</a>
-</li>
-                                </ul>
-                            </li>
-                        </ul>
-
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Search
-                            </a>
-                        </li>
-                            <li >
-                                <a rel="next" href="../tutorial/">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li >
-                                <a rel="prev" href="../api/">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://github.com/junjiezhujason/aegis"><i class="fa fa-github"></i> GitHub</a>
-                            </li>
-                    </ul>
-                </div>
-            </div>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application.451f80e5.css">
+      
+      
+    
+    
+      <script src="../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
+    viewBox="0 0 416 448" id="__github">
+  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
+        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
+        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
+        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
+        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
+        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
+        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
+        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
+        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
+        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
+        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
+        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
+        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
+        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
+        99.5z" />
+</svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="../#visualization-panel-and-options" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="http://aegis.stanford.edu" title="AEGIS Documentation" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                AEGIS Documentation
+              </span>
+              <span class="md-header-nav__topic">
+                Web Interface Manual
+              </span>
+            
+          
         </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
 
-        <div class="container">
-                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
-    <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#visualization-panel-and-options">Visualization Panel and Options</a></li>
-            <li><a href="#full-and-lite-versions">Full and Lite Versions</a></li>
-            <li><a href="#main-graphical-interface">Main Graphical Interface</a></li>
-            <li><a href="#terminology-and-concepts">Terminology and Concepts</a></li>
-            <li><a href="#navigation-features">Navigation Features</a></li>
-        <li class="main "><a href="#gene-set-selection">Gene Set Selection</a></li>
-        <li class="main "><a href="#go-term-data-input">GO Term Data Input</a></li>
-        <li class="main "><a href="#power-analysis-and-simulation">Power Analysis and Simulation</a></li>
+
+  
+
+
+  <a href="https://github.com/junjiezhujason/aegis" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="http://aegis.stanford.edu" title="AEGIS Documentation" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    AEGIS Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/junjiezhujason/aegis" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#__github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      User Guide
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        User Guide
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../install/" title="Installation" class="md-nav__link">
+      Installation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../tutorial/" title="Video Tutorials" class="md-nav__link">
+      Video Tutorials
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Web Interface Manual
+      </label>
+    
+    <a href="./" title="Web Interface Manual" class="md-nav__link md-nav__link--active">
+      Web Interface Manual
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#visualization-panel-and-options" title="Visualization Panel and Options" class="md-nav__link">
+    Visualization Panel and Options
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#full-and-lite-versions" title="Full and Lite Versions" class="md-nav__link">
+    Full and Lite Versions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main-graphical-interface" title="Main Graphical Interface" class="md-nav__link">
+    Main Graphical Interface
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminology-and-concepts" title="Terminology and Concepts" class="md-nav__link">
+    Terminology and Concepts
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#focus-graph-context-graphs-and-their-anchors" title="Focus graph, context graphs and their anchors" class="md-nav__link">
+    Focus graph, context graphs and their anchors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#root-bound-leaf-bound-and-buoyant-layouts" title="Root-bound, leaf-bound and buoyant layouts" class="md-nav__link">
+    Root-bound, leaf-bound and buoyant layouts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refinement-of-context" title="Refinement of context" class="md-nav__link">
+    Refinement of context
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prolific-node-and-focus-descendant-threshold" title="Prolific node and focus descendant threshold" class="md-nav__link">
+    Prolific node and focus descendant threshold
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outer-focus-anchors" title="Outer focus anchors" class="md-nav__link">
+    Outer focus anchors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clustered-anchors" title="Clustered anchors" class="md-nav__link">
+    Clustered anchors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gap-break" title="Gap break" class="md-nav__link">
+    Gap break
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binder-plot-for-focus-graph" title="Binder plot for focus graph" class="md-nav__link">
+    Binder plot for focus graph
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#navigation-features" title="Navigation Features" class="md-nav__link">
+    Navigation Features
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#select-ontology" title="Select Ontology" class="md-nav__link">
+    Select Ontology
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#select-context-and-focus-anchors" title="Select Context and Focus Anchors" class="md-nav__link">
+    Select Context and Focus Anchors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-graph-options" title="Context Graph Options" class="md-nav__link">
+    Context Graph Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layout-options" title="Layout Options" class="md-nav__link">
+    Layout Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interaction-on-the-focus-graph" title="Interaction on the Focus Graph" class="md-nav__link">
+    Interaction on the Focus Graph
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gene-set-selection" title="Gene Set Selection" class="md-nav__link">
+    Gene Set Selection
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#searching-for-genes" title="Searching for Genes" class="md-nav__link">
+    Searching for Genes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing-and-copying" title="Clearing and Copying" class="md-nav__link">
+    Clearing and Copying
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-time-update-of-self-contained-and-competitive-nulls" title="Real-time update of self-contained and competitive nulls" class="md-nav__link">
+    Real-time update of self-contained and competitive nulls
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go-term-data-input" title="GO Term Data Input" class="md-nav__link">
+    GO Term Data Input
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#power-analysis-and-simulation" title="Power Analysis and Simulation" class="md-nav__link">
+    Power Analysis and Simulation
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#selecting-the-testing-context" title="Selecting the Testing Context" class="md-nav__link">
+    Selecting the Testing Context
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selecting-differentially-expressed-genes" title="Selecting Differentially Expressed Genes" class="md-nav__link">
+    Selecting Differentially Expressed Genes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specifying-simulation-parameters" title="Specifying Simulation Parameters" class="md-nav__link">
+    Specifying Simulation Parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launching-the-simulation" title="Launching the Simulation" class="md-nav__link">
+    Launching the Simulation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieving-simulation-results" title="Retrieving Simulation Results" class="md-nav__link">
+    Retrieving Simulation Results
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
     </ul>
-</div></div>
-                <div class="col-md-9" role="main">
+  
+</nav>
+    
+  </li>
 
-<h2 id="visualization-panel-and-options">Visualization Panel and Options</h2>
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../api/" title="API Documentation" class="md-nav__link">
+      API Documentation
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Jupyter Notebooks
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Jupyter Notebooks
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../notebooks/aegis_single_cell_example.html" title="Single Cell RNA-seq Application" class="md-nav__link">
+      Single Cell RNA-seq Application
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../notebooks/aegis_benchmark_part1.html" title="Benchmark for Testing: Part 1" class="md-nav__link">
+      Benchmark for Testing: Part 1
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../notebooks/aegis_benchmark_part2.html" title="Benchmark for Testing: Part 2" class="md-nav__link">
+      Benchmark for Testing: Part 2
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#visualization-panel-and-options" title="Visualization Panel and Options" class="md-nav__link">
+    Visualization Panel and Options
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#full-and-lite-versions" title="Full and Lite Versions" class="md-nav__link">
+    Full and Lite Versions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main-graphical-interface" title="Main Graphical Interface" class="md-nav__link">
+    Main Graphical Interface
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminology-and-concepts" title="Terminology and Concepts" class="md-nav__link">
+    Terminology and Concepts
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#focus-graph-context-graphs-and-their-anchors" title="Focus graph, context graphs and their anchors" class="md-nav__link">
+    Focus graph, context graphs and their anchors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#root-bound-leaf-bound-and-buoyant-layouts" title="Root-bound, leaf-bound and buoyant layouts" class="md-nav__link">
+    Root-bound, leaf-bound and buoyant layouts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refinement-of-context" title="Refinement of context" class="md-nav__link">
+    Refinement of context
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prolific-node-and-focus-descendant-threshold" title="Prolific node and focus descendant threshold" class="md-nav__link">
+    Prolific node and focus descendant threshold
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outer-focus-anchors" title="Outer focus anchors" class="md-nav__link">
+    Outer focus anchors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clustered-anchors" title="Clustered anchors" class="md-nav__link">
+    Clustered anchors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gap-break" title="Gap break" class="md-nav__link">
+    Gap break
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binder-plot-for-focus-graph" title="Binder plot for focus graph" class="md-nav__link">
+    Binder plot for focus graph
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#navigation-features" title="Navigation Features" class="md-nav__link">
+    Navigation Features
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#select-ontology" title="Select Ontology" class="md-nav__link">
+    Select Ontology
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#select-context-and-focus-anchors" title="Select Context and Focus Anchors" class="md-nav__link">
+    Select Context and Focus Anchors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-graph-options" title="Context Graph Options" class="md-nav__link">
+    Context Graph Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layout-options" title="Layout Options" class="md-nav__link">
+    Layout Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interaction-on-the-focus-graph" title="Interaction on the Focus Graph" class="md-nav__link">
+    Interaction on the Focus Graph
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gene-set-selection" title="Gene Set Selection" class="md-nav__link">
+    Gene Set Selection
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#searching-for-genes" title="Searching for Genes" class="md-nav__link">
+    Searching for Genes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearing-and-copying" title="Clearing and Copying" class="md-nav__link">
+    Clearing and Copying
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-time-update-of-self-contained-and-competitive-nulls" title="Real-time update of self-contained and competitive nulls" class="md-nav__link">
+    Real-time update of self-contained and competitive nulls
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go-term-data-input" title="GO Term Data Input" class="md-nav__link">
+    GO Term Data Input
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#power-analysis-and-simulation" title="Power Analysis and Simulation" class="md-nav__link">
+    Power Analysis and Simulation
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#selecting-the-testing-context" title="Selecting the Testing Context" class="md-nav__link">
+    Selecting the Testing Context
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selecting-differentially-expressed-genes" title="Selecting Differentially Expressed Genes" class="md-nav__link">
+    Selecting Differentially Expressed Genes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specifying-simulation-parameters" title="Specifying Simulation Parameters" class="md-nav__link">
+    Specifying Simulation Parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launching-the-simulation" title="Launching the Simulation" class="md-nav__link">
+    Launching the Simulation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieving-simulation-results" title="Retrieving Simulation Results" class="md-nav__link">
+    Retrieving Simulation Results
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>Web Interface Manual</h1>
+                
+                <h2 id="visualization-panel-and-options">Visualization Panel and Options</h2>
 <h3 id="full-and-lite-versions">Full and Lite Versions</h3>
 <p>There are two options to explore the visualization by AEGIS:
 the lite version and the full version.</p>
@@ -151,10 +931,11 @@ several panels.</p>
     <img src="../img/fig_panel.png" width="100%"/>
 </div>
 
-<p>Note that in the lite version the context selection is disabled. The download
-options can vary based on which application of AEGIS a user chooses.</p>
-<p>Next, we will elaborate on what some of the terminologies mean and how to update
-the focus and context graphs using our options.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the lite version the context selection is disabled for performance reasons. You will need to <a href="../install">install</a> the full version to flexibly select the context. Further, the "Download Options" can vary based on which application of AEGIS a user chooses.</p>
+</div>
+<p>Next, we will elaborate on what some of the terminologies mean and how to update the focus and context graphs using our options.</p>
 <h3 id="terminology-and-concepts">Terminology and Concepts</h3>
 <p>AEGIS also introduces some new concepts that facilitate interpretation and interactions.</p>
 <h4 id="focus-graph-context-graphs-and-their-anchors">Focus graph, context graphs and their anchors</h4>
@@ -245,12 +1026,41 @@ If the node is a prolific node [visualization concept], double clicking will als
 <p>Double click leveled “+” sign next to the context graph draws a random node in the context graph to be focus anchor.</p>
 <h2 id="gene-set-selection">Gene Set Selection</h2>
 <p>In addition to exploring the GO DAG, a user can use focus and context visualization in AEGIS to identify gene sets that might be usefully for applications such as differential gene expression analysis and single cell benchmarking. One main application of this function is for our built-in <a href="#power-analysis-and-simulation">power analysis workflow</a>. Select gene sets in the gene selection box [need a figure here], selected genes can be easily exported, or used as input signal genes for subsequent power simulation. This section is adapted from video demo, where you can find more examples.</p>
+<h4 id="searching-for-genes">Searching for Genes</h4>
+<p>A user can directly search for the gene symbol (or ensembl ID) in the "Gene Selection" input box. Gene names can be auto-completed.
+<div class="img-block">
+    <img src="../img/select_gene.png" width="100%"/>
+</div>
+<div class="img-block">
+    <img src="../img/select_gene_2.png" width="100%"/>
+</div></p>
+<p>If you have little knowledge about gene names, the user can rely on the GO terms to select sets. They can select a number of GO terms by typing their names in the “GO selection” box to select GO terms. In this example, the GO term of interest “adult heart development”. To select “adult heart development”, type GO term name (“adult heart development”), or GO ID (“GO: 0007512”) into the search box. There is also auto-complete for the GO term name. Next, you can use the options below to randomly sample a number or a proportion of genes annotated with this GO term.</p>
+<div class="img-block">
+    <img src="../img/select_all_gene.png" width="100%"/>
+</div>
+
+<h4 id="clearing-and-copying">Clearing and Copying</h4>
+<p>A user can clear selected GO terms or selected genes individually or all at once. Click cross sign next to gene selection box to clear all terms. Click cross sign next to individual term to clear individual term. Click the clipboard sign to copy selected GO terms / genes to clipboard.</p>
+<div class="img-block">
+    <img src="../img/clipboard.png" width="30%"/>
+</div>
+
+<h4 id="real-time-update-of-self-contained-and-competitive-nulls">Real-time update of self-contained and competitive nulls</h4>
+<p>For power analysis specifically, once a user specify differentially expressed genes, they can highlight self-contained and competitive non-null terms within the current context graph in “highlight” options. Specifically, a GO term is a self-contained null if none of the genes annotated to it is differentially expressed. It is a competitive null if proportion of differentially expressed genes is less than that of the entire genome. For instance, the root node, “animal organ development” is a self-contained non-null, but it is not a competitive non-null.</p>
+<div class="img-block">
+    <img src="../img/competitive.png" width="90%"/>
+</div>
+
+<div class="img-block">
+    <img src="../img/self-contained.png" width="90%"/>
+</div>
+
 <h2 id="go-term-data-input">GO Term Data Input</h2>
+<p>As a convenient way to specify context or focus anchors, a user can upload GO terms in the “Data upload” section. The user can upload either focus or context anchors or both. When only focus anchors are specified, the context anchors will be initialized as the ontology roots. When only context anchors are specified, the focus anchors will be randomly initialized. When both are specified, only valid focus anchors within the specified context graph will be used.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Currently, this option is only supported locally in the full version of AEGIS, and not in the lite version on the web server.</p>
+<p>Currently, this data input functionality is only supported locally in the full version of AEGIS (which requires a simple <a href="../install">installation</a>), and not in the lite version on the web server.</p>
 </div>
-<p>A user can upload GO terms as focus or context anchors in the “Data upload” section. The user can upload either focus or context anchors or both. When only focus anchors are specified, the context anchors will be initialized as the ontology roots. When only context anchors are specified, the focus anchors will be randomly initialized. When both are specified, only valid focus anchors within the specified context graph will be used.</p>
 <div class="img-block">
     <img src="../img/data_upload_section.png" width="100%"/>
 </div>
@@ -268,86 +1078,157 @@ If the node is a prolific node [visualization concept], double clicking will als
 
 <p>Click “Continue Navigation” button to expand focus and context graphs.  If no data is uploaded, click “focus-and-context anchor navigation” to start GO exploration.</p>
 <h2 id="power-analysis-and-simulation">Power Analysis and Simulation</h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Currently, this option is only supported locally in the full version of AEGIS, and not in the lite version on the web server.</p>
-</div></div>
-        </div>
-
-        <footer class="col-md-12">
-            <hr>
-            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
-        </footer>
-        <script>
-            var base_url = "..",
-                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
-        </script>
-        <script src="../js/base.js" defer></script>
-        <script src="../search/main.js" defer></script>
-
-        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
-            </div>
-            <div class="modal-body">
-                <p>
-                    From here you can search these documents. Enter
-                    your search terms below.
-                </p>
-                <form role="form">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
-                    </div>
-                </form>
-                <div id="mkdocs-search-results"></div>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-    </div>
-</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
-            </div>
-            <div class="modal-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="width: 20%;">Keys</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Open this help</td>
-                  </tr>
-                  <tr>
-                    <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Next page</td>
-                  </tr>
-                  <tr>
-                    <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Previous page</td>
-                  </tr>
-                  <tr>
-                    <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Search</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-    </div>
+<p>A user can perform power simulation for potential study design in the full version of AEGIS.
+Detailed explanation of power analysis workflow can be found in Section 5.1 in our manuscript. Here is an over view of the system.</p>
+<div class="img-block">
+    <img src="../img/fig_workflow.png" width="100%"/>
 </div>
 
-    </body>
+<p>To enter the simulation and power analysis workflow, go to “Power analysis setup” tab within the main panel.</p>
+<div class="img-block">
+    <img src="../img/sim_setup_page.png" width="100%"/>
+</div>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently, this power analysis functionality is only supported locally in the full version of AEGIS (which requires a simple <a href="../install">installation</a>), and not in the lite version on the web server.</p>
+</div>
+<h4 id="selecting-the-testing-context">Selecting the Testing Context</h4>
+<p>First, the user needs to select the testing context. The number of nodes to test is conveniently defined by the context graph. Thus, we also recommend a user to turn on the option to refine the graph to remove redundant identical tests. By default, the context is the entire ontology with refined nodes.</p>
+<div class="img-block">
+    <img src="../img/context_for_power.png" width="100%"/>
+</div>
+
+<h4 id="selecting-differentially-expressed-genes">Selecting Differentially Expressed Genes</h4>
+<p>Core to the simulation is to select gene sets. A user needs to select truly differentially expressed genes <span><span class="MathJax_Preview">\{g_1, … ,g_m\}</span><script type="math/tex">\{g_1, … ,g_m\}</script></span> (see <a href="#gene-set-selection">Gene Set Selection</a>).</p>
+<p>Once a user selects truly differentially expressed genes, AEGIS generates gene expression data <span><span class="MathJax_Preview">X</span><script type="math/tex">X</script></span> for case and control samples from the following multivariate normal model:
+$$
+X \sim \mathcal{N}(0, I)
+$$
+if <span><span class="MathJax_Preview">X</span><script type="math/tex">X</script></span> is a control sample, and
+$$
+X \sim \mathcal{N}(\mu, I)
+$$
+if <span><span class="MathJax_Preview">X</span><script type="math/tex">X</script></span> is a case sample. Here <span><span class="MathJax_Preview">\mu</span><script type="math/tex">\mu</script></span> corresponds to a vector which is equal to <span><span class="MathJax_Preview">\beta_{effect}</span><script type="math/tex">\beta_{effect}</script></span> at the selected differentially expressed genes
+<span><span class="MathJax_Preview">\{g_1, … ,g_m\}</span><script type="math/tex">\{g_1, … ,g_m\}</script></span>  and 0 otherwise.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The dimension of <span><span class="MathJax_Preview">X</span><script type="math/tex">X</script></span> is the number of samples times the number of genes. The number of samples is a user-specified quantity, and the number of genes is determined based on the testing context: only genes annotated to the root nodes of the context graph are used.</p>
+</div>
+<h4 id="specifying-simulation-parameters">Specifying Simulation Parameters</h4>
+<p>Beyond the gene set, many parameters can be selected. To set simulation parameters, click “Simulation Parameters” to expand simulation options.
+<div class="img-block">
+    <img src="../img/simulation_params.png" width="100%"/>
+</div>
+Use “Gene effect size/signal strength” to set <span><span class="MathJax_Preview">\beta_{effect}</span><script type="math/tex">\beta_{effect}</script></span>. Use “Minimum of samples per case / control”, “Maximum of samples per case / control” and “Number of linearly spaced sample size regimes” to set number of case and control samples. For instance, if “min samples” is 10, “max samples” is 50, and “num linearly spaced samples” is 10, then sample sizes {10, 20, 30, 40, 50 will be used in the simulation.</p>
+<h4 id="launching-the-simulation">Launching the Simulation</h4>
+<p>Finally, to launch the simulation, you will generate a unique job ID. Make sure to store this job ID as it will be used for retrieving the finalized output.</p>
+<div class="img-block">
+    <img src="../img/launch_simulation.png" width="100%"/>
+</div>
+
+<h4 id="retrieving-simulation-results">Retrieving Simulation Results</h4>
+<p>Once the simulation is complete, a user can use our interface to visualize the summary statistics and out customized renderings. The simulation-specific job ID is required to retrieve these results.</p>
+<div class="img-block">
+    <img src="../img/sim_result_page.png" width="100%"/>
+</div>
+
+<p>Successfully loaded simulations should render the context graph that was used for testing, with focus nodes anchored on the (self-contained) non-null GO terms.</p>
+<div class="img-block">
+    <img src="../img/sim_result_graph.png" width="100%"/>
+</div>
+
+<p>Following the graph, the next panel on "Power Analysis Result" displays all the parameters used for the simulation and the summary statistics including false discovery rate (FDR), power and number of rejected GO terms.</p>
+<div class="img-block">
+    <img src="../img/sim_result_power.png" width="100%"/>
+</div>
+
+<p>As one of our highlighted features, you can also visualize the node-specific power of nodes specified in the focus graph via binder plots by clicking "View" next to the "Binder Plot Summary of the Focus Graph". Again, this can be adjusted in the previous panel "Reference Graph for Testing".</p>
+<div class="img-block">
+    <img src="../img/sim_result_graph_view.png" width="100%"/>
+</div>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../tutorial/" title="Video Tutorials" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Video Tutorials
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../api/" title="API Documentation" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                API Documentation
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application.583bbe55.js"></script>
+      
+      <script>app.initialize({version:"1.0",url:{base:".."}})</script>
+      
+        <script src="../javascripts/extra.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+    
+      
+    
+  </body>
 </html>
