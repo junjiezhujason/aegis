@@ -27,7 +27,7 @@ function request_simulation_details() {
       full_data.general_data.simulation["matrix"] = out_data["matrix"];
       // full_data.general_data.simulation["statistics"] = out_data["statistics"];
       plotly_boxplot(config, "update", out_data.statistics);
-      $("#expand_binder_summary").off().on("click", function() {
+      $("#expand_binder_result_summary").off().on("click", function() {
         open_context_focus_image("ssm");
       });
     },
