@@ -25,11 +25,10 @@ several panels.
     <img src="../img/fig_panel.png" width="100%"/>
 </div>
 
-Note that in the lite version the context selection is disabled. The download
-options can vary based on which application of AEGIS a user chooses.
+!!! note
+    In the lite version the context selection is disabled for performance reasons. You will need to [install](../install) the full version to flexibly select the context. Further, the "Download Options" can vary based on which application of AEGIS a user chooses.
 
-Next, we will elaborate on what some of the terminologies mean and how to update
-the focus and context graphs using our options.
+Next, we will elaborate on what some of the terminologies mean and how to update the focus and context graphs using our options.
 
 ### Terminology and Concepts
 
@@ -167,20 +166,172 @@ If the node is a prolific node [visualization concept], double clicking will als
 
 Double click leveled “+” sign next to the context graph draws a random node in the context graph to be focus anchor.
 
-## GO Term Data Input (Optional)
+## Gene Set Selection
 
-A user can upload GO terms as focus or context anchors in the “Data upload” section. The user can upload either focus or context anchors or both. When only focus anchors are specified, the context anchors will be initialized as the ontology roots. When only context anchors are specified, the focus anchors will be randomly initialized. When both are specified, only valid focus anchors within the specified context graph will be used.
+In addition to exploring the GO DAG, a user can use focus and context visualization in AEGIS to identify gene sets that might be usefully for applications such as differential gene expression analysis and single cell benchmarking. One main application of this function is for our built-in [power analysis workflow](#power-analysis-and-simulation). Select gene sets in the gene selection box [need a figure here], selected genes can be easily exported, or used as input signal genes for subsequent power simulation. This section is adapted from video demo, where you can find more examples.
+
+#### Searching for Genes
+
+A user can directly search for the gene symbol (or ensembl ID) in the "Gene Selection" input box. Gene names can be auto-completed.
+<div class="img-block">
+    <img src="../img/select_gene.png" width="100%"/>
+</div>
+<div class="img-block">
+    <img src="../img/select_gene_2.png" width="100%"/>
+</div>
+
+If you have little knowledge about gene names, the user can rely on the GO terms to select sets. They can select a number of GO terms by typing their names in the “GO selection” box to select GO terms. In this example, the GO term of interest “adult heart development”. To select “adult heart development”, type GO term name (“adult heart development”), or GO ID (“GO: 0007512”) into the search box. There is also auto-complete for the GO term name. Next, you can use the options below to randomly sample a number or a proportion of genes annotated with this GO term.
+
+<div class="img-block">
+    <img src="../img/select_all_gene.png" width="100%"/>
+</div>
+
+#### Clearing and Copying
+
+A user can clear selected GO terms or selected genes individually or all at once. Click cross sign next to gene selection box to clear all terms. Click cross sign next to individual term to clear individual term. Click the clipboard sign to copy selected GO terms / genes to clipboard.
+
+<div class="img-block">
+    <img src="../img/clipboard.png" width="30%"/>
+</div>
+
+#### Real-time update of self-contained and competitive nulls
+
+For power analysis specifically, once a user specify differentially expressed genes, they can highlight self-contained and competitive non-null terms within the current context graph in “highlight” options. Specifically, a GO term is a self-contained null if none of the genes annotated to it is differentially expressed. It is a competitive null if proportion of differentially expressed genes is less than that of the entire genome. For instance, the root node, “animal organ development” is a self-contained non-null, but it is not a competitive non-null.
+
+<div class="img-block">
+    <img src="../img/competitive.png" width="90%"/>
+</div>
+
+<div class="img-block">
+    <img src="../img/self-contained.png" width="90%"/>
+</div>
+
+
+
+## GO Term Data Input
+
+As a convenient way to specify context or focus anchors, a user can upload GO terms in the “Data upload” section. The user can upload either focus or context anchors or both. When only focus anchors are specified, the context anchors will be initialized as the ontology roots. When only context anchors are specified, the focus anchors will be randomly initialized. When both are specified, only valid focus anchors within the specified context graph will be used.
+
+!!! note
+    Currently, this data input functionality is only supported locally in the full version of AEGIS (which requires a simple [installation](../install)), and not in the lite version on the web server.
+
+<div class="img-block">
+    <img src="../img/data_upload_section.png" width="100%"/>
+</div>
 
 To upload a GO term file, click “Data Upload” to expand data upload box.
 
 Click “Choose File” button to upload GO terms. The required format is a .txt or .csv file, with one GO ID (e.g., GO: 0008150) per line. An example file that can be found at “aegis/data/great_srf_example.txt”, which is uploaded as context anchors here. After file selection, click on refresh button, a green arrow appears if GO term file has been uploaded successfully.
 
+<div class="img-block">
+    <img src="../img/upload_data.png" width="100%"/>
+</div>
+
 
 After uploading GO terms, the user need to choose the ontology and species in in “General Options” panel. For this example, “human cellular component” ontology is selected. Click refresh button after selecting desired ontology, a green arrow should appear if ontology is specified correctly. All the uploaded GO terms will appear in the box below. Otherwise, error message “None of the context anchors were identified in the current ontology. Perhaps the wrong ontology was selected” will appear.
+
+<div class="img-block">
+    <img src="../img/set_ontology.png" width="100%"/>
+</div>
 
 Click “Continue Navigation” button to expand focus and context graphs.  If no data is uploaded, click “focus-and-context anchor navigation” to start GO exploration.
 
 
-## Gene Set Selection (Optional)
-
 ## Power Analysis and Simulation
+
+A user can perform power simulation for potential study design in the full version of AEGIS.
+Detailed explanation of power analysis workflow can be found in Section 5.1 in our manuscript. Here is an over view of the system.
+
+<div class="img-block">
+    <img src="../img/fig_workflow.png" width="100%"/>
+</div>
+
+
+To enter the simulation and power analysis workflow, go to “Power analysis setup” tab within the main panel.
+
+<div class="img-block">
+    <img src="../img/sim_setup_page.png" width="100%"/>
+</div>
+
+
+!!! note
+    Currently, this power analysis functionality is only supported locally in the full version of AEGIS (which requires a simple [installation](../install)), and not in the lite version on the web server.
+
+#### Selecting the Testing Context
+
+First, the user needs to select the testing context. The number of nodes to test is conveniently defined by the context graph. Thus, we also recommend a user to turn on the option to refine the graph to remove redundant identical tests. By default, the context is the entire ontology with refined nodes.
+
+<div class="img-block">
+    <img src="../img/context_for_power.png" width="100%"/>
+</div>
+
+#### Selecting Differentially Expressed Genes
+
+Core to the simulation is to select gene sets. A user needs to select truly differentially expressed genes $\{g_1, … ,g_m\}$ (see [Gene Set Selection](#gene-set-selection)).
+
+
+Once a user selects truly differentially expressed genes, AEGIS generates gene expression data $X$ for case and control samples from the following multivariate normal model:
+$$
+X \sim \mathcal{N}(0, I)
+$$
+if $X$ is a control sample, and
+$$
+X \sim \mathcal{N}(\mu, I)
+$$
+if $X$ is a case sample. Here $\mu$ corresponds to a vector which is equal to $\beta_{effect}$ at the selected differentially expressed genes
+$\{g_1, … ,g_m\}$  and 0 otherwise.
+
+!!! note
+    The dimension of $X$ is the number of samples times the number of genes. The number of samples is a user-specified quantity, and the number of genes is determined based on the testing context: only genes annotated to the root nodes of the context graph are used.
+
+#### Specifying Simulation Parameters
+
+Beyond the gene set, many parameters can be selected. To set simulation parameters, click “Simulation Parameters” to expand simulation options.
+<div class="img-block">
+    <img src="../img/simulation_params.png" width="100%"/>
+</div>
+Use “Gene effect size/signal strength” to set $\beta_{effect}$. Use “Minimum of samples per case / control”, “Maximum of samples per case / control” and “Number of linearly spaced sample size regimes” to set number of case and control samples. For instance, if “min samples” is 10, “max samples” is 50, and “num linearly spaced samples” is 10, then sample sizes {10, 20, 30, 40, 50 will be used in the simulation. A user can repeat simulation multiple times for each sample size, default value of “Number of repetitions per regime” is 10 per sample size. A user can further use “Multiple testing adjustment procedure” to select Bonferroni / BH method to adjust for multiple hypothesis testing. He/she can set desired FDR level in “GO term false discovery rate level”.
+
+
+
+#### Launching the Simulation
+
+Finally, to launch the simulation, you will generate a unique job ID. Make sure to store this job ID as it will be used for retrieving the finalized output.
+
+<div class="img-block">
+    <img src="../img/launch_simulation.png" width="100%"/>
+</div>
+
+
+
+#### Retrieving Simulation Results
+
+Once the simulation is complete, a user can use our interface to visualize the summary statistics and out customized renderings. The simulation-specific job ID is required to retrieve these results.
+
+<div class="img-block">
+    <img src="../img/sim_result_page.png" width="100%"/>
+</div>
+
+Successfully loaded simulations should render the context graph that was used for testing, with focus nodes anchored on the (self-contained) non-null GO terms.
+
+<div class="img-block">
+    <img src="../img/sim_result_graph.png" width="100%"/>
+</div>
+
+Following the graph, the next panel on "Power Analysis Result" displays all the parameters used for the simulation and the summary statistics including false discovery rate (FDR), power and number of rejected GO terms.
+
+<div class="img-block">
+    <img src="../img/sim_result_power.png" width="100%"/>
+</div>
+
+As one of our highlighted features, you can also visualize the node-specific power of nodes specified in the focus graph via binder plots by clicking "View" next to the "Binder Plot Summary of the Focus Graph". Again, this can be adjusted in the previous panel "Reference Graph for Testing".
+
+<div class="img-block">
+    <img src="../img/sim_result_graph_view.png" width="100%"/>
+</div>
+
+
+
+
+
+

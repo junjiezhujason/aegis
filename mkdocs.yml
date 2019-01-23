@@ -7,7 +7,7 @@ repo_url: https://github.com/junjiezhujason/aegis
 edit_uri: ""
 
 theme:
-    name: mkdocs
+    name: material 
     highlightjs: true
     hljs_languages:
         - yaml
@@ -28,3 +28,25 @@ nav:
         - 'Benchmark for Testing: Part 1': 'notebooks/aegis_benchmark_part1.html'
         - 'Benchmark for Testing: Part 2': 'notebooks/aegis_benchmark_part2.html'
 
+markdown_extensions:
+  - admonition
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra_javascript:
+  - 'javascripts/extra.js'
+  - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'

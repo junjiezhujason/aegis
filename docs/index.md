@@ -1,7 +1,13 @@
 
 # Welcome!
 
-This is the documentation webpage for AEGIS (Augmented Exploration of the GO with Interactive Simulations). AEGIS is an open-source software with an interactive information-retrieval framework that enables an investigator to navigate through the entire Gene Ontology (GO) graph (with tens of thousands of nodes) and focus on fine-grained details without losing the context. It features interpretable visualization of GO terms reported from studies, flexible exploratory analysis of the GO DAG, as well as principled power analysis that is biologically grounded. You can find more technical details in our [bioRxiv paper](https://www.biorxiv.org/content/early/2018/10/05/436741).
+This is the documentation webpage for AEGIS (Augmented Exploration of the GO with Interactive Simulations). AEGIS is an open-source software with an interactive information-retrieval framework that enables an investigator to navigate through the entire Gene Ontology (GO) graph (with tens of thousands of nodes) and focus on fine-grained details without losing the context. It features interpretable visualization of GO terms reported from studies, flexible exploratory analysis of the GO DAG, as well as principled power analysis that is biologically grounded.
+
+### Quick links
+
+- [Technical details in our bioRxiv paper](https://www.biorxiv.org/content/early/2018/10/05/436741)
+- [Video tutorials of our visual concepts](./tutorial)
+- [Source code in Python and Javascript](https://github.com/junjiezhujason/aegis)
 
 ---
 
