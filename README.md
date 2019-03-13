@@ -1,9 +1,9 @@
 
 # AEGIS
 
-## Installation
-
-See the project site: http://aegis.stanford.edu for instructions.
+The following are development and deployment instructions.
+For the installation instructions, manuals, tutorials, code documentation, and contact information, please visit our
+ project site: http://aegis.stanford.edu for all the details.
 
 ## Launching the local server
 

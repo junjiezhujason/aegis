@@ -8,6 +8,7 @@ This is the documentation webpage for AEGIS (Augmented Exploration of the GO wit
 - [Technical details in our bioRxiv paper](https://www.biorxiv.org/content/early/2018/10/05/436741)
 - [Video tutorials of our visual concepts](./tutorial)
 - [Source code in Python and Javascript](https://github.com/junjiezhujason/aegis)
+- [Contact us for feedback or cite our work](./#contact-us)
 
 ---
 
