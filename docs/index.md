@@ -79,7 +79,8 @@ Both
 and
 [Eugene Katsevich](http://web.stanford.edu/~ekatsevi/)
 have also contributed to the development of this project.
-You can find the contact information at the webpages or via Github issues.
+
+Feel free to contact `jjzhu AT stanford DOT edu` for feedback and quesitons. You are welcome to provide feedback via [this questionnaire](./questionnaire/questionnaire.pdf)
 
 ---
 
