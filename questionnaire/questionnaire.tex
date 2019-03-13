@@ -1,0 +1,237 @@
+\documentclass[a4paper,10pt,BCOR10mm,oneside,headsepline]{scrartcl}
+% \usepackage[paperheight=9in, paperwidth=8in, margin=0pt]{geometry}
+
+% general
+\usepackage{amsmath,amssymb,graphicx,tikz,psfrag}
+% for algorithms
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{algorithmic}
+% for captions
+\renewcommand{\thealgocf}{} % removes caption numbering
+% for sizing
+\usepackage[
+    % paperheight=11in,
+    lmargin=2cm,
+    rmargin=2cm,
+    tmargin=2.00cm,
+    bmargin=1.50cm]{geometry}
+
+\usepackage{scalerel}
+\newcommand{\scalesize}{1.3}
+% more configurations
+\thispagestyle{empty} % to turn off the page number
+\nopagecolor % removes the pdf background color
+
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{wasysym}% provides \ocircle and \Box
+\usepackage{enumitem}% easy control of topsep and leftmargin for lists
+\usepackage{color}% used for background color
+\usepackage{forloop}% used for \Qrating and \Qlines
+\usepackage{ifthen}% used for \Qitem and \QItem
+\usepackage{typearea}
+% \areaset{17cm}{26cm}
+% \setlength{\topmargin}{-1cm}
+\usepackage{scrpage2}
+\pagestyle{scrheadings}
+\ohead{\pagemark}
+\chead{}
+\cfoot{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Beginning of questionnaire command definitions %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% 2010, 2012 by Sven Hartenstein
+%% mail@svenhartenstein.de
+%% http://www.svenhartenstein.de
+%%
+%% Please be warned that this is NOT a full-featured framework for
+%% creating (all sorts of) questionnaires. Rather, it is a small
+%% collection of LaTeX commands that I found useful when creating a
+%% questionnaire. Feel free to copy and adjust any parts you like.
+%% Most probably, you will want to change the commands, so that they
+%% fit your taste.
+%%
+%% Also note that I am not a LaTeX expert! Things can very likely be
+%% done much more elegant than I was able to. If you have suggestions
+%% about what can be improved please send me an email. I intend to
+%% add good tipps to my website and to name contributers of course.
+%%
+%% 10/2012: Thanks to karathan for the suggestion to put \noindent
+%% before \rule!
+
+%% \Qq = Questionaire question. Oh, this is just too simple. It helps
+%% making it easy to globally change the appearance of questions.
+\newcommand{\Qq}[1]{\textbf{#1}}
+
+%% \QO = Circle or box to be ticked. Used both by direct call and by
+%% \Qrating and \Qlist.
+\newcommand{\QO}{$\Box$}% or: $\ocircle$
+
+%% \Qrating = Automatically create a rating scale with NUM steps, like
+%% this: 0--0--0--0--0.
+\newcounter{qr}
+\newcommand{\Qrating}[1]{\QO\forloop{qr}{1}{\value{qr} < #1}{------\QO}}
+
+%% \Qline = Again, this is very simple. It helps setting the line
+%% thickness globally. Used both by direct call and by \Qlines.
+\newcommand{\Qline}[1]{\noindent\rule{#1}{0.6pt}}
+
+%% \Qlines = Insert NUM lines with width=\linewith. You can change the
+%% \vskip value to adjust the spacing.
+\newcounter{ql}
+\newcommand{\Qlines}[1]{\forloop{ql}{0}{\value{ql}<#1}{\vskip0em\Qline{\linewidth}}}
+
+%% \Qlist = This is an environment very similar to itemize but with
+%% \QO in front of each list item. Useful for classical multiple
+%% choice. Change leftmargin and topsep accourding to your taste.
+\newenvironment{Qlist}{%
+\renewcommand{\labelitemi}{\QO}
+\begin{itemize}
+}{%
+\end{itemize}
+}
+
+%% \Qtab = A "tabulator simulation". The first argument is the
+%% distance from the left margin. The second argument is content which
+%% is indented within the current row.
+\newlength{\qt}
+\newcommand{\Qtab}[2]{
+\setlength{\qt}{\linewidth}
+\addtolength{\qt}{-#1}
+\hfill\parbox[t]{\qt}{\raggedright #2}
+}
+
+%% \Qitem = Item with automatic numbering. The first optional argument
+%% can be used to create sub-items like 2a, 2b, 2c, ... The item
+%% number is increased if the first argument is omitted or equals 'a'.
+%% You will have to adjust this if you prefer a different numbering
+%% scheme. Adjust topsep and leftmargin as needed.
+\newcounter{itemnummer}
+\newcommand{\Qitem}[2][]{% #1 optional, #2 notwendig
+\ifthenelse{\equal{#1}{}}{\stepcounter{itemnummer}}{}
+\ifthenelse{\equal{#1}{a}}{\stepcounter{itemnummer}}{}
+\begin{enumerate}
+\item[\textbf{\arabic{itemnummer}#1.}] #2
+\end{enumerate}
+}
+
+%% \QItem = Like \Qitem but with alternating background color. This
+%% might be error prone as I hard-coded some lengths (-5.25pt and
+%% -3pt)! I do not yet understand why I need them.
+\definecolor{bgodd}{rgb}{0.8,0.8,0.8}
+\definecolor{bgeven}{rgb}{0.9,0.9,0.9}
+\newcounter{itemoddeven}
+\newlength{\gb}
+\newcommand{\QItem}[2][]{% #1 optional, #2 notwendig
+\setlength{\gb}{\linewidth}
+\addtolength{\gb}{-5.25pt}
+\ifthenelse{\equal{\value{itemoddeven}}{0}}{%
+\noindent\colorbox{bgeven}{\hskip-3pt\begin{minipage}{\gb}\Qitem[#1]{#2}\end{minipage}}%
+\stepcounter{itemoddeven}%
+}{%
+\noindent\colorbox{bgodd}{\hskip-3pt\begin{minipage}{\gb}\Qitem[#1]{#2}\end{minipage}}%
+\setcounter{itemoddeven}{0}%
+}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% End of questionnaire command definitions %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{center}
+\textbf{\huge Feedback Questionnaire for AEGIS}
+\end{center}
+\vskip2em
+
+\minisec{Please tell us a little bit about yourself below.}
+\vskip.5em
+
+\Qitem[a]{ \Qq{What is your research area?} \Qline{10.6cm} .}
+
+\Qitem[b]{ \Qq{Do you study either genes or gene products?} \hskip0.4cm  \QO{} No. \hskip0.4cm \QO{}
+Yes, I study them for \Qline{2cm} .}
+
+
+\Qitem[c]{ \Qq{Have you used any tools for GO (Gene Ontology) analysis?}
+\begin{Qlist}
+\item No, I do not know what GO is.
+\item No, I know what GO is, but never used any GO analysis tools.
+\item Yes, I have used the following platforms: \Qline{8.5cm} .
+\end{Qlist}
+}
+
+\minisec{Please evaluate the following user manuals: \texttt{http://aegis.stanford.edu/manual/}.}
+\vskip.5em
+
+\Qitem[a]{ \Qq{Visualization panel:} \Qtab{5cm}{difficult to follow ~~ \Qrating{5} ~~ easy to follow}}
+
+\Qitem[b]{ \Qq{Navigation features:} \Qtab{5cm}{difficult to follow ~~ \Qrating{5} ~~ easy to follow}}
+
+\Qitem[c]{ \Qq{Gene set selection:} \Qtab{5cm}{difficult to follow ~~ \Qrating{5} ~~ easy to follow}}
+
+\Qitem[d]{ \Qq{Power analysis:} \Qtab{5cm}{difficult to follow ~~ \Qrating{5} ~~ easy to follow}}
+
+\minisec{Please evaluate the following video tutorials: \texttt{http://aegis.stanford.edu/tutorial/}.}
+\vskip.5em
+
+\Qitem[a]{ \Qq{Video tutorial 1:} \Qtab{5cm}{difficult to follow ~~ \Qrating{5} ~~ easy to follow}}
+
+\Qitem[b]{ \Qq{Video tutorial 2:} \Qtab{5cm}{difficult to follow ~~ \Qrating{5} ~~ easy to follow}}
+
+\Qitem[c]{ \Qq{Video tutorial 3:} \Qtab{5cm}{difficult to follow ~~ \Qrating{5} ~~
+easy to follow}}
+
+\Qitem[d]{ \Qq{Video tutorial 4:} \Qtab{5cm}{difficult to follow ~~ \Qrating{5} ~~
+easy to follow}}
+
+% \vspace{0.02in}
+\Qitem{ \Qq{About how long did it take you to read the documentation and tutorials?}
+\Qline{2.5cm} .}
+
+\minisec{Please describe your experience with the search strategies below.}
+\vskip.5em
+
+\Qitem[a]{ {\Qq{Could you find all concepts of interests through the auto-complete search?} \Qtab{5.5cm}{\QO{} Yes.
+\hskip0.3cm \QO{} No.}}
+If not, can you describe what your attempts were?  \Qline{7.8cm} .
+}
+
+\Qitem[b]{ {\Qq{What anchors did you use to specify the context graph?} \Qtab{5cm}{~\QO{} waypoint anchors
+\hskip0.2cm \QO{} root anchors}}}
+
+\Qitem[c]{ {\Qq{What anchors did you use to specify the focus graph?} \Qtab{5cm}{~~~ \QO{} waypoint anchors
+\hskip0.2cm \QO{} leaf anchors}}}
+
+\Qitem[d]{ {\Qq{How was your search result?}} \Qtab{5.5cm}{not informative ~~ \Qrating{5} ~~
+very informative}}
+
+\minisec{Please describe your experience with the visualization interactions below.}
+\vskip.5em
+
+\Qitem[a]{ {\Qq{What graph layout did you use most frequently?} \Qtab{5cm}{\QO{} root-bound
+\hskip0.4cm \QO{} leaf-bound \hskip0.4cm \QO{} buoyant}}}
+
+\Qitem[b]{ {\Qq{What was the average scale of your visualization?} \Qtab{1cm}{\Qline{1cm} context nodes, and \Qline{1cm} focus nodes.}}}
+
+\Qitem[c]{ {\Qq{Were you able to select the appropriate node highlights for your application?} \Qtab{5.5cm}{~ \QO{} Yes.\hskip0.2cm \QO{} No.}}
+If not, can you describe what you would prefer to highlight?  \Qline{6.4cm} .
+}
+\Qitem[d]{ {\Qq{Was the provided the GO annotation information sufficient for your analysis?} \Qtab{5.5cm}{\QO{} Yes.
+\hskip0.1cm \QO{} No.}}
+If not, can you describe what additional information you would like to see?  \Qline{4.1cm} .
+}
+% \vspace{0.03in}
+
+\Qitem{ {\Qq{Did you perform power calculations for your study design?} \Qtab{5.5cm}{\QO{} Yes
+\hskip0.3cm \QO{} No}}
+If yes, how long did it take you to setup it up and wait for it complete?  \Qline{1.95cm} and \Qline{1.95cm} .
+}
+
+\Qitem{ \Qq{In case you have additional feedback or suggestions, please write them below.} \Qlines{2}
+}
+
+\end{document}
