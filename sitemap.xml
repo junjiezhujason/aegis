@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>http://aegis.stanford.edu/</loc>
-     <lastmod>2019-03-13</lastmod>
+     <lastmod>2019-08-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://aegis.stanford.edu/install/</loc>
-     <lastmod>2019-03-13</lastmod>
+     <lastmod>2019-08-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://aegis.stanford.edu/tutorial/</loc>
-     <lastmod>2019-03-13</lastmod>
+     <lastmod>2019-08-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://aegis.stanford.edu/manual/</loc>
-     <lastmod>2019-03-13</lastmod>
+     <lastmod>2019-08-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://aegis.stanford.edu/api/</loc>
-     <lastmod>2019-03-13</lastmod>
+     <lastmod>2019-08-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://aegis.stanford.edu/notebooks/aegis_single_cell_example.html</loc>
-     <lastmod>2019-03-13</lastmod>
+     <lastmod>2019-08-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://aegis.stanford.edu/notebooks/aegis_benchmark_part1.html</loc>
-     <lastmod>2019-03-13</lastmod>
+     <lastmod>2019-08-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://aegis.stanford.edu/notebooks/aegis_benchmark_part2.html</loc>
-     <lastmod>2019-03-13</lastmod>
+     <lastmod>2019-08-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>
