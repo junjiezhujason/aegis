@@ -530,7 +530,13 @@
                 <p>AEGIS is an open-source software, and the back-end and front-end implementations in Python and Javscript are available under the MIT License. The following instructions are used to install the <em>full</em> version of AEGIs, which includes all of its functionalities including power calculation.</p>
 <h2 id="install-dependencies">Install Dependencies</h2>
 <p><em>Prerequisites</em>: <a href="http://docs.python-guide.org/en/latest/">Python3.6</a> (required),
-<a href="https://virtualenv.pypa.io/en/stable/">virtualenv</a> or other package managements (recommended). Note that</p>
+<a href="https://virtualenv.pypa.io/en/stable/">virtualenv</a> or other package managements (recommended).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The current version of AEGIS has only been tested on Linux and MacOS environments.
+There might be backward compatibility issues with Python3.7, so virtual environments
+are highly recommended.</p>
+</div>
 <p>The code is available on github, so you can directly clone the repository to your local:</p>
 <pre><code>git clone https://github.com/junjiezhujason/aegis.git
 </code></pre>
@@ -541,8 +547,11 @@
 cached files. This is mainly for version control and speed performance.
 For most of the analyses (excluding simulation outputs), the files will typically
 require no more than 250M of disk space.</p>
-<p><em>Note</em>: If this is the first time that you are running AEGIS locally, Internet connection
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If this is the first time that you are running AEGIS locally, Internet connection
 will be required to download data (or our cached files below) from the online databases.</p>
+</div>
 <h2 id="launch-the-lite-version-locally">Launch the Lite Version Locally</h2>
 <p>All the data files required to launch the lite version (for testing or simple demonstration)
 are stored in the repo under <code>./data</code>. So once all the Python dependencies are installed,
