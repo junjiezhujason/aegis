@@ -5,9 +5,22 @@ The following are development and deployment instructions.
 For the installation instructions, manuals, tutorials, code documentation, and contact information, please visit our
  project site: http://aegis.stanford.edu for all the details.
 
+```
+Usage: main.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -d, --debug           enable debug mode
+  -p PORT, --port=PORT  which port to serve content on
+  -f FOLDER, --folder=FOLDER
+                        folder to store temporary data
+  -l, --lite            enforcing light mode
+```
+
+
 ## Launching the local server
 
-To launch full version of AEGIS locally, run:
+To launch full version of AEGIS locally (without debug mode), run:
 
     python3 main.py --port 5000 --folder $maindir
 
@@ -16,12 +29,13 @@ The port number 5000 can be changed.
 
 ## Development
 
-For the development of either the full or lite version, run:
+For the development of either the full version, run:
 
-    python3 main.py --debug $mode --port 5000 --folder $maindir
+    python3 main.py --debug --lite --port 5000 --folder ./data
 
-The `$version` could be either `core` or `lite`.
-Again, the port number can be changed.
+or for the lite version, run:
+
+    python3 main.py --debug --port 5000 --folder $maindir
 
 For convenience, there is an equivalent bash script wrapper that launches this
 python command:

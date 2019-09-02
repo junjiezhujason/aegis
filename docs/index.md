@@ -5,7 +5,7 @@ This is the documentation webpage for AEGIS (Augmented Exploration of the GO wit
 
 ### Quick links
 
-- [Technical details in our bioRxiv paper](https://www.biorxiv.org/content/early/2018/10/05/436741)
+- [Our published paper with method details](https://www.nature.com/articles/s41598-019-42178-x)
 - [Video tutorials of our visual concepts](./tutorial)
 - [Source code in Python and Javascript](https://github.com/junjiezhujason/aegis)
 - [Contact us for feedback or cite our work](./#contact-us)
@@ -35,18 +35,17 @@ knowledgeable, or benevolent source. By combining visualization with the rich kn
 
 ## Getting Started
 
-Accompanied by our
-[tutorials](./tutorial),
-there are two options to explore the visualization by AEGIS:
+You can [install](./install) our software locally and accompanied by our
+[tutorials](./tutorial), there are two options to explore the visualization by AEGIS:
 the lite version and the full version.
 
 ### The lite version
 
-A light weight version of AEGIS is available as a web interface [here](https://aegis-viz.appspot.com/). It includes the minimal interactive features with some examples for simple demonstrations. The lite version does not require installation and serves as an introduction to our visualization concepts.
+A light weight version of AEGIS includes the minimal interactive features with some examples for simple demonstrations. The lite version does not require the cached data download and serves as an introduction to our visualization concepts.
 
 ### The full version
 
-The full version includes all features, including data upload and power analysis functions. This version is meant to be [installed](./install) locally and include more customization and computationally intensive processes. The code is [open source]() with [api documentation](./api) so advanced pipelines can customize it to their needs.
+The full version includes all features, including data upload and power analysis functions. This version includes more customization and computationally intensive processes.
 
 
 ---
@@ -86,5 +85,15 @@ Feel free to contact `jjzhu AT stanford DOT edu` for feedback and quesitons. You
 ---
 
 ## How to Cite
-
-Our manuscript is currently under review and instructions will be available soon. You can cite our [bioRxiv paper](https://www.biorxiv.org/content/early/2018/10/05/436741).
+```
+@article{zhu2019exploratory,
+  title={Exploratory Gene Ontology Analysis with Interactive Visualization},
+  author={Zhu, Junjie and Zhao, Qian and Katsevich, Eugene and Sabatti, Chiara},
+  journal={Scientific reports},
+  volume={9},
+  number={1},
+  pages={7793},
+  year={2019},
+  publisher={Nature Publishing Group}
+}
+```
