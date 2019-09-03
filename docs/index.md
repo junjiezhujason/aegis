@@ -80,7 +80,7 @@ and
 [Eugene Katsevich](http://web.stanford.edu/~ekatsevi/)
 have also contributed to the development of this project.
 
-Feel free to contact `jjzhu AT stanford DOT edu` for feedback and quesitons. You are welcome to provide feedback via [this questionnaire](./questionnaire/questionnaire.pdf)
+Feel free to contact `jjzhu AT stanford DOT edu` for feedback and quesitons. You are welcome to provide feedback via [this questionnaire](./questionnaire/questionnaire.pdf).
 
 ---
 
