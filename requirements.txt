@@ -7,7 +7,7 @@ Flask==0.12.3
 goatools==0.8.4
 idna==2.6
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.11.3
 MarkupSafe==1.0
 matplotlib==2.1.1
 mygene==3.0.0
