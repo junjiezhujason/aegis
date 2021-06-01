@@ -28,7 +28,7 @@ six==1.11.0
 sklearn==0.0
 statsmodels==0.8.0
 tornado==4.5.2
-urllib3==1.22
+urllib3==1.26.5
 Werkzeug==0.12.2
 wget==3.2
 xlrd==1.1.0
